@@ -1,0 +1,5 @@
+#/bin/bash
+
+__author__='lufeng4828@163.com'
+
+python ../swall/cmd.py $*
