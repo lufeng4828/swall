@@ -397,12 +397,15 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 > 答：每个函数后面加上 help参数都会打印这个函数使用说明
 > > 
 > > [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.copy help
+> 
     ####################
+>  
     [server] xyz_sa_server_192.168.8.190 :
         def copy(*args, **kwargs) -> 拷贝文件到远程 可以增加一个ret_type=full，支持返回文件名
         @param args list:支持位置参数，例如 sys.copy /etc/src.tar.gz /tmp/src.tar.gz ret_type=full
         @param kwargs dict:支持关键字参数，例如sys.copy local_path=/etc/src.tar.gz remote_path=/tmp/src.tar.gz
         @return int:1 if success else 0
+> 
     ####################
     一共执行了[1]个
         
@@ -410,11 +413,12 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 > 答：提供了一个sys.funcs函数可以解决这个问题，需要输入想要查看的模块名称（不带后缀）
 > > 
 > > [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.funcs sys
+>  
+> > \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+> 
+> > [server] xyz_sa_server_192.168.8.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
     
-> > ####################
-    [server] xyz_sa_server_192.168.8.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
-    
-> > ####################
+> > \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     一共执行了[1]个
     [root@swall1 ~]#
         
@@ -444,7 +448,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 
 > 答：模块编写如下所示：
 > > 
-> > #coding:utf-8
+> > \#coding:utf-8
 > > from swall.utils import node
     
 > > @node
