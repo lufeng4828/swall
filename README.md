@@ -10,7 +10,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 
 1.下载 [jdk-7u55-linux-x64](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 
-2.上传jdk-7u55-linux-x64.gz到服务器，解压:
+2.上传jdk-7u55-linux-x64.gz到服务器，解压
 
     [root@zookeeper1 ~]# tar xf jdk-7u55-linux-x64.gz -C /usr/local/
     [root@zookeeper1 ~]# ls /usr/local/
@@ -18,7 +18,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     [root@zookeeper1 ~]# mv /usr/local/jdk1.7.0_55 /usr/local/java
     [root@zookeeper1 ~]#
 
-3.配置jdk环境:
+3.配置jdk环境
 
     [root@zookeeper1 ~]# cat >> /etc/bashrc <<\eof
     > export JAVA_HOME=/usr/local/java
@@ -27,7 +27,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     > eof
     [root@zookeeper1 ~]# source /etc/bashrc
 
-4.检查java是否安装成功:
+4.检查java是否安装成功
 
     [root@zookeeper1 ~]# java -version
     java version "1.7.0_55"
@@ -40,14 +40,14 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 
 1.下载 [zookeeper-3.4.5-cdh5.0.0](http://archive.cloudera.com/cdh5/cdh/5/zookeeper-3.4.5-cdh5.0.0.tar.gz)
 
-2.上传zookeeper-3.4.5-cdh5.0.0.tar.gz到服务器，解压:
+2.上传zookeeper-3.4.5-cdh5.0.0.tar.gz到服务器，解压
 
     [root@zookeeper1 ~]# tar xf zookeeper-3.4.5-cdh5.0.0.tar.gz -C /usr/local/
     [root@zookeeper1 ~]# ls -d /usr/local/zookeeper-3.4.5-cdh5.0.0
     /usr/local/zookeeper-3.4.5-cdh5.0.0
     [root@zookeeper1 ~]# mv /usr/local/zookeeper-3.4.5-cdh5.0.0 /usr/local/zookeeper
 
-3.配置zookeeper，这里配置的是单节点（最好配置成多节点）:
+3.配置zookeeper，这里配置的是单节点（最好配置成多节点）
 
     [root@zookeeper1 ~]# cd /usr/local/zookeeper/conf/
     [root@zookeeper1 conf]# mv zoo_sample.cfg zoo.cfg
@@ -65,7 +65,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     Mode: standalone #说明配置成功
     [root@zookeeper1 bin]#
 
-4.配置防火墙，允许访问2181端口（这里以INPUT规则为例）::
+4.配置防火墙，允许访问2181端口（这里以INPUT规则为例）
 
     [root@zookeeper1 bin]# iptables -A INPUT -p tcp --dport 2181 -j ACCEPT
     [root@zookeeper1 bin]# iptables -L -n | grep 2181
@@ -165,7 +165,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
          节点名列表，通过加@@标识，如：@@gen.game，意思是调用gen.py的game函数生成，gen.py要放在module/common下面
 
 4.文件传输以rsync为例，配置rsync，一定要192.168.4.181的rsync服务已经正确运行了，
-下面给出配置rsync过程，这里我们把rsync也配置到192.168.4.181::
+下面给出配置rsync过程，这里我们把rsync也配置到192.168.4.181
 
     [root@zookeeper1 ~]# useradd swall
     [root@zookeeper1 ~]# mkdir /data/swall_fs
@@ -173,7 +173,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     [root@zookeeper1 ~]# vim /etc/rsyncd.conf
 
 
-（1）rsync配置如下:
+（1）rsync配置如下
 
     secrets file = /etc/rsyncd.secrets
     list = no
@@ -191,25 +191,25 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     auth users = swall
     read only = no
 
-（2）设置rsync密码:
+（2）设置rsync密码
 
     [root@zookeeper1 ~]# echo 'swall:vGjeVUncnbPV8CcZ' > /etc/rsyncd.secrets
     [root@zookeeper1 ~]# chmod 600 /etc/rsyncd.secrets
 
 
-（3）防火墙要允许访问61768端口::
+（3）防火墙要允许访问61768端口
 
     [root@zookeeper1 bin]# iptables -A INPUT -p tcp --dport 61768 -j ACCEPT
     [root@zookeeper1 bin]# iptables -L -n | grep 61768
     ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0           tcp dpt:61768
     [root@zookeeper1 bin]# iptables-save > /etc/sysconfig/iptables
 
-（4）运行rsync::
+（4）运行rsync
 
     [root@zookeeper1 bin]# rsync --port=61768 --config=/etc/rsyncd.conf --daemon
 
 
-（5）测试rsync是否正常服务,登录其他机器，这里以192.168.4.180为例::
+（5）测试rsync是否正常服务,登录其他机器，这里以192.168.4.180为例
 
     [root@swall1 ~]# RSYNC_PASSWORD=vGjeVUncnbPV8CcZ rsync -a --port=61768 --partial /etc/services swall@192.168.8.181::swall_fs/service
     [root@swall1 ~]# echo $?
@@ -220,7 +220,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 
 如上，说明rsync配置成功。
 
-5.在启动swall之前，下面给出一个完整配置示例::
+5.在启动swall之前，下面给出一个完整配置示例
 
     ###swall.conf配置
     [main]
@@ -263,17 +263,17 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     node_name = @@gen.game
 
 
-6.第一次配置swall集群下初始化zookeeper目录::
+6.第一次配置swall集群下初始化zookeeper目录
 
     [root@swall1 ~]# cd /data/swall/bin
     [root@swall1 bin]# ./swall init
 
-7.启动swall节点程序::
+7.启动swall节点程序
 
     [root@swall1 ~]# cd /data/swall/bin
     [root@swall1 bin]# ./swall server start
 
-8.测试命令::
+8.测试命令
 
     [root@swall1 bin]# swall ctl server "*"  sys.ping
     ####################
@@ -285,7 +285,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 五、swall简单用法
 ====================
 
-1.swall的管理工具是swall，使用方法如下:
+1.swall的管理工具是swall，使用方法如下
 
     Usage: cmd.py ctl  <role> [target] <module.function> [arguments]
 
@@ -318,15 +318,15 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 
 3.选项解释
 
-    --exclude：  需要从target刷选的列表中排除，支持通配符和正则
-    --timeout：  设置超时
-    --is_raw:    打印结果需要显示颜色
-    --nthread：  需要多少个线程去执行任务，如果为1，代表一个swall接收到的任务只会在一个线程中执行
-
+    --exclude：     需要从target刷选的列表中排除，支持通配符和正则
+    --timeout：     设置超时
+    --is_raw:       打印结果需要显示颜色
+    --nthread：     需要多少个线程去执行任务，如果为1，代表一个swall接收到的任务只会在一个线程中执行
+    --config_dir：  指定swall配置文件，否则使用默认的配置/data/swall/conf
 
 4.下面演示一些功能函数的使用
 
-（1）查看swall通讯是否正常::
+（1）查看swall通讯是否正常:
 
     [root@swall1 ~]# swall ctl server "*"  sys.ping --timeout=10
     ####################
@@ -340,7 +340,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     一共执行了[6]个
 
     
-（2）拷贝文件到远程::
+（2）拷贝文件到远程:
 
     [root@swall1 ~]# swall ctl server "*"  sys.copy /etc/hosts /tmp/xx_hosts --timeout=10
     ####################
@@ -364,7 +364,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     一共执行了[6]个
     [root@swall1 ~]#
 
-（3）从远程拷贝文件到当前::
+（3）从远程拷贝文件到当前:
 
     [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.get /etc/services /tmp/xxx_service
     ####################
@@ -374,7 +374,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     [root@swall1 ~]#
 
 
-（4）执行shell命令::
+（4）执行shell命令:
 
     [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  cmd.call 'df -h | grep data'
     ####################
@@ -390,8 +390,10 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 
 六、一些问题
 ===================
+1.怎么添加节点到集群呢？
+> 答：只要配置zk.conf好了，启动swall以后会自动添到集群
 
-1.调用模块的时候如果不知道怎么使用模块，不知道传什么参数，怎么办？
+2.调用模块的时候如果不知道怎么使用模块，不知道传什么参数，怎么办？
 > 答：每个函数后面加上 help参数都会打印这个函数使用说明
 > > 
         [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.copy help
@@ -404,7 +406,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
         ####################
         一共执行了[1]个
         
-2.需要查看摸个模块的函数列表，怎么办？
+3.需要查看摸个模块的函数列表，怎么办？
 > 答：提供了一个sys.funcs函数可以解决这个问题，需要输入想要查看的模块名称（不带后缀）
 > > [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.funcs sys
         ####################
@@ -413,10 +415,9 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
         一共执行了[1]个
         [root@swall1 ~]#
         
-3.写好了模块以后要怎么同步到节点呢？
+4.写好了模块以后要怎么同步到节点呢？
 > 答：通过调用sys.rsync_module可以同步模块到节点
 > > 如果写好了模块并且存放如当前节点的/module/{role}，这里的{role}对应你要同步的角色，/module/common是所有角色公用的模块，现在为server同步模块如下:
-
     [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.rsync_module
     ####################
     [server] xyz_sa_server_192.168.8.190 : 1
@@ -431,10 +432,28 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     [root@swall1 ~]#
 
 
+5.如何编写模块？
+> 答：模块编写如下所示：
+> > ==================================
+> > #coding:utf-8
+    from swall.utils import node
+    
+> > @node
+    def ping(*args, **kwargs):
+    return 1
+> > ==================================
+> > 说明：
+    所有模块需要加上node修饰器才可以让swall调用，函数一定要加上kwargs这个关键字扩展参数，swall内部会传一些信息过来，这些
+    信息有:project，agent、role、node_name、node_ip
+    在函数里面可以通过kwargs["project"]等获取这些信息
+    
+> > 写好模块以后保存，例如ping.py，存放到module下对应的角色目录中，通过命令同步到agent，归属于这个角色节点就可以调用该
+> > 函数
+    
 七、详细文档
 ============
 
-http://swall.readthedocs.org/en/latest/index.html
+更多详细和高级用法请参考：http://swall.readthedocs.org/en/latest/index.html
 
 
 
