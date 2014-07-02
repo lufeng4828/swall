@@ -16,7 +16,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 三、安装zookeeper集群
 =========================
 
-1.下载 [jdk-7u55-linux-x64](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
+1.下载 [jdk](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)，这里我以jdk-7u55-linux-x64.gz为例
 
 2.上传jdk-7u55-linux-x64.gz到服务器，解压
 
@@ -93,7 +93,8 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 2.安装swall的依赖包，建议用pip安装
     
     [root@swall1 ~]# cd swall
-    [root@swall1 swall]# pip install -r requirememts.txt 
+    [root@swall1 swall]# pip install -r requirememts.txt
+    注意：如果还没有装pip，centos可以通过yum install python-pip，ubuntu可以通过 apt-get install python-pip安装
     
 3.修改swall配置
 
@@ -103,7 +104,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     #定义角色，多个角色用逗号分开
     node_role = server
     #agent地址，根据具体情况
-    node_ip = 192.168.4.180
+    node_ip = 192.168.7.180
     #缓存路径
     cache = var/cache
     #模块路径
@@ -129,7 +130,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     [root@swall1 conf]# vim zk.conf
     [main]
     #zookeepr地址，支持多个，通过逗号分隔
-    zk_servers = 192.168.4.181:2181
+    zk_servers = 192.168.7.181:2181
     #zookeeper权限管理方式
     zk_scheme = digest
     zk_auth = vcode:swall!@#
@@ -145,7 +146,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     [root@swall1 conf]# vim fs.conf
     [main]
     fs_type = rsync
-    fs_host = 192.168.4.181
+    fs_host = 192.168.7.181
     fs_port = 61768
     fs_user = swall
     fs_pass = vGjeVUncnbPV8CcZ
@@ -160,18 +161,18 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     
     [root@swall1 conf]# vim roles.d/server.conf
     [main]
-    project = vcode
-    agent = sw
-    node_name = %(project)s_%(agent)s_server_172.17.0.4
+    project = swall
+    agent = sa
+    node_name = %(project)s_%(agent)s_server_192.168.7.180
     
     说明：
     （1）如果node_name不是@@格式的，一定要为角色指定project标识，因为公司里面可以有很多项目，这个用来处理多项目的环境
     （2）agent可以认为是二级项目标识，作用和project一样，如果node_name不是@@格式的，就一定要为你的角色指定一个二级标识
-    （3）自定该角色节点名列表，可以写死，多个节点名通过逗号分隔，如：vcode_swc_1,vcode_swc_2，也可以通过模块自动生成
+    （3）自定该角色节点名列表，可以写死，多个节点名通过逗号分隔，如：swall_sa_1,swall_sa_2，也可以通过模块自动生成
          节点名列表，通过加@@标识，如：@@gen.game，意思是调用gen.py的game函数生成，gen.py要放在module/common下面
 
-4.文件传输以rsync为例，配置rsync，一定要192.168.4.181的rsync服务已经正确运行了，
-下面给出配置rsync过程，这里我们把rsync也配置到192.168.4.181
+4.文件传输以rsync为例，配置rsync，一定要192.168.7.181的rsync服务已经正确运行了，
+下面给出配置rsync过程，这里我们把rsync也配置到192.168.7.181
 
     [root@zookeeper1 ~]# useradd swall
     [root@zookeeper1 ~]# mkdir /data/swall_fs
@@ -215,12 +216,12 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     [root@zookeeper1 bin]# rsync --port=61768 --config=/etc/rsyncd.conf --daemon
 
 
-（5）测试rsync是否正常服务,登录其他机器，这里以192.168.4.180为例
+（5）测试rsync是否正常服务,登录其他机器，这里以192.168.7.180为例
 
-    [root@swall1 ~]# RSYNC_PASSWORD=vGjeVUncnbPV8CcZ rsync -a --port=61768 --partial /etc/services swall@192.168.4.181::swall_fs/service
+    [root@swall1 ~]# RSYNC_PASSWORD=vGjeVUncnbPV8CcZ rsync -a --port=61768 --partial /etc/services swall@192.168.7.181::swall_fs/service
     [root@swall1 ~]# echo $?
     0
-    [root@swall1 ~]# RSYNC_PASSWORD=vGjeVUncnbPV8CcZ rsync -a --port=61768 --partial swall@192.168.4.181::swall_fs/service /tmp/service
+    [root@swall1 ~]# RSYNC_PASSWORD=vGjeVUncnbPV8CcZ rsync -a --port=61768 --partial swall@192.168.7.181::swall_fs/service /tmp/service
     [root@swall1 ~]# ll /tmp/service
     -rw-r--r-- 1 root root 640999 Jan 12  2010 /tmp/service
 
@@ -230,8 +231,8 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 
     ###swall.conf配置
     [main]
-    node_role = game,server
-    node_ip = 192.168.8.180
+    node_role = server
+    node_ip = 192.168.7.180
     cache = var/cache
     module = module/
     backup = var/backup
@@ -243,7 +244,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 
     ###fs.conf配置
     fs_type = rsync
-    fs_host = 192.168.4.181
+    fs_host = 192.168.7.181
     fs_port = 61768
     fs_user = swall
     fs_pass = vGjeVUncnbPV8CcZ
@@ -252,7 +253,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 
     ###zk.conf配置
     [main]
-    zk_servers = 192.168.4.181:2181
+    zk_servers = 192.168.7.181:2181
     zk_scheme = digest
     zk_auth = vcode:swall!@#
     root=/swall
@@ -262,7 +263,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     [main]
     project = swall
     agent = sa
-    node_name = %(project)s_%(agent)s_server_192.168.8.180
+    node_name = %(project)s_%(agent)s_server_192.168.7.180
 
     ###roles.d/game.conf配置
     [main]
@@ -289,7 +290,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 
     [root@swall1 bin]# swall ctl server "*"  sys.ping
     ####################
-    [server] xyz_sa_server_192.168.8.180 : 1
+    [server] swall_sa_server_192.168.7.180 : 1
     ####################
     一共执行了[1]个
     
@@ -336,18 +337,18 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     --nthread：     需要多少个线程去执行任务，如果为1，代表一个swall接收到的任务只会在一个线程中执行
     --config_dir：  指定swall配置文件，否则使用默认的配置/data/swall/conf
 
-4.下面演示一些功能函数的使用
+4.下面演示一些功能函数的使用，假设已经配置了N个节点了
 
 （1）查看swall通讯是否正常:
 
     [root@swall1 ~]# swall ctl server "*"  sys.ping --timeout=10
     ####################
-    [server] xyz_sa_server_192.168.8.190 : 1
-    [server] xyz_sa_server_192.168.8.191 : 1
-    [server] xyz_sa_server_192.168.8.195 : 1
-    [server] xyz_sa_server_192.168.8.198 : 1
-    [server] xyz_sa_server_192.168.8.203 : 1
-    [server] xyz_sa_server_192.168.8.180 : 1
+    [server] swall_sa_server_192.168.7.190 : 1
+    [server] swall_sa_server_192.168.7.191 : 1
+    [server] swall_sa_server_192.168.7.195 : 1
+    [server] swall_sa_server_192.168.7.198 : 1
+    [server] swall_sa_server_192.168.7.203 : 1
+    [server] swall_sa_server_192.168.7.180 : 1
     ####################
     一共执行了[6]个
 
@@ -356,31 +357,31 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 
     [root@swall1 ~]# swall ctl server "*"  sys.copy /etc/hosts /tmp/xx_hosts --timeout=10
     ####################
-    [server] xyz_sa_server_192.168.8.190 : 1
-    [server] xyz_sa_server_192.168.8.191 : 1
-    [server] xyz_sa_server_192.168.8.195 : 1
-    [server] xyz_sa_server_192.168.8.198 : 1
-    [server] xyz_sa_server_192.168.8.203 : 1
-    [server] xyz_sa_server_192.168.8.180 : 1
+    [server] swall_sa_server_192.168.7.190 : 1
+    [server] swall_sa_server_192.168.7.191 : 1
+    [server] swall_sa_server_192.168.7.195 : 1
+    [server] swall_sa_server_192.168.7.198 : 1
+    [server] swall_sa_server_192.168.7.203 : 1
+    [server] swall_sa_server_192.168.7.180 : 1
     ####################
     一共执行了[6]个
     [root@swall1 ~]# swall ctl server "*"  sys.copy /etc/hosts /tmp/xx_hosts ret_type=full --timeout=10
     ####################
-    [server] xyz_sa_server_192.168.8.190 : /tmp/xx_hosts
-    [server] xyz_sa_server_192.168.8.191 : /tmp/xx_hosts
-    [server] xyz_sa_server_192.168.8.195 : /tmp/xx_hosts
-    [server] xyz_sa_server_192.168.8.198 : /tmp/xx_hosts
-    [server] xyz_sa_server_192.168.8.203 : /tmp/xx_hosts
-    [server] xyz_sa_server_192.168.8.180 : /tmp/xx_hosts
+    [server] swall_sa_server_192.168.7.190 : /tmp/xx_hosts
+    [server] swall_sa_server_192.168.7.191 : /tmp/xx_hosts
+    [server] swall_sa_server_192.168.7.195 : /tmp/xx_hosts
+    [server] swall_sa_server_192.168.7.198 : /tmp/xx_hosts
+    [server] swall_sa_server_192.168.7.203 : /tmp/xx_hosts
+    [server] swall_sa_server_192.168.7.180 : /tmp/xx_hosts
     ####################
     一共执行了[6]个
     [root@swall1 ~]#
 
 （3）从远程拷贝文件到当前:
 
-    [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.get /etc/services /tmp/xxx_service
+    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.7.190"  sys.get /etc/services /tmp/xxx_service
     ####################
-    [server] xyz_sa_server_192.168.8.190 : /tmp/xxx_service
+    [server] swall_sa_server_192.168.7.190 : /tmp/xxx_service
     ####################
     一共执行了[1]个
     [root@swall1 ~]#
@@ -388,14 +389,14 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 
 （4）执行shell命令:
 
-    [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  cmd.call 'df -h | grep data'
+    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.7.190"  cmd.call 'df -h | grep data'
     ####################
-    [server] xyz_sa_server_192.168.8.190 : {'pid': 5329, 'retcode': 0, 'stderr': None, 'stdout': '/dev/sda5              73G   15G   55G  21% /data'}
+    [server] swall_sa_server_192.168.7.190 : {'pid': 5329, 'retcode': 0, 'stderr': None, 'stdout': '/dev/sda5              73G   15G   55G  21% /data'}
     ####################
 
-    [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  cmd.call 'df -h | grep data' ret_type=stdout
+    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.7.190"  cmd.call 'df -h | grep data' ret_type=stdout
     ####################
-    [server] xyz_sa_server_192.168.8.190 : /dev/sda5              73G   15G   55G  21% /data
+    [server] swall_sa_server_192.168.7.190 : /dev/sda5              73G   15G   55G  21% /data
     ####################
     一共执行了[1]个
     [root@swall1 ~]#
@@ -408,9 +409,9 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 2.调用模块的时候如果不知道怎么使用模块，不知道传什么参数，怎么办？
 > 答：每个函数后面加上 help参数都会打印这个函数使用说明
 > > 
-    [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.copy help
+    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.7.190"  sys.copy help
     ####################
-    [server] xyz_sa_server_192.168.8.190 :
+    [server] swall_sa_server_192.168.7.190 :
         def copy(*args, **kwargs) -> 拷贝文件到远程 可以增加一个ret_type=full，支持返回文件名
         @param args list:支持位置参数，例如 sys.copy /etc/src.tar.gz /tmp/src.tar.gz ret_type=full
         @param kwargs dict:支持关键字参数，例如sys.copy local_path=/etc/src.tar.gz remote_path=/tmp/src.tar.gz
@@ -421,9 +422,9 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 3.需要查看摸个模块的函数列表，怎么办？
 > 答：提供了一个sys.funcs函数可以解决这个问题，需要输入想要查看的模块名称（不带后缀）
 > > 
-    [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.funcs sys
+    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.7.190"  sys.funcs sys
     ####################
-    [server] xyz_sa_server_192.168.8.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
+    [server] swall_sa_server_192.168.7.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
     ####################
     一共执行了[1]个
     [root@swall1 ~]#
@@ -434,17 +435,17 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 > > 如果写好了模块并且存放如当前节点的/module/{role}，这里的{role}对应你要同步的角色，/module/common是所有角色公用的模块，现在为server同步模块如下:
 
 > >  
-    [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.rsync_module
+    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.7.190"  sys.rsync_module
     ####################
-    [server] xyz_sa_server_192.168.8.190 : 1
+    [server] swall_sa_server_192.168.7.190 : 1
     ####################
     一共执行了[1]个
     
 > > 支持同步个别模块，多个需要用逗号分隔：
 > > 
-    [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.rsync_module server_tools.py
+    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.7.190"  sys.rsync_module server_tools.py
     ####################
-    [server] xyz_sa_server_192.168.8.190 : 1
+    [server] swall_sa_server_192.168.7.190 : 1
     ####################
     一共执行了[1]个
     [root@swall1 ~]#
