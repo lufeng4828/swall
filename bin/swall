@@ -1,9 +1,23 @@
-#/bin/bash
+#!/usr/bin/env python
+#coding:utf-8
 
-__author__='lufeng4828@163.com'
+__author__ = 'lufeng4828@163.com'
 
-#新增Python路径
-cur_dir=`pwd`
-export PYTHONPATH=${cur_dir%/*}:$PYTHONPATH
-#运行主程序
-python ../swall/cmd.py "$@"
+import sys
+from swall.parser import SwallAgent, Swall
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+
+def swall_agent():
+    """
+    manage the swall agent
+    """
+    agent = SwallAgent()
+    agent.main()
+
+
+if __name__ == "__main__":
+    swall = Swall()
+    swall.main()

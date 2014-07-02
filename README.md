@@ -87,6 +87,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 1.下载最新版本swall
 
     [root@swall1 ~]# mkdir /data
+    [root@swall1 ~]# cd /data
     [root@swall1 data]# git clone https://github.com/lufeng4828/swall.git
 
 2.安装swall的依赖包，建议用pip安装
@@ -268,17 +269,23 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     node_name = @@gen.game
 
 
-6.第一次配置swall集群下初始化zookeeper目录
+6.新增PATH和PYTHONPATH路径
+
+    [root@swall1 ~]# export PATH=/data/swall/bin:$PATH
+    [root@swall1 ~]# export PYTHONPATH=/data/swall:$PYTHONPATH
+    [root@swall1 ~]# #备注：最好把着两个环境变量写入配置文件
+
+7.第一次配置swall集群下初始化zookeeper目录
 
     [root@swall1 ~]# cd /data/swall/bin
     [root@swall1 bin]# ./swall manage init
 
-7.启动swall节点程序
+8.启动swall节点程序
 
     [root@swall1 ~]# cd /data/swall/bin
     [root@swall1 bin]# ./swall server start
 
-8.测试命令
+9.测试命令
 
     [root@swall1 bin]# swall ctl server "*"  sys.ping
     ####################
