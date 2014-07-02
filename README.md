@@ -169,7 +169,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 
     [root@zookeeper1 ~]# useradd swall
     [root@zookeeper1 ~]# mkdir /data/swall_fs
-    [root@zookeeper1 ~]# chown -R swall:swall
+    [root@zookeeper1 ~]# chown -R swall:swall /data/swall_fs
     [root@zookeeper1 ~]# vim /etc/rsyncd.conf
 
 

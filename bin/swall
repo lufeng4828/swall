@@ -2,4 +2,8 @@
 
 __author__='lufeng4828@163.com'
 
+#新增Python路径
+cur_dir=`pwd`
+export PYTHONPATH=${cur_dir%/*}:$PYTHONPATH
+#运行主程序
 python ../swall/cmd.py $*
