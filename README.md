@@ -8,12 +8,12 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 ------------------------
 
 
-下载 http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html（选择jdk-7u55-linux-x64.gz进行下载）
+下载[jdk-7u55-linux-x64](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 
 上传jdk-7u55-linux-x64.gz到服务器，解压::
 
     [root@zookeeper1 ~]# tar xf jdk-7u55-linux-x64.gz -C /usr/local/
-    [root@zookeeper1 ~]# ls /usr/zookeeper/
+    [root@zookeeper1 ~]# ls /usr/local/
     /usr/local/jdk1.7.0_55
     [root@zookeeper1 ~]# mv /usr/local/jdk1.7.0_55 /usr/local/java
     [root@zookeeper1 ~]#
