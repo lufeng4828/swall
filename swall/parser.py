@@ -8,6 +8,7 @@ import logging
 import optparse
 from swall.utils import c, \
     daemonize, \
+    app_abs_path, \
     parse_args_and_kwargs, \
     color, \
     sort_ret, \
@@ -128,8 +129,9 @@ class BaseOptionParser(optparse.OptionParser, object):
 
 class ConfParser(BaseOptionParser):
     def setup_config(self):
-        opts = {f: agent_config(self.get_config_file_path("%s.conf" % f))
-                for f in ('swall', 'zk', 'fs')}
+        opts = {}
+        for f in ('swall', 'zk', 'fs'):
+            opts[f] = agent_config(self.get_config_file_path("%s.conf" % f))
         return opts
 
     def __merge_config_with_cli(self, *args):
@@ -429,7 +431,7 @@ class SwallAgent(ServerParser):
         restart server
         """
         self.daemonize_if_required()
-        logger.setup_file_logger(self.config["swall"]["log_file"], self.config["swall"]["log_level"])
+        logger.setup_file_logger(app_abs_path(self.config["swall"]["log_file"]), self.config["swall"]["log_level"])
         try:
             sagent = Agent(self.config)
             self.set_pidfile()

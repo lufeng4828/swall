@@ -475,7 +475,8 @@ def load_config(conf_path):
     confparser = ConfigParser()
     if os.path.exists(conf_path):
         confparser.read(conf_path)
-        opts = {k: v for k, v in confparser.items("main")}
+        for k, v in confparser.items("main"):
+            opts[k] = v
     return opts
 
 

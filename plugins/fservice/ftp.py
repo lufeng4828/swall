@@ -41,7 +41,7 @@ class FTPClient(BFClient):
             f = open(upload_path, 'rb')
             self.ftp.storbinary('STOR %s' % ftp_path, f, BLOCK_SIZE)
         except :
-            log.logger.error(traceback.format_exc())
+            log.error(traceback.format_exc())
             return 0
         return 1
 
@@ -69,7 +69,7 @@ class FTPClient(BFClient):
             f = open(to_path, 'wb').write
             self.ftp.retrbinary('RETR %s' % ftp_file, f, BLOCK_SIZE)
         except :
-            log.logger.error(traceback.format_exc())
+            log.error(traceback.format_exc())
             return 0
         return 1
 
