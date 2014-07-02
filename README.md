@@ -285,7 +285,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 五、swall简单用法
 ====================
 
-1.swall的管理工具是swall，使用方法如下
+1.swall的管理工具是bin/swall，这个脚本调用的是swall/cmd.py 使用方法如下
 
     Usage: cmd.py ctl  <role> [target] <module.function> [arguments]
 
