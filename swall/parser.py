@@ -7,6 +7,7 @@ import logger
 import logging
 import optparse
 from swall.utils import c, \
+    dict_print, \
     daemonize, \
     app_abs_path, \
     parse_args_and_kwargs, \
@@ -259,9 +260,9 @@ class MainParser(object):
 A approach to infrastructure management.
 
   Commands:
-    server     manage a agent server:start,stop,restart
+    server     Manage a agent server:start,stop,restart
     ctl        Send functions to swall server
-    init       init zookeeper db for swall server
+    manage     Tools to manage the swall cluster
 
 """
 
@@ -315,6 +316,22 @@ Run swall server.
     stop        stop swall server
     restart     restart swall server
     status      show the status of the swall server
+
+"""
+
+
+class ManageParser(ConfParser, ConfMin):
+    __metaclass__ = OptionParserMeta
+
+    def __init__(self, *args, **kwargs):
+        super(ManageParser, self).__init__(*args, **kwargs)
+        self.usage = '%prog manage  [OPTIONS] COMMAND'
+        self.description = """
+Manage tool for  swall server.
+
+  Commands:
+    init       Init zookeeper db for swall server
+    info       Show same information for swall
 
 """
 
@@ -381,6 +398,38 @@ class Ctl(CtlParser):
         else:
             index = 0
         print "一共执行了[%s]个" % color(index)
+
+
+class SwallManage(ManageParser):
+    def main(self):
+        self.parse_args()
+
+        if not sys.argv[2:]:
+            self.print_help()
+            sys.exit(1)
+        cmd = sys.argv[2]
+        self._sub_commands(cmd)
+
+    def _sub_commands(self, cmd):
+        if cmd == "init":
+            init = ZKInit()
+            init.main()
+        elif cmd == "info":
+            self._show_info()
+        else:
+            self.print_help()
+
+    def _show_info(self):
+        """
+        显示swall信息
+        """
+        keeper = Keeper(self.config)
+        valid_nodes = keeper.get_valid_nodes()
+        info = {
+            "config": self.config,
+            "node_list": valid_nodes
+        }
+        dict_print(info)
 
 
 class SwallAgent(ServerParser):
@@ -477,9 +526,9 @@ class Swall(MainParser):
         if cmd == "server":
             agent = SwallAgent()
             agent.main()
-        elif cmd == "init":
-            init = ZKInit()
-            init.main()
+        elif cmd == "manage":
+            manger = SwallManage()
+            manger.main()
         elif cmd == "ctl":
             ctl = Ctl()
             ctl.main()

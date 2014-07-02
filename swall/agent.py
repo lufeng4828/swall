@@ -160,7 +160,6 @@ class Agent(ZKDb):
                 "sys.copy": self._copy,
                 "sys.get": self._get,
                 "sys.exprs": self.exprs,
-                "sys.job_info": self.job_info,
                 "sys.rsync_module": self._rsync_module,
                 "sys.reload_node": self._reload_node,
                 "sys.ping": self.ping,
@@ -208,27 +207,6 @@ class Agent(ZKDb):
             return 1
         else:
             return 0
-
-    def job_info(self, jid, *args, **kwargs):
-        """
-        def job_info(self, jid, *args, **kwargs) -> 获取任务信息
-        @param jid:任务id
-        return dict:
-        """
-        role = kwargs["role"]
-        node_name = kwargs["node_name"]
-        node_base_dir = self.zookeeper_conf.nodes
-        jid_path = os.path.join(node_base_dir, role, node_name, "jobs", jid)
-        zk = self.zkconn
-        payload = {}
-        if zk.exists(jid_path):
-            job = self.zkconn.get(jid_path)[0]
-            data = msgpack.loads(job)
-            if data["env"] == "aes":
-                key_str = self.main_conf.token
-                crypt = Crypt(key_str)
-                payload = crypt.loads(data.get("payload"))
-        return payload
 
     def _version(self, *args, **kargs):
         """

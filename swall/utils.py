@@ -5,6 +5,7 @@ import re
 import sys
 import imp
 import time
+import json
 import traceback
 import hashlib
 import functools
@@ -743,3 +744,14 @@ def sort_ret(rets):
     for i in t:
         list_result.append(i["info"])
     return list_result
+
+
+def dict_print(obj):
+    """
+    格式化字典的输出
+    """
+    outfile = sys.stdout
+    with outfile:
+        json.dump(obj, outfile, sort_keys=True,
+                  indent=4, separators=(',', ': '))
+        outfile.write('\n')

@@ -4,9 +4,8 @@
 swall是一个基于zookeeper实现的分布式基础信息管理系统（Infrastructure Management）可以用于管理特别是架构比较灵活的服务，比如游戏。用swall，你不用登陆到具体的服务器去操作，你指需要在一台机器上面就可以完成服务管理，比如获取服务器监控信息、执行shell命令等等，你还可以方便的实现自动化配置，一条命令实现所有应用的部署不再是难题。
 
 
-二、安装jdk和配置java环境
+二、安装zookeeper集群
 =========================
-
 
 1.下载 [jdk-7u55-linux-x64](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 
@@ -35,19 +34,16 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     Java HotSpot(TM) 64-Bit Server VM (build 24.55-b03, mixed mode)
 
 
-三、安装zookeeper集群
-===========================
+5.下载 [zookeeper-3.4.5-cdh5.0.0](http://archive.cloudera.com/cdh5/cdh/5/zookeeper-3.4.5-cdh5.0.0.tar.gz)
 
-1.下载 [zookeeper-3.4.5-cdh5.0.0](http://archive.cloudera.com/cdh5/cdh/5/zookeeper-3.4.5-cdh5.0.0.tar.gz)
-
-2.上传zookeeper-3.4.5-cdh5.0.0.tar.gz到服务器，解压
+6.上传zookeeper-3.4.5-cdh5.0.0.tar.gz到服务器，解压
 
     [root@zookeeper1 ~]# tar xf zookeeper-3.4.5-cdh5.0.0.tar.gz -C /usr/local/
     [root@zookeeper1 ~]# ls -d /usr/local/zookeeper-3.4.5-cdh5.0.0
     /usr/local/zookeeper-3.4.5-cdh5.0.0
     [root@zookeeper1 ~]# mv /usr/local/zookeeper-3.4.5-cdh5.0.0 /usr/local/zookeeper
 
-3.配置zookeeper，这里配置的是单节点（最好配置成多节点）
+7.配置zookeeper，这里配置的是单节点（最好配置成多节点）
 
     [root@zookeeper1 ~]# cd /usr/local/zookeeper/conf/
     [root@zookeeper1 conf]# mv zoo_sample.cfg zoo.cfg
@@ -65,7 +61,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     Mode: standalone #说明配置成功
     [root@zookeeper1 bin]#
 
-4.配置防火墙，允许访问2181端口（这里以INPUT规则为例）
+8.配置防火墙，允许访问2181端口（这里以INPUT规则为例）
 
     [root@zookeeper1 bin]# iptables -A INPUT -p tcp --dport 2181 -j ACCEPT
     [root@zookeeper1 bin]# iptables -L -n | grep 2181
@@ -76,7 +72,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     [root@zookeeper1 bin]# 
 
 
-四、安装swall
+三、安装swall
 =========================
 
 1.下载最新版本swall
@@ -266,7 +262,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 6.第一次配置swall集群下初始化zookeeper目录
 
     [root@swall1 ~]# cd /data/swall/bin
-    [root@swall1 bin]# ./swall init
+    [root@swall1 bin]# ./swall manage init
 
 7.启动swall节点程序
 
@@ -282,7 +278,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     一共执行了[1]个
     
     
-五、swall简单用法
+四、swall简单用法
 ====================
 
 1.swall的管理工具是bin/swall，这个脚本调用的是swall/cmd.py 使用方法如下
@@ -388,7 +384,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     一共执行了[1]个
     [root@swall1 ~]#
 
-六、一些问题
+五、一些问题
 ===================
 1.怎么添加节点到集群呢？
 > 答：只要配置zk.conf好了，启动swall以后会自动添到集群
@@ -458,7 +454,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 > > 写好模块以后保存，例如ping.py，存放到module下对应的角色目录中，通过命令同步到agent，归属于这个角色节点就可以调用该
 > > 函数
     
-七、更多详细文档和案例
+六、更多详细文档和案例
 ============
 
 更多详细和高级用法请参考：http://swall.readthedocs.org/en/latest/index.html
