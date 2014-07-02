@@ -6,4 +6,4 @@ __author__='lufeng4828@163.com'
 cur_dir=`pwd`
 export PYTHONPATH=${cur_dir%/*}:$PYTHONPATH
 #运行主程序
-python ../swall/cmd.py $*
+python ../swall/cmd.py "$@"
