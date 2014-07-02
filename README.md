@@ -397,8 +397,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 > 答：每个函数后面加上 help参数都会打印这个函数使用说明
 > > 
 > > [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.copy help
-> 
-    ####################
+    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 >  
     [server] xyz_sa_server_192.168.8.190 :
         def copy(*args, **kwargs) -> 拷贝文件到远程 可以增加一个ret_type=full，支持返回文件名
@@ -406,13 +405,14 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
         @param kwargs dict:支持关键字参数，例如sys.copy local_path=/etc/src.tar.gz remote_path=/tmp/src.tar.gz
         @return int:1 if success else 0
 > 
-    ####################
+    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     一共执行了[1]个
         
 3.需要查看摸个模块的函数列表，怎么办？
 > 答：提供了一个sys.funcs函数可以解决这个问题，需要输入想要查看的模块名称（不带后缀）
 > > 
-> > [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.funcs sys
+>  
+    [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.funcs sys
 >  
 > > \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
 > 
@@ -427,19 +427,18 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 > 答：通过调用sys.rsync_module可以同步模块到节点
 > > 如果写好了模块并且存放如当前节点的/module/{role}，这里的{role}对应你要同步的角色，/module/common是所有角色公用的模块，现在为server同步模块如下:
 
-> > [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.rsync_module
-
-> > ####################
+> >  
+    [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.rsync_module
+> > \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     [server] xyz_sa_server_192.168.8.190 : 1
-    ####################
+    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     一共执行了[1]个
     支持同步个别模块，多个需要用逗号分隔：
     
 > > [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.rsync_module server_tools.py
-    
-> > ####################
+> > \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     [server] xyz_sa_server_192.168.8.190 : 1
-    ####################
+    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     一共执行了[1]个
     [root@swall1 ~]#
 
