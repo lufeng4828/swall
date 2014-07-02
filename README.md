@@ -397,14 +397,13 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 > 答：每个函数后面加上 help参数都会打印这个函数使用说明
 > > 
     [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.copy help
-    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+    ####################
     [server] xyz_sa_server_192.168.8.190 :
         def copy(*args, **kwargs) -> 拷贝文件到远程 可以增加一个ret_type=full，支持返回文件名
         @param args list:支持位置参数，例如 sys.copy /etc/src.tar.gz /tmp/src.tar.gz ret_type=full
         @param kwargs dict:支持关键字参数，例如sys.copy local_path=/etc/src.tar.gz remote_path=/tmp/src.tar.gz
         @return int:1 if success else 0
-> 
-    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+    ####################
     一共执行了[1]个
         
 3.需要查看摸个模块的函数列表，怎么办？
@@ -430,7 +429,6 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     一共执行了[1]个
     
 > > 支持同步个别模块，多个需要用逗号分隔：
-    
 > > 
     [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.rsync_module server_tools.py
     ####################
@@ -449,8 +447,8 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     from swall.utils import node
 > >   
     @node
-     def ping(*args, **kwargs):
-    return 1
+    def ping(*args, **kwargs):
+        return 1
 
 > > 说明：
     所有模块需要加上node修饰器才可以让swall调用，函数一定要加上kwargs这个关键字扩展参数，swall内部会传一些信息过来，这些
