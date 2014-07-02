@@ -411,10 +411,9 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 > 答：提供了一个sys.funcs函数可以解决这个问题，需要输入想要查看的模块名称（不带后缀）
 > > 
     [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.funcs sys
-    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+    \####################
     [server] xyz_sa_server_192.168.8.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
->
-    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+    \####################
     一共执行了[1]个
     [root@swall1 ~]#
         
