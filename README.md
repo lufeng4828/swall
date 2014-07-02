@@ -396,9 +396,8 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 2.调用模块的时候如果不知道怎么使用模块，不知道传什么参数，怎么办？
 > 答：每个函数后面加上 help参数都会打印这个函数使用说明
 > > 
-> > [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.copy help
+    [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.copy help
     \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
->  
     [server] xyz_sa_server_192.168.8.190 :
         def copy(*args, **kwargs) -> 拷贝文件到远程 可以增加一个ret_type=full，支持返回文件名
         @param args list:支持位置参数，例如 sys.copy /etc/src.tar.gz /tmp/src.tar.gz ret_type=full
@@ -411,13 +410,10 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 3.需要查看摸个模块的函数列表，怎么办？
 > 答：提供了一个sys.funcs函数可以解决这个问题，需要输入想要查看的模块名称（不带后缀）
 > > 
->  
     [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.funcs sys
->  
-> > \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+    [server] xyz_sa_server_192.168.8.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
 > 
-> > [server] xyz_sa_server_192.168.8.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
-    
 > > \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     一共执行了[1]个
     [root@swall1 ~]#
@@ -429,14 +425,15 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 
 > >  
     [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.rsync_module
-> > \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     [server] xyz_sa_server_192.168.8.190 : 1
     \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     一共执行了[1]个
     支持同步个别模块，多个需要用逗号分隔：
     
-> > [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.rsync_module server_tools.py
-> > \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+> > 
+    [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.rsync_module server_tools.py
+    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     [server] xyz_sa_server_192.168.8.190 : 1
     \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     一共执行了[1]个
