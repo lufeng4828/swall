@@ -413,8 +413,8 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     [root@swall1 ~]# swall ctl server "xyz_sa_server_192.168.8.190"  sys.funcs sys
     \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     [server] xyz_sa_server_192.168.8.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
-> 
-> > \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
+>
+    \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
     一共执行了[1]个
     [root@swall1 ~]#
         
