@@ -217,10 +217,10 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
 
 （5）测试rsync是否正常服务,登录其他机器，这里以192.168.4.180为例
 
-    [root@swall1 ~]# RSYNC_PASSWORD=vGjeVUncnbPV8CcZ rsync -a --port=61768 --partial /etc/services swall@192.168.8.181::swall_fs/service
+    [root@swall1 ~]# RSYNC_PASSWORD=vGjeVUncnbPV8CcZ rsync -a --port=61768 --partial /etc/services swall@192.168.4.181::swall_fs/service
     [root@swall1 ~]# echo $?
     0
-    [root@swall1 ~]# RSYNC_PASSWORD=vGjeVUncnbPV8CcZ rsync -a --port=61768 --partial swall@192.168.8.181::swall_fs/service /tmp/service
+    [root@swall1 ~]# RSYNC_PASSWORD=vGjeVUncnbPV8CcZ rsync -a --port=61768 --partial swall@192.168.4.181::swall_fs/service /tmp/service
     [root@swall1 ~]# ll /tmp/service
     -rw-r--r-- 1 root root 640999 Jan 12  2010 /tmp/service
 
