@@ -458,7 +458,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 > > 写好模块以后保存，例如ping.py，存放到module下对应的角色目录中，通过命令同步到agent，归属于这个角色节点就可以调用该
 > > 函数
     
-七、详细文档
+七、更多详细文档和案例
 ============
 
 更多详细和高级用法请参考：http://swall.readthedocs.org/en/latest/index.html
