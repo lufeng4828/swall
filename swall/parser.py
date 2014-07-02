@@ -9,7 +9,6 @@ import optparse
 from swall.utils import c, \
     daemonize, \
     parse_args_and_kwargs, \
-    app_abs_path, \
     color, \
     sort_ret, \
     kill_daemon, \
@@ -225,23 +224,29 @@ class CtlMin(object):
         group.add_option('-e', '--exclude',
                          default='',
                          dest='exclude',
-                         help='specify the exclude hosts by regix'
+                         help='Specify the exclude hosts by regix'
         )
         group.add_option('-t', '--timeout',
                          default=30,
                          dest='timeout',
-                         help='specify the timeout,the unit is second'
+                         help='Specify the timeout,the unit is second'
         )
         group.add_option('-r', '--is_raw',
                          action="store_true",
                          default=False,
                          dest='is_raw',
-                         help='specify the raw output'
+                         help='Specify the raw output'
         )
         group.add_option('-n', '--nthread',
                          default=-1,
                          dest='nthread',
-                         help='specify running nthread'
+                         help='Specify running nthread'
+        )
+        group.add_option('-F', '--no_format',
+                         action="store_true",
+                         default=False,
+                         dest='no_format',
+                         help='Do not format the output'
         )
 
 
@@ -337,7 +342,7 @@ class Ctl(CtlParser):
         if len(args) < 2:
             self.print_help()
             sys.exit(1)
-        #解析参数，获取位置参数和关键字参数
+            #解析参数，获取位置参数和关键字参数
         args, kwargs = parse_args_and_kwargs(args)
         rets = job.submit_job(
             cmd=args[2],
@@ -352,22 +357,22 @@ class Ctl(CtlParser):
         if rets.get("extra_data"):
             rets = sort_ret(rets.get("extra_data"))
         else:
-            print c('#' * 20, 'y')
+            print c('#' * 50, 'y')
             print color(rets.get("msg"), 'r')
-            print c('#' * 20, 'y')
+            print c('#' * 50, 'y')
             sys.exit(1)
-
         if not self.options.is_raw:
-            format_ret = enumerate([u"%s %s : %s" % (u"[%s]" % c(ret[0], 'y'), c(ret[1], 'g'), color(ret[2])) for ret in rets])
+            format_ret = enumerate(
+                [u"%s %s : %s" % (u"[%s]" % c(ret[0], 'y'), c(ret[1], 'g'), color(ret[2])) for ret in rets])
         else:
-            format_ret = enumerate([u"%s %s : %s" % (u"[%s]" % ret[0], ret[1], ret[2]) for ret in rets])
-
-        print c('#' * 20, 'y')
+            format_ret = enumerate(
+                [u"%s %s : %s" % (u"[%s]" % ret[0], ret[1], ret[2]) for ret in rets])
+        print c('#' * 50, 'y')
 
         for index, item in format_ret:
             print item.encode("utf-8")
 
-        print c('#' * 20, 'y')
+        print c('#' * 50, 'y')
 
         if locals().get('index') >= 0:
             index += 1

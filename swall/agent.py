@@ -33,7 +33,7 @@ from swall.excpt import SwallCommandExecutionError
 log = logging.getLogger()
 
 QUEUE_SIZE = 20000
-THREAD_NUM = 20
+THREAD_NUM = 10
 
 
 class Agent(ZKDb):
@@ -414,7 +414,7 @@ class Agent(ZKDb):
                 q.put(("add", node_name, curr_nodes[node_name]), timeout=5)
             for node_name in del_nodes:
                 q.put(("del", node_name, self.nodes[node_name]), timeout=5)
-            time.sleep(5)
+            time.sleep(6)
 
     @thread(pnum=1)
     def crond_clear_job(self):
@@ -453,7 +453,7 @@ class Agent(ZKDb):
                                                                                       data["payload"]["status"], jid))
             except:
                 log.error(traceback.format_exc())
-            time.sleep(3)
+            time.sleep(5)
 
     @thread(pnum=1)
     def loop_tos(self):
@@ -476,7 +476,7 @@ class Agent(ZKDb):
                         zkcli.create(os.path.join(node_path, "tos"), flags=zookeeper.EPHEMERAL)
             except:
                 log.error(traceback.format_exc())
-            time.sleep(3)
+            time.sleep(5)
 
     @thread(pnum=1)
     def node_watcher(self):
@@ -507,7 +507,7 @@ class Agent(ZKDb):
                 q = self.queues["reg_node"]
                 zkconn = self.zkconn
                 if q.empty():
-                    time.sleep(1)
+                    time.sleep(0.5)
                     if self.zkepoch and zkconn.epoch != self.zkepoch:
                         log.info("start rewatch")
                         rewatch()
@@ -548,7 +548,7 @@ class Agent(ZKDb):
             if self.locks["get_job"].acquire():
                 if self.queues["get_job"].empty():
                     self.locks["get_job"].release()
-                    time.sleep(1)
+                    time.sleep(0.5)
                     continue
                 dist_role, dist_node, jid = self.queues["get_job"].get(timeout=5)
                 self.queues["get_job"].task_done()
@@ -597,6 +597,7 @@ class Agent(ZKDb):
                 if self.queues["sigle_run"].empty():
                     time.sleep(1)
                     continue
+                log.info("single_run_job start")
                 data = msgpack.loads(self.queues["sigle_run"].get(timeout=5))
                 role, cmd, node_name = data["payload"]["role"], data["payload"]["cmd"], data["payload"][
                     "node_name"]
@@ -673,7 +674,7 @@ class Agent(ZKDb):
             if self.locks["mult_run"].acquire():
                 if self.queues["mult_run"].empty():
                     self.locks["mult_run"].release()
-                    time.sleep(1)
+                    time.sleep(0.5)
                     continue
                 data = msgpack.loads(self.queues["mult_run"].get(timeout=5))
                 self.queues["mult_run"].task_done()
@@ -745,7 +746,7 @@ class Agent(ZKDb):
             if self.locks["ret_job"].acquire():
                 if self.queues["ret_job"].empty():
                     self.locks["ret_job"].release()
-                    time.sleep(1)
+                    time.sleep(0.5)
                     continue
                 data = msgpack.loads(self.queues["ret_job"].get(timeout=5))
                 self.queues["ret_job"].task_done()
@@ -792,5 +793,5 @@ class Agent(ZKDb):
         while 1:
             if self._stop:
                 break
-            time.sleep(3)
+            time.sleep(5)
 

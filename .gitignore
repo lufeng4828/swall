@@ -2,8 +2,6 @@
 *.pyo
 *.7z
 *.dmg
-*.conf
-*.log
 *.gz
 *.iso
 *.jar
