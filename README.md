@@ -1,10 +1,19 @@
 一、概述
 ============
 
-swall是一个基于zookeeper实现的分布式基础信息管理系统（Infrastructure Management）可以用于管理特别是架构比较灵活的服务，比如游戏。用swall，你不用登陆到具体的服务器去操作，你指需要在一台机器上面就可以完成服务管理，比如获取服务器监控信息、执行shell命令等等，你还可以方便的实现自动化配置，一条命令实现所有应用的部署不再是难题。
+swall是一个基于zookeeper实现的分布式基础信息管理系统（Infrastructure Management）可以用于管理特别是架构比较灵活的服务，比如游戏。用swall，
+你不用登陆到具体的服务器去操作，你指需要在一台机器上面就可以完成服务管理，比如获取服务器监控信息、执行shell命令等等，你还可以方便的实现自动化配置，一条命令实现所有应用的部署不再是难题。
 
 
-二、安装zookeeper集群
+二、Swall原理
+==============
+
+swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存储敏感的状态信息，并提供一系列机制来操作这些信息，swall主要利用的是zookeeper
+的watcher功能，就是当某个数据变化的时候会提供一个机制来实现通知，那么swall主要架构很简单了：
+![image](https://raw.githubusercontent.com/lufeng4828/swall_doc/master/swall-arch.png)
+
+
+三、安装zookeeper集群
 =========================
 
 1.下载 [jdk-7u55-linux-x64](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
@@ -72,7 +81,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     [root@zookeeper1 bin]# 
 
 
-三、安装swall
+四、安装swall
 =========================
 
 1.下载最新版本swall
@@ -278,7 +287,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     一共执行了[1]个
     
     
-四、swall简单用法
+五、swall简单用法
 ====================
 
 1.swall的管理工具是bin/swall，这个脚本调用的是swall/cmd.py 使用方法如下
@@ -384,7 +393,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
     一共执行了[1]个
     [root@swall1 ~]#
 
-五、一些问题
+六、一些问题
 ===================
 1.怎么添加节点到集群呢？
 > 答：只要配置zk.conf好了，启动swall以后会自动添到集群
@@ -454,7 +463,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 > > 写好模块以后保存，例如ping.py，存放到module下对应的角色目录中，通过命令同步到agent，归属于这个角色节点就可以调用该
 > > 函数
     
-六、更多详细文档和案例
+七、更多详细文档和案例
 ============
 
 更多详细和高级用法请参考：http://swall.readthedocs.org/en/latest/index.html
