@@ -10,7 +10,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 
 swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存储敏感的状态信息，并提供一系列机制来操作这些信息，swall主要利用的是zookeeper
 的watcher功能，就是当某个数据变化的时候会提供一个机制来实现通知，那么swall主要架构很简单了：
-[image](https://raw.githubusercontent.com/lufeng4828/swall_doc/master/swall-ar.png)
+![image](https://raw.githubusercontent.com/lufeng4828/swall_doc/master/swall-ar.png)
 
 
 三、安装zookeeper集群
