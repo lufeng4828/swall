@@ -1,17 +1,15 @@
 #coding:utf-8
 __author__ = 'lufeng4828@163.com'
 
-import os
 import time
+import logging
 from subprocess import call
 from swall.utils import checksum, \
-    load_config, \
     load_fclient
 
 from swall.bfclient import BFClient
-from swall.logger import Logger
 
-log = Logger().logger
+log = logging.getLogger()
 
 
 class RSYNCClient(BFClient):

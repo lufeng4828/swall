@@ -15,10 +15,8 @@ def game(*args):
     def game(*args) -> 获取游戏节点列表，返回格式是
     @return dict:
     {
-        'ljxz_elex_9002': {'project': 'ljxz', 'agent': 'elex'},
-        'ljxz_elex_9001': {'project': 'ljxz', , 'agent': 'elex'},
-        'ljxz_fline_1': {'project': 'ljxz', 'agent': 'fline'},
-        'ljxz_fcenter_1': {'project': 'ljxz', 'agent': 'fcenter'}
+        'swall_sa_9002': {'project': 'swall', 'agent': 'sa'},
+        'swall_sa_9001': {'project': 'swall', , 'agent': 'sa'},
     }
     """
     all_games = {}

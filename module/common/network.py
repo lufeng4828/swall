@@ -29,7 +29,7 @@ def get_ip(ifname="eth0", *args, **kwarg):
 @node
 def get_ping(host="121.14.207.189", count=5, *args, **kwarg):
     """
-    def get_ping(host="121.14.207.189") -> 获取到某个地址的ping延迟
+    def get_ping(host="121.14.207.189", count=5, *args, **kwarg) -> 获取到某个地址的ping延迟
     @param host string:目标检测点
     @param count int:检测几次
     @return int:延迟数据，单位是毫秒

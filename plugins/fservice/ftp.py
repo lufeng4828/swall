@@ -6,7 +6,6 @@ import traceback
 import ftplib
 import logging
 from swall.utils import checksum, \
-    load_config, \
     load_fclient
 
 from swall.bfclient import BFClient
