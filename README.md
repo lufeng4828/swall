@@ -447,7 +447,7 @@ swall是一个基于zookeeper实现的分布式基础信息管理系统（Infras
 > > 
     #coding:utf-8
     from swall.utils import node
-  
+> >   
     @node
      def ping(*args, **kwargs):
     return 1
