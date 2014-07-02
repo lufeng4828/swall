@@ -265,10 +265,6 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     agent = sa
     node_name = %(project)s_%(agent)s_server_192.168.7.180
 
-    ###roles.d/game.conf配置
-    [main]
-    node_name = @@gen.game
-
 
 6.新增PATH和PYTHONPATH路径
 
