@@ -6,9 +6,9 @@ __author__ = 'lufeng4828@163.com'
 import os
 import sys
 
-if "swall" not in os.environ.get("PYTHONPATH"):
+if "swall" not in os.environ.get("PYTHONPATH",""):
     sys.stderr.write(
-        "swall is not in PYTHONPATH env,please set, for example:\nexport PYTHONPATH=/data/swall:$PYTHONPATH")
+        "swall is not in PYTHONPATH env,please set, for example:\nexport PYTHONPATH=/data/swall:$PYTHONPATH\n")
     sys.stderr.flush()
     sys.exit(1)
 
