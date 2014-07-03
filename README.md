@@ -1,4 +1,4 @@
-一、概述
+一、Swall概述
 ============
 
 swall是一个基于zookeeper实现的分布式基础信息管理系统（Infrastructure Management）可以用于管理特别是架构比较灵活的服务，比如游戏。用swall，
@@ -81,7 +81,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     [root@zookeeper1 bin]# 
 
 
-四、安装swall
+四、安装Swall
 =========================
 
 1.下载最新版本swall
