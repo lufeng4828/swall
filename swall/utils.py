@@ -21,6 +21,7 @@ from threading import Thread
 from swall.kthread import KThread
 from swall.bfclient import BFClient
 from ConfigParser import ConfigParser
+from swall.excpt import SwallCommandExecutionError
 
 log = logging.getLogger()
 
@@ -358,9 +359,9 @@ def cp(src_file, dest_file, stat=None):
                 os.chmod(dest_file, mode)
             if uid != -1 or gid != -1:
                 os.chown(dest_file, uid, gid)
-    except:
-        log.error(traceback.format_exc())
-        return 0
+    except IOError as exc:
+        log.error(exc)
+        raise SwallCommandExecutionError(str(exc))
     else:
         return 1
 
@@ -400,7 +401,11 @@ def checksum(thing):
     return thissum.hexdigest()
 
 
-def daemonize():
+def daemonize(user):
+    """
+    守护进程运行
+    @param user string:运行程序的用户名
+    """
     try:
         pid = os.fork()
         if pid > 0:
@@ -409,6 +414,15 @@ def daemonize():
         sys.stderr.write('fork #1 failed: %d (%s)\n' % (e.errno, e.strerror))
         sys.exit(1)
     os.setsid()
+
+    try:
+        uinfo = pwd.getpwnam(user)
+        os.setegid(uinfo.pw_gid)
+        os.seteuid(uinfo.pw_uid)
+    except KeyError:
+        sys.stderr.write("user %s is not valid\n")
+        sys.exit(1)
+
     os.chdir('/')
     os.umask(022)
     try:

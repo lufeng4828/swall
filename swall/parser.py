@@ -148,6 +148,10 @@ class DaemonMin(object):
         )
         self.add_option_group(group)
         group.add_option(
+            '-u', "--user", dest='user',
+            help='Specify the user to run swall'
+        )
+        group.add_option(
             '-D', dest='daemon',
             default=True,
             action='store_false',
@@ -168,7 +172,7 @@ class DaemonMin(object):
 
     def daemonize_if_required(self):
         if self.options.daemon:
-            daemonize()
+            daemonize(self.config["swall"]["user"])
 
     def set_pidfile(self):
         set_pidfile(self.config["swall"]['pidfile'])

@@ -188,6 +188,8 @@ Swall这里安装到192.168.0.180服务器上
     [root@swall1 swall]# cd conf
     [root@swall1 conf]# vim swall.conf
     [main]
+    #以此用户运行swall
+    user = swall
     #定义角色，多个角色用逗号分开
     node_role = server #这里我们只定义一个server角色
     #agent地址，根据具体情况
@@ -263,6 +265,7 @@ Swall这里安装到192.168.0.180服务器上
 
     ###swall.conf配置
     [main]
+    user = swall
     node_role = server
     node_ip = 192.168.0.180
     cache = var/cache
@@ -304,17 +307,22 @@ Swall这里安装到192.168.0.180服务器上
     [root@swall1 ~]# export PYTHONPATH=/data/swall:$PYTHONPATH
     [root@swall1 ~]# #备注：最好把着两个环境变量写入配置文件
 
-6.第一次配置swall集群下初始化zookeeper目录
+6.新建swall用户和设置文件权限
+
+    [root@swall1 ~]# useradd swall
+    [root@swall1 ~]# chown -R swall:swall /data/swall
+
+7.第一次配置swall集群下初始化zookeeper目录
 
     [root@swall1 ~]# cd /data/swall/bin
     [root@swall1 bin]# ./swall manage init
 
-7.启动swall节点程序
+8.启动swall节点程序
 
     [root@swall1 ~]# cd /data/swall/bin
     [root@swall1 bin]# ./swall server start
 
-8.测试命令
+9.测试命令
 
     [root@swall1 bin]# swall ctl server "*"  sys.ping
     ##################################################
