@@ -19,12 +19,11 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
  准备两台机器，相关信息如下：
 
 
-\===========================================
-名称	             配置	      IP地址
-\-------------------------------------------
-zookeeper1	     centos6.2	  192.168.0.181
-
-swall1	         centos6.2	  192.168.0.180
+=========================================== <br/>
+名称	             配置	      IP地址        <br/>
+------------------------------------------- <br/>
+zookeeper1	     centos6.2	  192.168.0.181 <br/>
+swall1	         centos6.2	  192.168.0.180 <br/>
 
 
 （一）安装zookeeper集群
@@ -32,9 +31,9 @@ swall1	         centos6.2	  192.168.0.180
 
 zookeeper服务部署在192.168.0.181，这里我配置的是standalone集群，有条件的可以配置多个实现高可用
 
-### 1.下载 [jdk](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)，这里我以jdk-7u55-linux-x64.gz为例
+1.下载 [jdk](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)，这里我以jdk-7u55-linux-x64.gz为例
 
-### 2.上传jdk-7u55-linux-x64.gz到服务器，解压
+2.上传jdk-7u55-linux-x64.gz到服务器，解压
 
     [root@zookeeper1 ~]# tar xf jdk-7u55-linux-x64.gz -C /usr/local/
     [root@zookeeper1 ~]# ls /usr/local/
@@ -42,7 +41,7 @@ zookeeper服务部署在192.168.0.181，这里我配置的是standalone集群，
     [root@zookeeper1 ~]# mv /usr/local/jdk1.7.0_55 /usr/local/java
     [root@zookeeper1 ~]#
 
-### 3.配置jdk环境
+3.配置jdk环境
 
     [root@zookeeper1 ~]# cat >> /etc/bashrc <<\eof
     > export JAVA_HOME=/usr/local/java
@@ -51,7 +50,7 @@ zookeeper服务部署在192.168.0.181，这里我配置的是standalone集群，
     > eof
     [root@zookeeper1 ~]# source /etc/bashrc
 
-### 4.检查java是否安装成功
+4.检查java是否安装成功
 
     [root@zookeeper1 ~]# java -version
     java version "1.7.0_55"
