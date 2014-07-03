@@ -568,7 +568,7 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
         """
         return dict(psutil.phymem_usage()._asdict())
 
-2.编写好了以后需要同步出去
+2.编写好了以后需要同步出去，同步命令会自动加载模块
 
     [root@swall1 swall]# swall ctl server "*" sys.rsync_module mem_info.py
     ##################################################
@@ -693,7 +693,26 @@ swall支持在调用函数的时候，在参数（位置参数、关键字参数
     一共执行了[2]个，失败了[0]
     [root@swall1 swall]#
 
+4.新增系统变量
 
+    （1）编辑module/common/_sys_common.py文件，直接在里面参考其他系统变量添加，然后通过下面的命令同步
+    [root@swall1 swall]# swall ctl server "*" sys.rsync_module _sys_common.py
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 : 1
+    [server] swall_sa_server_192.168.0.191 : 1
+    ##################################################
+    一共执行了[2]个，失败了[0]
+
+    （2）由于同步模块不会自动加载系统变量，需要手动加载
+    [root@swall1 swall]# swall ctl server "*" sys.reload_env
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 : 1
+    [server] swall_sa_server_192.168.0.191 : 1
+    ##################################################
+    一共执行了[2]个，失败了[0]
+    [root@swall1 swall]#
+
+    
 八、一些问题
 ===================
 
