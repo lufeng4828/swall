@@ -352,7 +352,7 @@ Swall这里安装到192.168.0.180服务器上
 
 2.参数解释
 
-    role：指的是在swall.conf的node_role配置角色，只有配置了对应的role才能接收到命令
+    role：指的是在swall.conf的node_role配置角色，只有配置了对应的role才能接收到命令，role支持多个，通过","或者"|"分隔
     target：通配符或者正则，通配符只支持*号，用来匹配具体的节点，主要去匹配swall.conf的node_name
     module.function：要执行的函数，例如sys.ping，有内置函数和自定义函数
     arguments：传递到module.function中的参数，支持位置参数和关键字参数
@@ -417,18 +417,27 @@ Swall这里安装到192.168.0.180服务器上
 
 （4）执行shell命令:
 
-    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  cmd.call 'df -h | grep data'
+    [root@swall1 swall]# swall ctl server "swall_sa_server_192.168.0.190"  cmd.call 'echo ok | awk "{print \$0}"'
     ##################################################
-    [server] swall_sa_server_192.168.0.190 : {'pid': 5329, 'retcode': 0, 'stderr': None, 'stdout': '/dev/sda5              73G   15G   55G  21% /data'}
+    [server] swall_sa_server_192.168.0.190 :
+    {
+        "pid": 1149,
+        "retcode": 0,
+        "stderr": null,
+        "stdout": "ok"
+    }
+
     ##################################################
     一共执行了[1]个，失败了[0]
-    [root@swall1 ~]#
-    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  cmd.call 'df -h | grep data' ret_type=stdout
+    [root@swall1 swall]#
+
+    [root@agent2 swall]# swall ctl server "swall_sa_server_192.168.0.190"  cmd.call 'echo ok | awk "{print \$0}"' ret_type=stdout
     ##################################################
-    [server] swall_sa_server_192.168.0.190 : /dev/sda5              73G   15G   55G  21% /data
+    [server] swall_sa_server_192.168.0.190 : ok
     ##################################################
     一共执行了[1]个，失败了[0]
-    [root@swall1 ~]#
+    [root@swall1 swall]#
+
 
 五、Swall命令进阶
 =========================
@@ -626,8 +635,68 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
     [root@swall1 swall]#
 
 
-七、一些问题
+七、Swall系统变量
 ===================
+
+swall支持在调用函数的时候，在参数（位置参数、关键字参数）里面加上系统变量，这些变量会在agent执行命令的时候扩展为具体的值，目前swall已经
+支持如下几个系统变量：
+
+    NODE：   node的名称
+    IP：     node的ip地址
+    AGENT：  node的agent名称
+    PROJECT  node的项目名称
+    ROLE     node的角色名
+    TIME     node的当前时间
+    DATE     node的当前日期
+
+
+1.查看系统变量列表
+
+    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.get_env
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 :
+    [
+        "NODE",
+        "IP",
+        "AGENT",
+        "PROJECT",
+        "ROLE",
+        "TIME",
+        "DATE"
+    ]
+
+    ##################################################
+    一共执行了[1]个，失败了[0]
+
+2.查看具体系统变量的值
+
+    [root@swall1 bin]# swall ctl server "*"  sys.exprs "{NODE}"
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 : node:swall_sa_server_192.168.0.190
+    [server] swall_sa_server_192.168.0.191 : node:swall_sa_server_192.168.0.191
+    [server] swall_sa_server_192.168.0.195 : node:swall_sa_server_192.168.0.195
+    [server] swall_sa_server_192.168.0.198 : node:swall_sa_server_192.168.0.198
+    [server] swall_sa_server_192.168.0.203 : node:swall_sa_server_192.168.0.203
+    [server] swall_sa_server_192.168.0.180 : node:swall_sa_server_192.168.0.180
+    ##################################################
+    一共执行了[6]个，失败了[0]
+
+    这里sys.exprs可以帮你打印节点的系统变量值，经常用来做系统变量查看的
+
+3.在执行sys.copy的时候将当前/etc/hosts文件拷贝到server角色的所有节点的/tmp下面，同时加上拷贝的时间
+
+    [root@swall1 swall]# swall ctl server "*190*;*191*" sys.copy /etc/hosts /tmp/hosts.{DATE}_{TIME} ret_type=full
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 : /tmp/hosts.2014-07-03_07:36:17
+    [server] swall_sa_server_192.168.0.191 : /tmp/hosts.2014-07-03_07:36:17
+    ##################################################
+    一共执行了[2]个，失败了[0]
+    [root@swall1 swall]#
+
+
+八、一些问题
+===================
+
 1.怎么添加节点到集群呢？
 > 答：只要配置zk.conf好了，启动swall以后会自动添到集群
 
@@ -674,11 +743,9 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
 4.需要查看摸个模块的函数列表，怎么办？
 > 答：提供了一个sys.funcs函数可以解决这个问题，需要输入想要查看的模块名称（不带后缀）
 > > 
-    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.funcs sys
+    [root@swall1 swall]# swall ctl server "swall_sa_server_192.168.0.190"  sys.funcs network
     ##################################################
-    [server] swall_sa_server_192.168.0.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
-    ##################################################
-    一共执行了[1]个，失败了[0]
+    [server] swall_sa_server_192.168.0.190 : ['network.get_ip', 'network.get_ping']
     [root@swall1 ~]#
         
 5.写好了模块以后要怎么同步到节点呢？
@@ -766,7 +833,10 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
     一共执行了[3]个，失败了[0]
     [root@swall1 bin]#
 
-八、更多详细文档和案例
+8.怎么找不到sys.py文件？
+> 答：swall模块分有两大类，一类是内置的，sys开头，这些模块在agent.py里面实现了，其他模块都可以在module目录下找到
+
+九、更多详细文档和案例
 ============
 
 更多详细和高级用法请参考：http://swall.readthedocs.org/en/latest/index.html
