@@ -291,7 +291,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     一共执行了[1]个
     
     
-五、swall简单用法
+五、Swall命令入门
 ====================
 
 1.swall的管理工具是bin/swall, 使用方法如下
@@ -397,7 +397,39 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     一共执行了[1]个
     [root@swall1 ~]#
 
-六、一些问题
+六、Swall命令进阶
+=========================
+
+swall提供一些内置变量，使用在参数中，在真正执行的时候会被替换，查看当前系统支持的“系统变量”
+
+    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.7.190"  sys.get_env
+    ####################
+    [server] swall_sa_server_192.168.7.190 : ('node', 'ip', 'role')
+
+支持node，ip、role这三个系统变量，使用的时候需要加大括号，如{node}、{ip}，查看系统变量的具体值如下::
+
+    [root@swall1 bin]# swall ctl server "*"  sys.exprs "role:{role},ip:{ip},node:{node}"
+    ####################
+    [server] swall_sa_server_192.168.7.190 : role:server,ip:192.168.7.190,node:swall_sa_server_192.168.7.190
+    [server] swall_sa_server_192.168.7.191 : role:server,ip:192.168.7.191,node:swall_sa_server_192.168.7.191
+    [server] swall_sa_server_192.168.7.195 : role:server,ip:192.168.7.195,node:swall_sa_server_192.168.7.195
+    [server] swall_sa_server_192.168.7.198 : role:server,ip:192.168.7.198,node:swall_sa_server_192.168.7.198
+    [server] swall_sa_server_192.168.7.203 : role:server,ip:192.168.7.203,node:swall_sa_server_192.168.7.203
+    [server] swall_sa_server_192.168.7.180 : role:server,ip:192.168.7.180,node:swall_sa_server_192.168.7.180
+    ####################
+    一共执行了[6]个
+    [root@swall1 bin]#
+    [root@swall1 bin]# swall ctl game "*"  sys.copy /etc/services /data/{node}/ ret_type=full
+    ####################
+    [game] swall_sa_600 : /data/swall_sa_600/services
+    [game] swall_sa_601 : /data/swall_sa_601/services
+    [game] swall_sa_700 : /data/swall_sa_700/services
+    ####################
+    一共执行了[3]个
+    [root@swall1 bin]#
+
+
+七、一些问题
 ===================
 1.怎么添加节点到集群呢？
 > 答：只要配置zk.conf好了，启动swall以后会自动添到集群
@@ -466,8 +498,51 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     
 > > 写好模块以后保存，例如ping.py，存放到module下对应的角色目录中，通过命令同步到agent，归属于这个角色节点就可以调用该
 > > 函数
-    
-七、更多详细文档和案例
+
+6.什么场景下使用系统变量呢？
+
+> 答：例如其他节点获取配置的时候，一般情况下，如果你不加系统变量，获取到当前节点的文件是同一个路径，你根本区分不出来，如下::
+> >
+    [root@swall1 bin]# swall ctl server "*"  sys.get /etc/hosts /tmp/
+    ####################
+    [server] swall_sa_server_192.168.7.190 : /etc/hosts
+    [server] swall_sa_server_192.168.7.191 : /etc/hosts
+    [server] swall_sa_server_192.168.7.195 : /etc/hosts
+    [server] swall_sa_server_192.168.7.198 : /etc/hosts
+    [server] swall_sa_server_192.168.7.203 : /etc/hosts
+    [server] swall_sa_server_192.168.7.205 : /etc/hosts
+    ####################
+    一共执行了[6]个
+    [root@swall1 bin]#
+
+> > 这里就有一个问题了，所有获取的文件路径都是/etc/hosts，区分不出是那个节点的文件，如果使用系统变量，就不一样了::
+
+    [root@swall1 bin]# swall ctl server "*"  sys.get /etc/hosts /tmp/hosts.{node}
+    ####################
+    [server] swall_sa_server_192.168.7.190 : /tmp/hosts.swall_sa_server_192.168.7.190
+    [server] swall_sa_server_192.168.7.191 : /tmp/hosts.swall_sa_server_192.168.7.191
+    [server] swall_sa_server_192.168.7.195 : /tmp/hosts.swall_sa_server_192.168.7.195
+    [server] swall_sa_server_192.168.7.198 : /tmp/hosts.swall_sa_server_192.168.7.198
+    [server] swall_sa_server_192.168.7.203 : /tmp/hosts.swall_sa_server_192.168.7.203
+    [server] swall_sa_server_192.168.7.205 : /tmp/hosts.swall_sa_server_192.168.7.205
+    ####################
+    一共执行了[6]个
+    [root@swall1 bin]#
+
+
+> > 还有一种场景，在游戏运维中，针对一机多服，假设游戏有/data/swall_sa_600,/data/swall_sa_601,/data/swall_sa_700三个程序，
+> > 对应三个game的节点，节点名称就是目录名。如果我要拷贝文件到/data/swall_sa_600,/data/swall_sa_601,/data/swall_sa_700各个目录下，用swall的系统变量替换就很容易解决::
+
+    [root@swall1 bin]# swall ctl game "*"  sys.copy /etc/services /data/{node}/ ret_type=full
+    ####################
+    [game] swall_sa_600 : /data/swall_sa_600/services
+    [game] swall_sa_601 : /data/swall_sa_601/services
+    [game] swall_sa_700 : /data/swall_sa_700/services
+    ####################
+    一共执行了[3]个
+    [root@swall1 bin]#
+
+八、更多详细文档和案例
 ============
 
 更多详细和高级用法请参考：http://swall.readthedocs.org/en/latest/index.html

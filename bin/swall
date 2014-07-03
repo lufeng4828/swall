@@ -12,18 +12,10 @@ if "swall" not in os.environ.get("PYTHONPATH",""):
     sys.stderr.flush()
     sys.exit(1)
 
-from swall.parser import SwallAgent, Swall
+from swall.parser import Swall
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
-
-def swall_agent():
-    """
-    manage the swall agent
-    """
-    agent = SwallAgent()
-    agent.main()
 
 
 if __name__ == "__main__":

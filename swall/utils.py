@@ -231,11 +231,11 @@ def load_module(mod_dirs):
                 if isinstance(func, type) and getattr(func, "node", False):
                     if any(['Error' in func.__name__, 'Exception' in func.__name__]):
                         continue
-                try:
-                    if getattr(func, "node", None):
-                        funcs['{0}.{1}'.format(mod.__name__, attr)] = func
-                except AttributeError:
-                    continue
+                    try:
+                        if getattr(func, "node", None):
+                            funcs['{0}.{1}'.format(mod.__name__, attr)] = func
+                    except AttributeError:
+                        continue
     return funcs
 
 
@@ -277,11 +277,11 @@ def load_env(mod_dirs):
                 if isinstance(func, type) and getattr(func, "env", False):
                     if any(['Error' in func.__name__, 'Exception' in func.__name__]):
                         continue
-                try:
-                    #if getattr(func, mod_type, None):
-                    funcs['{0}'.format(attr)] = func
-                except AttributeError:
-                    continue
+                    try:
+                        #if getattr(func, mod_type, None):
+                        funcs['{0}'.format(attr)] = func
+                    except AttributeError:
+                        continue
     return funcs
 
 
