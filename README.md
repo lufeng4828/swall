@@ -22,7 +22,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     名称	             配置          IP地址
     -------------------------------------------
     zookeeper1	     centos6.2	  192.168.0.181
-    swall1	         centos6.2	  192.168.0.180 
+    swall1	         centos6.2	  192.168.0.180
 
 
 （一）安装zookeeper集群
@@ -448,7 +448,7 @@ Swall这里安装到192.168.0.180服务器上
     ####################
     一共执行了[1]个
 
-（3）同步模块到agent
+（3）同步模块到节点
 
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.funcs sys
     ####################
@@ -511,7 +511,6 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
     [root@swall1 server]# pwd
     /data/swall/module/server
     [root@swall1 server]# vim mem_info.py
-
     import psutil
     import logging
     from swall.utils import node
@@ -614,8 +613,8 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
     一共执行了[6]个
     [root@swall1 bin]#
 
-> > 这里就有一个问题了，所有获取的文件路径都是/etc/hosts，区分不出是那个节点的文件，如果使用系统变量，就不一样了::
-
+> > 这里就有一个问题了，所有获取的文件路径都是/etc/hosts，区分不出是那个节点的文件，如果使用系统变量，就不一样了:
+> > 
     [root@swall1 bin]# swall ctl server "*"  sys.get /etc/hosts /tmp/hosts.{node}
     ####################
     [server] swall_sa_server_192.168.0.190 : /tmp/hosts.swall_sa_server_192.168.0.190
@@ -630,8 +629,8 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
 
 
 > > 还有一种场景，在游戏运维中，针对一机多服，假设游戏有/data/swall_sa_600,/data/swall_sa_601,/data/swall_sa_700三个程序，
-> > 对应三个game的节点，节点名称就是目录名。如果我要拷贝文件到/data/swall_sa_600,/data/swall_sa_601,/data/swall_sa_700各个目录下，用swall的系统变量替换就很容易解决::
-
+    对应三个game的节点，节点名称就是目录名。如果我要拷贝文件到/data/swall_sa_600,/data/swall_sa_601,/data/swall_sa_700各个目录下，用swall的系统变量替换就很容易解决:
+> >
     [root@swall1 bin]# swall ctl game "*"  sys.copy /etc/services /data/{node}/ ret_type=full
     ####################
     [game] swall_sa_600 : /data/swall_sa_600/services
