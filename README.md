@@ -266,7 +266,7 @@ swall原理很简单，用过zookeeper的人都知道，zookeeper比较擅长存
     node_name = %(project)s_%(agent)s_server_192.168.7.180
 
 
-6.新增PATH和PYTHONPATH路径
+6.新增PATH和PYTHONPATH路径（PYTHONPATH一定要设置，否则程序运行会提示swall模块找不到的）
 
     [root@swall1 ~]# export PATH=/data/swall/bin:$PATH
     [root@swall1 ~]# export PYTHONPATH=/data/swall:$PYTHONPATH
