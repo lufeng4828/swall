@@ -599,7 +599,7 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
 
 6.什么场景下使用系统变量呢？
 
-> 答：例如其他节点获取配置的时候，一般情况下，如果你不加系统变量，获取到当前节点的文件是同一个路径，你根本区分不出来，如下::
+> 答：例如其他节点获取配置的时候，一般情况下，如果你不加系统变量，获取到当前节点的文件是同一个路径，你根本区分不出来，如下:
 > >
     [root@swall1 bin]# swall ctl server "*"  sys.get /etc/hosts /tmp/
     ####################
@@ -614,7 +614,7 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
     [root@swall1 bin]#
 
 > > 这里就有一个问题了，所有获取的文件路径都是/etc/hosts，区分不出是那个节点的文件，如果使用系统变量，就不一样了:
-> > 
+> >
     [root@swall1 bin]# swall ctl server "*"  sys.get /etc/hosts /tmp/hosts.{node}
     ####################
     [server] swall_sa_server_192.168.0.190 : /tmp/hosts.swall_sa_server_192.168.0.190
