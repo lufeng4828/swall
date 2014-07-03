@@ -317,10 +317,10 @@ Swall这里安装到192.168.0.180服务器上
 8.测试命令
 
     [root@swall1 bin]# swall ctl server "*"  sys.ping
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.180 : 1
-    ####################
-    一共执行了[1]个
+    ##################################################
+    一共执行了[1]个，失败了[0]
     
     
 四、Swall命令入门
@@ -328,7 +328,7 @@ Swall这里安装到192.168.0.180服务器上
 
 1.swall的管理工具是bin/swall, 使用方法如下
 
-    Usage: /data/swall/bin/swall ctl  <role> [target] <module.function> [arguments]
+    Usage: swall ctl  <role> [target] <module.function> [arguments]
 
     Send command to swall server.
 
@@ -370,63 +370,64 @@ Swall这里安装到192.168.0.180服务器上
 （1）查看swall通讯是否正常:
 
     [root@swall1 ~]# swall ctl server "*"  sys.ping --timeout=10
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : 1
     [server] swall_sa_server_192.168.0.191 : 1
     [server] swall_sa_server_192.168.0.195 : 1
     [server] swall_sa_server_192.168.0.198 : 1
     [server] swall_sa_server_192.168.0.203 : 1
     [server] swall_sa_server_192.168.0.180 : 1
-    ####################
-    一共执行了[6]个
+    ##################################################
+    一共执行了[6]个，失败了[0]
 
     
 （2）拷贝文件到远程:
 
     [root@swall1 ~]# swall ctl server "*"  sys.copy /etc/hosts /tmp/xx_hosts --timeout=10
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : 1
     [server] swall_sa_server_192.168.0.191 : 1
     [server] swall_sa_server_192.168.0.195 : 1
     [server] swall_sa_server_192.168.0.198 : 1
     [server] swall_sa_server_192.168.0.203 : 1
     [server] swall_sa_server_192.168.0.180 : 1
-    ####################
-    一共执行了[6]个
+    ##################################################
+    一共执行了[6]个，失败了[0]
     [root@swall1 ~]# swall ctl server "*"  sys.copy /etc/hosts /tmp/xx_hosts ret_type=full --timeout=10
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : /tmp/xx_hosts
     [server] swall_sa_server_192.168.0.191 : /tmp/xx_hosts
     [server] swall_sa_server_192.168.0.195 : /tmp/xx_hosts
     [server] swall_sa_server_192.168.0.198 : /tmp/xx_hosts
     [server] swall_sa_server_192.168.0.203 : /tmp/xx_hosts
     [server] swall_sa_server_192.168.0.180 : /tmp/xx_hosts
-    ####################
-    一共执行了[6]个
+    ##################################################
+    一共执行了[6]个，失败了[0]
     [root@swall1 ~]#
 
 （3）从远程拷贝文件到当前:
 
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.get /etc/services /tmp/xxx_service
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : /tmp/xxx_service
-    ####################
-    一共执行了[1]个
+    ##################################################
+    一共执行了[1]个，失败了[0]
     [root@swall1 ~]#
 
 
 （4）执行shell命令:
 
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  cmd.call 'df -h | grep data'
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : {'pid': 5329, 'retcode': 0, 'stderr': None, 'stdout': '/dev/sda5              73G   15G   55G  21% /data'}
-    ####################
-
+    ##################################################
+    一共执行了[1]个，失败了[0]
+    [root@swall1 ~]#
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  cmd.call 'df -h | grep data' ret_type=stdout
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : /dev/sda5              73G   15G   55G  21% /data
-    ####################
-    一共执行了[1]个
+    ##################################################
+    一共执行了[1]个，失败了[0]
     [root@swall1 ~]#
 
 五、Swall命令进阶
@@ -438,71 +439,96 @@ Swall这里安装到192.168.0.180服务器上
 （1）查看内置功能
 
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.funcs sys
-    ####################
-    [server] swall_sa_server_192.168.0.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
-    ####################
-    一共执行了[1]个
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 :
+    [
+        "sys.rsync_module",
+        "sys.get_env",
+        "sys.job_info",
+        "sys.funcs",
+        "sys.exprs",
+        "sys.copy",
+        "sys.ping",
+        "sys.get",
+        "sys.reload_env",
+        "sys.roles",
+        "sys.reload_node",
+        "sys.reload_module",
+        "sys.version"
+    ]
+
+    ##################################################
+    一共执行了[1]个，失败了[0]
     [root@swall1 ~]#
 
 （2）查看功能函数帮助，在调用函数后面直接加上help就可以了
 
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.copy help
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 :
         def copy(*args, **kwargs) -> 拷贝文件到远程 可以增加一个ret_type=full，支持返回文件名
         @param args list:支持位置参数，例如 sys.copy /etc/src.tar.gz /tmp/src.tar.gz ret_type=full
         @param kwargs dict:支持关键字参数，例如sys.copy local_path=/etc/src.tar.gz remote_path=/tmp/src.tar.gz
         @return int:1 if success else 0
-    ####################
-    一共执行了[1]个
+    ##################################################
+    一共执行了[1]个，失败了[0]
 
 （3）同步模块到节点
 
-    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.funcs sys
-    ####################
-    [server] swall_sa_server_192.168.0.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
-    ####################
+    [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.rsync_module
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 : 1
+    ##################################################
     一共执行了[1]个
-    [root@swall1 ~]#
 
     支持同步个别模块，多个需要用逗号分隔
 
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.rsync_module server_tools.py
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : 1
-    ####################
-    一共执行了[1]个
+    ##################################################
+    一共执行了[1]个，失败了[0]
     [root@swall1 ~]#
 
 2.swall提供一些内置变量，使用在参数中，在真正执行的时候会被替换，查看当前系统支持的“系统变量”
 
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.get_env
-    ####################
-    [server] swall_sa_server_192.168.0.190 : ('NONE', 'IP', 'ROLE')
-    ####################
-    一共执行了[1]个
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 :
+    [
+        "NODE",
+        "IP",
+        "AGENT",
+        "PROJECT",
+        "ROLE",
+        "TIME",
+        "DATE"
+    ]
+
+    ##################################################
+    一共执行了[1]个，失败了[0]
     [root@swall1 bin]#
 
-    使用的时候需要加大括号，如{IP}、{IP}，系统变量自定义，查看系统变量的具体值如下:
+    使用的时候需要加大括号，如{IP}、{AGENT}，系统变量自定义，查看系统变量的具体值如下:
 
     [root@swall1 bin]# swall ctl server "*"  sys.exprs "role:{ROLE},ip:{IP},node:{NODE}"
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : role:server,ip:192.168.0.190,node:swall_sa_server_192.168.0.190
     [server] swall_sa_server_192.168.0.191 : role:server,ip:192.168.0.191,node:swall_sa_server_192.168.0.191
     [server] swall_sa_server_192.168.0.195 : role:server,ip:192.168.0.195,node:swall_sa_server_192.168.0.195
     [server] swall_sa_server_192.168.0.198 : role:server,ip:192.168.0.198,node:swall_sa_server_192.168.0.198
     [server] swall_sa_server_192.168.0.203 : role:server,ip:192.168.0.203,node:swall_sa_server_192.168.0.203
     [server] swall_sa_server_192.168.0.180 : role:server,ip:192.168.0.180,node:swall_sa_server_192.168.0.180
-    ####################
-    一共执行了[6]个
+    ##################################################
+    一共执行了[6]个，失败了[0]
     [root@swall1 bin]#
     [root@swall1 bin]# swall ctl game "*"  sys.copy /etc/services /data/{NODE}/ ret_type=full
-    ####################
+    ##################################################
     [game] swall_sa_600 : /data/swall_sa_600/services
     [game] swall_sa_601 : /data/swall_sa_601/services
     [game] swall_sa_700 : /data/swall_sa_700/services
-    ####################
-    一共执行了[3]个
+    ##################################################
+    一共执行了[3]个，失败了[0]
     [root@swall1 bin]#
 
 
@@ -533,6 +559,71 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
         """
         return dict(psutil.phymem_usage()._asdict())
 
+2.编写好了以后需要同步出去
+
+    [root@swall1 swall]# swall ctl server "*" sys.rsync_module mem_info.py
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 : 1
+    [server] swall_sa_server_192.168.0.191 : 1
+    ##################################################
+    一共执行了[2]个，失败了[0]
+
+3.查看写好的模块
+
+    [root@swall1 swall]# swall ctl server "*" sys.funcs mem_info
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 : ['mem_info.physical_memory_usage']
+    [server] swall_sa_server_192.168.0.191 : ['mem_info.physical_memory_usage']
+    ##################################################
+    一共执行了[2]个，失败了[0]
+    [root@swall1 swall]#
+
+    [root@swall1 swall]# swall ctl server "*" mem_info.physical_memory_usage help
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 :
+        def physical_memory_usage(*args, **kwarg) -> Return a dict that describes free and available physical memory.
+        @return dict:
+
+    [server] swall_sa_server_192.168.0.191 :
+        def physical_memory_usage(*args, **kwarg) -> Return a dict that describes free and available physical memory.
+        @return dict:
+
+    ##################################################
+    一共执行了[2]个，失败了[0]
+
+4.调用执行我们的模块
+
+    [root@swall1 swall]# swall ctl server "*" mem_info.physical_memory_usage
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 :
+    {
+        "active": 417042432,
+        "available": 57892864,
+        "buffers": 5967872,
+        "cached": 45473792,
+        "free": 6451200,
+        "inactive": 24846336,
+        "percent": 88.700000000000003,
+        "total": 514326528,
+        "used": 507875328
+    }
+
+    [server] swall_sa_server_192.168.0.191 :
+    {
+        "active": 417067008,
+        "available": 57929728,
+        "buffers": 5967872,
+        "cached": 45518848,
+        "free": 6443008,
+        "inactive": 24940544,
+        "percent": 88.700000000000003,
+        "total": 514326528,
+        "used": 507883520
+    }
+
+    ##################################################
+    一共执行了[2]个，失败了[0]
+    [root@swall1 swall]#
 
 
 七、一些问题
@@ -540,52 +631,79 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
 1.怎么添加节点到集群呢？
 > 答：只要配置zk.conf好了，启动swall以后会自动添到集群
 
-2.调用模块的时候如果不知道怎么使用模块，不知道传什么参数，怎么办？
+2.怎么匹配节点？
+> 答：swall支持通过通配符（*）和正则表达式匹配节点，如：
+> >
+    （1）通配符，只支持星号，功能和linux shell环境下面的功能是一样的
+
+    [root@swall1 swall]# swall ctl server "swall_sa_server*" sys.ping
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 : 1
+    [server] swall_sa_server_192.168.0.191 : 1
+    ##################################################
+    一共执行了[2]个，失败了[0]
+
+    （2）正则表达式
+    [root@swall1 swall]# swall ctl server "swall_sa_server_192.168.0.\d+" sys.ping
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 : 1
+    [server] swall_sa_server_192.168.0.191 : 1
+    ##################################################
+    一共执行了[2]个，失败了[0]
+
+    （3）写完整的节点名称
+    [root@swall1 swall]# swall ctl server "swall_sa_server_192.168.0.190" sys.ping
+    ##################################################
+    [server] swall_sa_server_192.168.0.190 : 1
+    ##################################################
+    一共执行了[1]个，失败了[0]
+
+3.调用模块的时候如果不知道怎么使用模块，不知道传什么参数，怎么办？
 > 答：每个函数后面加上 help参数都会打印这个函数使用说明
 > > 
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.copy help
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 :
         def copy(*args, **kwargs) -> 拷贝文件到远程 可以增加一个ret_type=full，支持返回文件名
         @param args list:支持位置参数，例如 sys.copy /etc/src.tar.gz /tmp/src.tar.gz ret_type=full
         @param kwargs dict:支持关键字参数，例如sys.copy local_path=/etc/src.tar.gz remote_path=/tmp/src.tar.gz
         @return int:1 if success else 0
-    ####################
-    一共执行了[1]个
+    ##################################################
+    一共执行了[1]个，失败了[0]
         
-3.需要查看摸个模块的函数列表，怎么办？
+4.需要查看摸个模块的函数列表，怎么办？
 > 答：提供了一个sys.funcs函数可以解决这个问题，需要输入想要查看的模块名称（不带后缀）
 > > 
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.funcs sys
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : ('sys.rsync_module', 'sys.get', 'sys.job_info', 'sys.exprs', 'sys.copy', 'sys.ping', 'sys.reload_env', 'sys.funcs', 'sys.roles', 'sys.reload_node', 'sys.reload_module')
-    ####################
-    一共执行了[1]个
+    ##################################################
+    一共执行了[1]个，失败了[0]
     [root@swall1 ~]#
         
-4.写好了模块以后要怎么同步到节点呢？
+5.写好了模块以后要怎么同步到节点呢？
 
 > 答：通过调用sys.rsync_module可以同步模块到节点
 > > 如果写好了模块并且存放如当前节点的/module/{role}，这里的{role}对应你要同步的角色，/module/common是所有角色公用的模块，现在为server同步模块如下:
 
 > >  
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.rsync_module
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : 1
-    ####################
-    一共执行了[1]个
+    ##################################################
+    一共执行了[1]个，失败了[0]
     
 > > 支持同步个别模块，多个需要用逗号分隔：
 > > 
     [root@swall1 ~]# swall ctl server "swall_sa_server_192.168.0.190"  sys.rsync_module server_tools.py
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : 1
-    ####################
-    一共执行了[1]个
+    ##################################################
+    一共执行了[1]个，失败了[0]
     [root@swall1 ~]#
 
 
-5.如何编写模块？
+6.如何编写模块？
 
 > 答：模块编写如下所示：
 > > 
@@ -605,34 +723,34 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
 > > 写好模块以后保存，例如ping.py，存放到module下对应的角色目录中，通过命令同步到agent，归属于这个角色节点就可以调用该
 > > 函数
 
-6.什么场景下使用系统变量呢？
+7.什么场景下使用系统变量呢？
 
 > 答：例如其他节点获取配置的时候，一般情况下，如果你不加系统变量，获取到当前节点的文件是同一个路径，你根本区分不出来，如下:
 > >
     [root@swall1 bin]# swall ctl server "*"  sys.get /etc/hosts /tmp/
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : /etc/hosts
     [server] swall_sa_server_192.168.0.191 : /etc/hosts
     [server] swall_sa_server_192.168.0.195 : /etc/hosts
     [server] swall_sa_server_192.168.0.198 : /etc/hosts
     [server] swall_sa_server_192.168.0.203 : /etc/hosts
     [server] swall_sa_server_192.168.0.205 : /etc/hosts
-    ####################
-    一共执行了[6]个
+    ##################################################
+    一共执行了[6]个，失败了[0]
     [root@swall1 bin]#
 
 > > 这里就有一个问题了，所有获取的文件路径都是/etc/hosts，区分不出是那个节点的文件，如果使用系统变量，就不一样了:
 > >
     [root@swall1 bin]# swall ctl server "*"  sys.get /etc/hosts /tmp/hosts.{node}
-    ####################
+    ##################################################
     [server] swall_sa_server_192.168.0.190 : /tmp/hosts.swall_sa_server_192.168.0.190
     [server] swall_sa_server_192.168.0.191 : /tmp/hosts.swall_sa_server_192.168.0.191
     [server] swall_sa_server_192.168.0.195 : /tmp/hosts.swall_sa_server_192.168.0.195
     [server] swall_sa_server_192.168.0.198 : /tmp/hosts.swall_sa_server_192.168.0.198
     [server] swall_sa_server_192.168.0.203 : /tmp/hosts.swall_sa_server_192.168.0.203
     [server] swall_sa_server_192.168.0.205 : /tmp/hosts.swall_sa_server_192.168.0.205
-    ####################
-    一共执行了[6]个
+    ##################################################
+    一共执行了[6]个，失败了[0]
     [root@swall1 bin]#
 
 
@@ -640,12 +758,12 @@ swall模块存放在module下面的特定目录中，module下面的目录就是
     对应三个game的节点，节点名称就是目录名。如果我要拷贝文件到/data/swall_sa_600,/data/swall_sa_601,/data/swall_sa_700各个目录下，用swall的系统变量替换就很容易解决:
 > >
     [root@swall1 bin]# swall ctl game "*"  sys.copy /etc/services /data/{node}/ ret_type=full
-    ####################
+    ##################################################
     [game] swall_sa_600 : /data/swall_sa_600/services
     [game] swall_sa_601 : /data/swall_sa_601/services
     [game] swall_sa_700 : /data/swall_sa_700/services
-    ####################
-    一共执行了[3]个
+    ##################################################
+    一共执行了[3]个，失败了[0]
     [root@swall1 bin]#
 
 八、更多详细文档和案例

@@ -228,14 +228,12 @@ def load_module(mod_dirs):
                 #将加载的模块存放到字典里面
             if callable(getattr(mod, attr)):
                 func = getattr(mod, attr)
-                if isinstance(func, type) and getattr(func, "node", False):
-                    if any(['Error' in func.__name__, 'Exception' in func.__name__]):
-                        continue
-                    try:
-                        if getattr(func, "node", None):
-                            funcs['{0}.{1}'.format(mod.__name__, attr)] = func
-                    except AttributeError:
-                        continue
+                if attr == "node":
+                    continue
+                try:
+                    funcs['{0}.{1}'.format(mod.__name__, attr)] = func
+                except AttributeError:
+                    continue
     return funcs
 
 
@@ -274,14 +272,12 @@ def load_env(mod_dirs):
                 #将加载的模块存放到字典里面
             if callable(getattr(mod, attr)):
                 func = getattr(mod, attr)
-                if isinstance(func, type) and getattr(func, "env", False):
-                    if any(['Error' in func.__name__, 'Exception' in func.__name__]):
-                        continue
-                    try:
-                        #if getattr(func, mod_type, None):
-                        funcs['{0}'.format(attr)] = func
-                    except AttributeError:
-                        continue
+                if attr == "env":
+                    continue
+                try:
+                    funcs['{0}'.format(attr)] = func
+                except AttributeError:
+                    continue
     return funcs
 
 
@@ -405,23 +401,23 @@ def checksum(thing):
 
 
 def daemonize():
-        try:
-            pid = os.fork()
-            if pid > 0:
-                sys.exit(0)
-        except OSError, e:
-            sys.stderr.write('fork #1 failed: %d (%s)\n' % (e.errno, e.strerror))
-            sys.exit(1)
-        os.setsid()
-        os.chdir('/')
-        os.umask(022)
-        try:
-            pid = os.fork()
-            if pid > 0:
-                sys.exit(0)
-        except OSError, e:
-            sys.stderr.write('fork #2 failed: %d (%s)\n' % (e.errno, e.strerror))
-            sys.exit(1)
+    try:
+        pid = os.fork()
+        if pid > 0:
+            sys.exit(0)
+    except OSError, e:
+        sys.stderr.write('fork #1 failed: %d (%s)\n' % (e.errno, e.strerror))
+        sys.exit(1)
+    os.setsid()
+    os.chdir('/')
+    os.umask(022)
+    try:
+        pid = os.fork()
+        if pid > 0:
+            sys.exit(0)
+    except OSError, e:
+        sys.stderr.write('fork #2 failed: %d (%s)\n' % (e.errno, e.strerror))
+        sys.exit(1)
 
 
 def set_pidfile(pidfile):
@@ -523,6 +519,7 @@ def timeout(seconds):
     """
     为函数新增超时功能
     """
+    seconds = int(seconds)
 
     def timeout_decorator(func):
         def _new_func(oldfunc, result, oldfunc_args, oldfunc_kwargs):
@@ -562,6 +559,7 @@ def retry(times, cmp_val=1):
     """
     如果修饰的函数返回结果不等于cmp_val，则重新执行函数，一共重试times
     """
+    times = int(times)
 
     def fail_retry_decorator(func):
         def _new_func(oldfunc, oldfunc_args, oldfunc_kwargs):
@@ -608,6 +606,7 @@ def which(exe=None):
             if os.access(full_path, os.X_OK):
                 return full_path
     return None
+
 
 def _run(cmd,
          cwd=None,
@@ -746,12 +745,61 @@ def sort_ret(rets):
     return list_result
 
 
-def dict_print(obj):
+def format_obj(obj):
     """
-    格式化字典的输出
+    格式化字典、列表等的输出
+    @param obj dict:
+    @param string|dict:
     """
-    outfile = sys.stdout
-    with outfile:
-        json.dump(obj, outfile, sort_keys=True,
-                  indent=4, separators=(',', ': '))
-        outfile.write('\n')
+    is_true = map(lambda x: isinstance(obj, x), [list, tuple, set])
+    if any(is_true) and len(obj) >= 5 or isinstance(obj, dict):
+        outs = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+        outs = "\n%s\n" % outs
+    else:
+        outs = obj
+    return outs
+
+
+def agent_config(path):
+    """
+    读取配置文件，返回配置信息
+    @param path string:配置文件
+    @return dict:
+    """
+    opts = {
+        "swall":
+            {
+                "node_role": "server",
+                "node_ip": "localhost",
+                "cache": "var/cache",
+                "backup": "var/backup",
+                "fs_plugin": "plugins/fservice",
+                "pidfile": "/tmp/.swall.pid",
+                "log_file": "var/logs/swall.log",
+                "log_level": "INFO",
+                "token": "yhIC7oenuJDpBxqyP3GSHn7mgQThRHtOnNNwqpJnyPVhR1n9Y9Q+/T3PJfjYCZdiGRrX03CM+VI=",
+                "thread_num": 20
+            },
+        "zk":
+            {
+                "zk_servers": "localhost:2181",
+                "zk_scheme": "digest",
+                "zk_auth": "swall!@#",
+                "root": "/swall",
+                "nodes": "/swall/nodes"
+            },
+        "fs":
+            {
+                "fs_type": "rsync",
+                "fs_host": "localhost",
+                "fs_port": 873,
+                "fs_user": "swall",
+                "fs_pass": "vGjeVUxxxrrrx8CcZ",
+                "fs_tmp_dir": "/data/swall_fs"
+            }
+    }
+
+    opt = load_config(path)
+    ret_opts = opts[os.path.basename(path).rstrip(".conf")]
+    ret_opts.update(opt)
+    return ret_opts

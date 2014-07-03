@@ -7,64 +7,19 @@ import logger
 import logging
 import optparse
 from swall.utils import c, \
-    dict_print, \
+    format_obj, \
     daemonize, \
     app_abs_path, \
     parse_args_and_kwargs, \
     color, \
     sort_ret, \
     kill_daemon, \
-    load_config, \
+    agent_config, \
     set_pidfile
 
+from swall.client import Client
 from swall.agent import Agent
 from swall.keeper import Keeper
-from swall.job import Job
-
-
-def agent_config(path):
-    """
-    读取配置文件，返回配置信息
-    @param path string:配置文件
-    @return dict:
-    """
-    opts = {
-        "swall":
-            {
-                "node_role": "server",
-                "node_ip": "localhost",
-                "cache": "var/cache",
-                "backup": "var/backup",
-                "fs_plugin": "plugins/fservice",
-                "pidfile": "/tmp/.swall.pid",
-                "log_file": "var/logs/swall.log",
-                "log_level": "INFO",
-                "token": "yhIC7oenuJDpBxqyP3GSHn7mgQThRHtOnNNwqpJnyPVhR1n9Y9Q+/T3PJfjYCZdiGRrX03CM+VI=",
-                "thread_num": 20
-            },
-        "zk":
-            {
-                "zk_servers": "localhost:2181",
-                "zk_scheme": "digest",
-                "zk_auth": "swall!@#",
-                "root": "/swall",
-                "nodes": "/swall/nodes"
-            },
-        "fs":
-            {
-                "fs_type": "rsync",
-                "fs_host": "localhost",
-                "fs_port": 873,
-                "fs_user": "swall",
-                "fs_pass": "vGjeVUxxxrrrx8CcZ",
-                "fs_tmp_dir": "/data/swall_fs"
-            }
-    }
-
-    opt = load_config(path)
-    ret_opts = opts[os.path.basename(path).rstrip(".conf")]
-    ret_opts.update(opt)
-    return ret_opts
 
 
 class OptionParserMeta(type):
@@ -160,6 +115,7 @@ class ConfParser(BaseOptionParser):
     def parse_args(self, args=None, values=None):
         options, args = super(ConfParser, self).parse_args(args, values)
         self.process_config_dir()
+        logger.setup_file_logger(app_abs_path(self.config["swall"]["log_file"]), self.config["swall"]["log_level"])
         return options, args
 
     def process_config_dir(self):
@@ -355,34 +311,47 @@ class Ctl(CtlParser):
 
     def main(self):
         self.parse_args()
-        job = Job(self.config, env="aes")
-        args = self.args[1:]
+        args, kwargs = parse_args_and_kwargs(self.args[1:])
 
         if len(args) < 2:
             self.print_help()
             sys.exit(1)
             #解析参数，获取位置参数和关键字参数
-        args, kwargs = parse_args_and_kwargs(args)
-        rets = job.submit_job(
-            cmd=args[2],
-            roles=args[0],
-            nregex=args[1],
-            nexclude=self.options.exclude,
-            args=args[3:],
-            kwargs=kwargs,
-            wait_timeout=self.options.timeout,
-            nthread=int(self.options.nthread)
+
+        cli = Client(
+            globs=args[1],
+            exclude_globs=self.options.exclude,
+            role=args[0],
+            nthread=int(self.options.nthread),
+            conf_dir=self.options.config_dir
         )
-        if rets.get("extra_data"):
-            rets = sort_ret(rets.get("extra_data"))
+        rets = {}
+        if args[2] == "sys.job_info":
+            if len(args[3:]) == 0 and len(kwargs) == 0:
+                sys.stderr.write(c("jid needed for sys.job_info\n", 'r'))
+                sys.stderr.flush()
+            else:
+                rets = cli.job_info(*args[3:], **kwargs)
+        else:
+            cli.submit_job(args[2], *args[3:], **kwargs)
+            rets = cli.get_return(self.options.timeout)
+
+        if rets:
+            rets = sort_ret(rets)
         else:
             print c('#' * 50, 'y')
             print color(rets.get("msg"), 'r')
             print c('#' * 50, 'y')
             sys.exit(1)
+
+        nfail = 0
+        for ret in rets:
+            if not ret[2]:
+                nfail += 1
+
         if not self.options.is_raw:
             format_ret = enumerate(
-                [u"%s %s : %s" % (u"[%s]" % c(ret[0], 'y'), c(ret[1], 'g'), color(ret[2])) for ret in rets])
+                [u"%s %s : %s" % (u"[%s]" % c(ret[0], 'y'), c(ret[1], 'b'), color(format_obj(ret[2]))) for ret in rets])
         else:
             format_ret = enumerate(
                 [u"%s %s : %s" % (u"[%s]" % ret[0], ret[1], ret[2]) for ret in rets])
@@ -397,7 +366,7 @@ class Ctl(CtlParser):
             index += 1
         else:
             index = 0
-        print "一共执行了[%s]个" % color(index)
+        print "一共执行了[%s]个，失败了[%s]" % (color(index), color(nfail, 0))
 
 
 class SwallManage(ManageParser):
@@ -429,7 +398,7 @@ class SwallManage(ManageParser):
             "config": self.config,
             "node_list": valid_nodes
         }
-        dict_print(info)
+        print format_obj(info)
 
 
 class SwallAgent(ServerParser):
@@ -480,7 +449,6 @@ class SwallAgent(ServerParser):
         restart server
         """
         self.daemonize_if_required()
-        logger.setup_file_logger(app_abs_path(self.config["swall"]["log_file"]), self.config["swall"]["log_level"])
         try:
             sagent = Agent(self.config)
             self.set_pidfile()

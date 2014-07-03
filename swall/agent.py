@@ -159,6 +159,7 @@ class Agent(ZKDb):
                 "sys.get_env": self._get_env,
                 "sys.copy": self._copy,
                 "sys.get": self._get,
+                "sys.job_info": self._job_info,
                 "sys.exprs": self.exprs,
                 "sys.rsync_module": self._rsync_module,
                 "sys.reload_node": self._reload_node,
@@ -168,6 +169,15 @@ class Agent(ZKDb):
                 "sys.version": self._version,
             })
         return node_funcs
+
+    def _job_info(self, jid, *args, **kwargs):
+        """
+        def _job_info(self, jid, *args, **kwargs) -> get the job info of jid
+        @param jid string:the job id
+        @return dict:
+        """
+        #为了加快速度，这部分在client.py实现了，不会调用到这里
+        pass
 
     def _get_roles(self, *args, **kwargs):
         """
@@ -744,6 +754,10 @@ class Agent(ZKDb):
                         key_str = self.main_conf.token
                         crypt = Crypt(key_str)
                         data["payload"] = crypt.dumps(data.get("payload"))
+
+                    #遇到过set返回成功但是却没有更新的情况，这里尝试set两次看看
+                    self.zkconn.set(jid_path, msgpack.dumps(data))
+                    time.sleep(0.0001)
                     set_ret = self.zkconn.set(jid_path, msgpack.dumps(data))
 
                     if set_ret != 0:

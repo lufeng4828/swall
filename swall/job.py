@@ -7,7 +7,6 @@ import time
 import msgpack
 import datetime
 import logging
-import traceback
 from swall.utils import cp, \
     check_cache, \
     make_dirs, \
@@ -23,6 +22,7 @@ from swall.crypt import Crypt
 from swall.keeper import Keeper
 from swall.zkclient import ZKClientError
 from swall.utils import timeout as iTimeout
+from swall.excpt import SwallAgentError
 
 log = logging.getLogger()
 
@@ -195,19 +195,19 @@ class Job(ZKDb):
             @iTimeout(wait_timeout)
             def _return(nodes, job_rets):
                 while 1:
-                    for r in nodes:
-                        wait = 0
-                        for n in nodes[r]:
-                            job_ret = self.get_job(r, n, self.jid)
-                            i_ret = job_ret["payload"].get("return", "")
-                            if not i_ret:
-                                wait = 1
-                            if job_rets.get(r):
-                                job_rets[r].update({n: i_ret})
-                            else:
-                                job_rets[r] = {n: i_ret}
-                    if wait:
-                        time.sleep(1)
+                    try:
+                        for r in nodes:
+                            for n in nodes[r]:
+                                job_ret = self.get_job(r, n, self.jid)
+                                i_ret = job_ret["payload"].get("return", "")
+                                if not i_ret:
+                                    raise SwallAgentError("wait")
+                                if job_rets.get(r):
+                                    job_rets[r].update({n: i_ret})
+                                else:
+                                    job_rets[r] = {n: i_ret}
+                    except SwallAgentError:
+                        time.sleep(0.1)
                     else:
                         break
             try:
