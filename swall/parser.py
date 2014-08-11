@@ -136,7 +136,7 @@ class ConfMin(object):
         self.add_option_group(group)
         group.add_option(
             '-c', '--config_dir', dest='config_dir',
-            default=app_abs_path('/conf'),
+            default=app_abs_path('conf/'),
             help='Pass in an alternative configuration dir. Default: %default'
         )
 
