@@ -494,12 +494,12 @@ class Agent(ZKDb):
             try:
                 q = self.queues["reg_node"]
                 zkconn = self.zkconn
+                if self.zkepoch and zkconn.epoch != self.zkepoch:
+                    log.warn("start rewatch")
+                    rewatch()
+                    self.zkepoch = zkconn.epoch
                 if q.empty():
                     time.sleep(0.5)
-                    if self.zkepoch and zkconn.epoch != self.zkepoch:
-                        log.info("start rewatch")
-                        rewatch()
-                        self.zkepoch = zkconn.epoch
                     continue
                 action, node_name, node_info = q.get(timeout=5)
                 job_path = os.path.join(self.zookeeper_conf.nodes, node_info["role"], node_name, "jobs")
