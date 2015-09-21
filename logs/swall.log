@@ -1,0 +1,2050 @@
+2015-09-21 23:57:30 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:57:30 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:57:30 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:57:35 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:57:36 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:57:36 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:57:41 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:57:42 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:57:42 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:57:47 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:57:48 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:57:48 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:57:53 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:57:54 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:57:54 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:57:59 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:58:00 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:58:00 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:58:05 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:58:06 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:58:06 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:58:11 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:58:12 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:58:12 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:58:17 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:58:18 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:58:18 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:58:23 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:58:24 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:58:24 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:58:29 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:58:30 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:58:30 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:58:35 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:58:36 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:58:36 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:58:41 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:58:42 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:58:42 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:58:47 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:58:48 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:58:48 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:58:53 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:58:54 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:58:54 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 426, in node_watcher
+    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
+  File "/wls/applications/swall/swall/agent.py", line 326, in add_node
+    if self.mq.exists(role_name):
+  File "/wls/applications/swall/swall/mq.py", line 111, in exists
+    return self.redis.exists(ping)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 838, in exists
+    return self.execute_command('EXISTS', name)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py", line 564, in execute_command
+    connection.send_command(*args)
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 556, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 532, in send_packed_command
+    self.connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 440, in connect
+    self.on_connect()
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 508, in on_connect
+    if nativestr(self.read_response()) != 'OK':
+  File "/Users/lufeng/.pyenv/versions/swall/lib/python2.7/site-packages/redis/connection.py", line 574, in read_response
+    raise response
+ResponseError: Client sent AUTH, but no password is set
+
+2015-09-21 23:58:59 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:59:06 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:59:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:59:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:59:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:59:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-21 23:59:17 INFO agent.add_node:338 new register accepted from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) success
+2015-09-21 23:59:17 INFO agent.node_watcher:430 register node [server swall_lufax_server_127.0.0.1] ok
+2015-09-21 23:59:22 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:59:27 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:59:32 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:59:37 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:59:42 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:59:47 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:59:52 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-21 23:59:57 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:02 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:07 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:12 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:00:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:00:17 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:22 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:27 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:32 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:37 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:42 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:47 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:52 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:00:57 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:02 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:07 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:12 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:01:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:01:17 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:22 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:27 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:32 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:37 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:42 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:47 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:52 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:01:57 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:02 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:07 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:12 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:02:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:02:17 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:22 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:28 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:33 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:38 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:43 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:48 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:53 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    action, node_name, node_info = q.get(timeout=5)
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:02:58 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    if self.queues["reg_node"].empty():
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:03:03 ERROR agent.node_watcher:441 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 424, in node_watcher
+    if self.queues["reg_node"].empty():
+  File "/Users/lufeng/.pyenv/versions/2.7.4/lib/python2.7/Queue.py", line 176, in get
+    raise Empty
+Empty
+
+2015-09-22 00:03:11 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:17 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:03:17 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:03:23 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:23 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:23 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:03:23 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:03:29 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:29 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:29 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:03:29 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:03:35 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:35 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:35 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:03:35 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:03:41 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:41 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:41 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:03:41 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:03:47 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:47 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:47 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:03:47 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:03:53 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:53 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:53 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:03:53 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:03:59 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:59 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:03:59 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:03:59 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:04:05 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:05 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:05 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:04:05 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:04:11 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:11 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:11 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:04:11 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:04:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:17 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:04:17 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:04:23 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:23 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:23 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:04:23 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:04:29 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:29 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:29 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:04:29 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:04:35 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:35 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:35 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:04:35 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:04:41 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:41 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:41 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:04:41 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:04:47 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:47 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:47 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:04:47 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:04:53 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:53 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:53 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:04:53 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:04:59 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:59 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:04:59 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:04:59 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:05:05 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:05 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:05 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:05:05 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:05:11 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:11 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:11 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:05:11 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:05:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:17 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:05:17 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:05:23 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:23 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:23 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:05:23 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:05:29 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:29 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:29 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:05:29 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:05:35 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:35 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:35 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:05:35 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:05:41 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:41 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:41 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:05:41 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:05:47 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:47 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:47 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:05:47 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:05:53 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:53 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:53 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:05:53 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:05:59 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:59 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:05:59 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:05:59 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:06:05 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:06:05 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:06:05 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:06:05 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:06:11 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:06:11 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:06:11 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:06:11 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:06:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:06:17 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:06:17 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:06:17 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:06:23 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:06:23 ERROR mq._conn:44 'NoneType' object has no attribute 'ping'
+2015-09-22 00:06:23 ERROR agent.add_node:331 register attempt from 192.168.4.180 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:06:23 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:06:34 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:06:34 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:06:34 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:06:40 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:06:40 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:06:46 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:06:46 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:06:52 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:06:52 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:06:58 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:06:58 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:07:04 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:07:04 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:07:10 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:07:10 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:07:16 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:07:16 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:07:22 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:07:22 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:07:28 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:07:28 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:07:34 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:07:34 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:07:40 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:07:40 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:07:46 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:07:46 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:07:52 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:07:52 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:07:58 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:07:58 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:08:04 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:08:04 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:08:10 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:08:10 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:08:16 ERROR agent.add_node:331 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:08:16 ERROR agent.node_watcher:437 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:08:20 WARNING agent.node_watcher:420 node_watcher stopping
+2015-09-22 00:08:20 WARNING agent.get_job:454 get_job stopping
+2015-09-22 00:08:20 WARNING agent.get_job:454 get_job stopping
+2015-09-22 00:08:20 WARNING agent.run_job:577 run_job stopping
+2015-09-22 00:08:20 WARNING agent.run_job:577 run_job stopping
+2015-09-22 00:08:20 WARNING agent.get_job:454 get_job stopping
+2015-09-22 00:08:20 WARNING agent.send_ret:648 send_ret stopping
+2015-09-22 00:08:20 WARNING agent.run_job:577 run_job stopping
+2015-09-22 00:08:20 WARNING agent.get_job:454 get_job stopping
+2015-09-22 00:08:20 WARNING agent.send_ret:648 send_ret stopping
+2015-09-22 00:08:20 WARNING agent.get_job:454 get_job stopping
+2015-09-22 00:08:20 WARNING agent.run_job:577 run_job stopping
+2015-09-22 00:08:20 WARNING agent.send_ret:648 send_ret stopping
+2015-09-22 00:08:20 WARNING agent.run_job:577 run_job stopping
+2015-09-22 00:08:20 WARNING agent.get_job:454 get_job stopping
+2015-09-22 00:08:20 WARNING agent.get_job:454 get_job stopping
+2015-09-22 00:08:20 WARNING agent.run_job:577 run_job stopping
+2015-09-22 00:08:20 WARNING agent.get_job:454 get_job stopping
+2015-09-22 00:08:20 WARNING agent.send_ret:648 send_ret stopping
+2015-09-22 00:08:20 WARNING agent.get_job:454 get_job stopping
+2015-09-22 00:08:20 WARNING agent.run_job:577 run_job stopping
+2015-09-22 00:08:20 WARNING agent.send_ret:648 send_ret stopping
+2015-09-22 00:08:20 WARNING agent.run_job:577 run_job stopping
+2015-09-22 00:08:20 WARNING agent.get_job:454 get_job stopping
+2015-09-22 00:08:20 WARNING agent.send_ret:648 send_ret stopping
+2015-09-22 00:08:20 WARNING agent.run_job:577 run_job stopping
+2015-09-22 00:08:20 WARNING agent.send_ret:648 send_ret stopping
+2015-09-22 00:08:20 WARNING agent.run_job:577 run_job stopping
+2015-09-22 00:08:20 WARNING agent.send_ret:648 send_ret stopping
+2015-09-22 00:08:20 WARNING agent.send_ret:648 send_ret stopping
+2015-09-22 00:08:20 WARNING agent.send_ret:648 send_ret stopping
+2015-09-22 00:08:20 WARNING agent.single_run_job:500 single_run_job stopping
+2015-09-22 00:08:22 WARNING agent.auto_auth:362 auto_auth stopping
+2015-09-22 00:08:34 WARNING agent.loop_tos:381 loop_tos stopping
+2015-09-22 00:08:36 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:08:36 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:08:36 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:08:42 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:08:42 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:08:48 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:08:48 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:08:54 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:08:54 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:09:00 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:09:00 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:09:06 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:09:06 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:09:12 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:09:12 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:09:26 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:09:26 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:09:26 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:09:32 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:09:32 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:09:38 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:09:38 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:09:44 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:09:44 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:09:50 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:09:50 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:09:56 ERROR agent.add_node:333 register attempt from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) failed, the ip in pending is different
+2015-09-22 00:09:56 ERROR agent.node_watcher:439 register node [server swall_lufax_server_127.0.0.1] fail
+2015-09-22 00:10:02 INFO agent.add_node:340 new register accepted from 127.0.0.1 for swall_lufax_server_127.0.0.1(server) success
+2015-09-22 00:10:02 INFO agent.node_watcher:436 register node [server swall_lufax_server_127.0.0.1] ok
+2015-09-22 00:12:14 INFO agent.add_node:340 new register accepted from 127.0.0.1 for @gen.game(server) success
+2015-09-22 00:12:14 INFO agent.node_watcher:436 register node [server @gen.game] ok
+2015-09-22 00:12:14 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:12:20 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:12:26 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:12:32 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:12:38 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:12:44 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:12:50 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:12:56 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:13:02 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:13:08 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:13:14 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:13:20 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:13:26 ERROR agent.node_watcher:447 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 441, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 353, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:13:39 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:13:40 INFO agent.add_node:337 register already accepted from 127.0.0.1 for @gen.game(server)
+2015-09-22 00:13:40 INFO agent.node_watcher:436 register node [server @gen.game] ok
+2015-09-22 00:19:10 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:20:30 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:21:18 INFO agent.add_node:339 new register accepted from 127.0.0.1 for swall_lu_4(game) success
+2015-09-22 00:21:18 INFO agent.node_watcher:435 register node [game swall_lu_4] ok
+2015-09-22 00:21:18 INFO agent.add_node:339 new register accepted from 127.0.0.1 for swall_lu_5(game) success
+2015-09-22 00:21:18 INFO agent.node_watcher:435 register node [game swall_lu_5] ok
+2015-09-22 00:21:18 INFO agent.add_node:339 new register accepted from 127.0.0.1 for swall_lu_1(game) success
+2015-09-22 00:21:18 INFO agent.node_watcher:435 register node [game swall_lu_1] ok
+2015-09-22 00:21:18 INFO agent.add_node:339 new register accepted from 127.0.0.1 for swall_lu_2(game) success
+2015-09-22 00:21:18 INFO agent.node_watcher:435 register node [game swall_lu_2] ok
+2015-09-22 00:21:18 INFO agent.add_node:339 new register accepted from 127.0.0.1 for swall_lu_3(game) success
+2015-09-22 00:21:18 INFO agent.node_watcher:435 register node [game swall_lu_3] ok
+2015-09-22 00:22:18 INFO agent.add_node:339 new register accepted from 127.0.0.1 for swall_lu_6(game) success
+2015-09-22 00:22:18 INFO agent.node_watcher:435 register node [game swall_lu_6] ok
+2015-09-22 00:22:18 INFO agent.add_node:339 new register accepted from 127.0.0.1 for swall_lu_7(game) success
+2015-09-22 00:22:18 INFO agent.node_watcher:435 register node [game swall_lu_7] ok
+2015-09-22 00:22:42 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:22:48 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:22:54 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:23:00 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:23:06 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    if self.del_node(node_info["role"], node_name):
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:23:12 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:23:18 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:23:24 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:23:30 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:23:36 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:23:42 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:23:48 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:23:54 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:24:00 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:24:06 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:24:12 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:24:18 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:24:24 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:24:30 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:24:36 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:24:42 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:24:48 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:24:54 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:25:00 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:25:06 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:25:12 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    self.nodes.pop(node_name)
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    @thread(pnum=1)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:25:18 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    self.nodes.pop(node_name)
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    @thread(pnum=1)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:25:24 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    self.nodes.pop(node_name)
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    @thread(pnum=1)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:25:30 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    self.nodes.pop(node_name)
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    @thread(pnum=1)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:25:36 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    self.nodes.pop(node_name)
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    @thread(pnum=1)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:25:42 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    self.nodes.pop(node_name)
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    @thread(pnum=1)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:25:48 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    self.nodes.pop(node_name)
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    @thread(pnum=1)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:25:54 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    self.nodes.pop(node_name)
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    @thread(pnum=1)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:26:00 ERROR agent.node_watcher:446 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 440, in node_watcher
+    self.nodes.pop(node_name)
+  File "/wls/applications/swall/swall/agent.py", line 352, in del_node
+    @thread(pnum=1)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:26:10 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:26:10 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_4
+2015-09-22 00:26:10 INFO agent.node_watcher:433 register node [game swall_lu_4] ok
+2015-09-22 00:26:10 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_5
+2015-09-22 00:26:10 INFO agent.node_watcher:433 register node [game swall_lu_5] ok
+2015-09-22 00:26:10 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_7
+2015-09-22 00:26:10 INFO agent.node_watcher:433 register node [game swall_lu_7] ok
+2015-09-22 00:26:10 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_1
+2015-09-22 00:26:10 INFO agent.node_watcher:433 register node [game swall_lu_1] ok
+2015-09-22 00:26:10 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_2
+2015-09-22 00:26:10 INFO agent.node_watcher:433 register node [game swall_lu_2] ok
+2015-09-22 00:26:10 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_3
+2015-09-22 00:26:10 INFO agent.node_watcher:433 register node [game swall_lu_3] ok
+2015-09-22 00:27:10 ERROR agent.node_watcher:444 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 438, in node_watcher
+    if self.del_node(node_name):
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:27:16 ERROR agent.node_watcher:444 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 438, in node_watcher
+    if self.del_node(node_name):
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:27:22 ERROR agent.node_watcher:444 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 438, in node_watcher
+    if self.del_node(node_name):
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:27:28 ERROR agent.node_watcher:444 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 438, in node_watcher
+    if self.del_node(node_name):
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:27:34 ERROR agent.node_watcher:444 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 438, in node_watcher
+    if self.del_node(node_name):
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:27:40 ERROR agent.node_watcher:444 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 438, in node_watcher
+    if self.del_node(node_name):
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:27:46 ERROR agent.node_watcher:444 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 438, in node_watcher
+    if self.del_node(node_name):
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:27:52 ERROR agent.node_watcher:444 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 438, in node_watcher
+    if self.del_node(node_name):
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:27:58 ERROR agent.node_watcher:444 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 438, in node_watcher
+    print node_name
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:28:04 ERROR agent.node_watcher:444 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 438, in node_watcher
+    print node_name, "ddddddddd"
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:28:10 ERROR agent.node_watcher:444 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 438, in node_watcher
+    print node_name, "ddddddddd"
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:28:19 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:28:19 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_4
+2015-09-22 00:28:19 INFO agent.node_watcher:433 register node [game swall_lu_4] ok
+2015-09-22 00:28:19 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_5
+2015-09-22 00:28:19 INFO agent.node_watcher:433 register node [game swall_lu_5] ok
+2015-09-22 00:28:19 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_1
+2015-09-22 00:28:19 INFO agent.node_watcher:433 register node [game swall_lu_1] ok
+2015-09-22 00:28:19 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_2
+2015-09-22 00:28:19 INFO agent.node_watcher:433 register node [game swall_lu_2] ok
+2015-09-22 00:28:19 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_3
+2015-09-22 00:28:19 INFO agent.node_watcher:433 register node [game swall_lu_3] ok
+2015-09-22 00:28:43 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    if self.del_node(node_name):
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:28:49 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    if self.del_node(node_name):
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:28:55 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    if self.del_node(node_name):
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:29:01 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:29:07 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:29:13 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:29:19 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:29:25 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:29:31 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:29:37 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:29:43 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:%s" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:29:49 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:%s" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:29:55 ERROR agent.node_watcher:445 Traceback (most recent call last):
+  File "/wls/applications/swall/swall/agent.py", line 439, in node_watcher
+    log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
+  File "/wls/applications/swall/swall/agent.py", line 350, in del_node
+    self.mq.unregister(role_name)
+  File "/wls/applications/swall/swall/mq.py", line 79, in unregister
+    self.unpsub("__keyspace@0__:__SWALL__:__JOB__:%s" % node_name)
+TypeError: not all arguments converted during string formatting
+
+2015-09-22 00:29:59 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:29:59 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_4
+2015-09-22 00:29:59 INFO agent.node_watcher:433 register node [game swall_lu_4] ok
+2015-09-22 00:29:59 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_1
+2015-09-22 00:29:59 INFO agent.node_watcher:433 register node [game swall_lu_1] ok
+2015-09-22 00:29:59 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_2
+2015-09-22 00:29:59 INFO agent.node_watcher:433 register node [game swall_lu_2] ok
+2015-09-22 00:29:59 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_3
+2015-09-22 00:29:59 INFO agent.node_watcher:433 register node [game swall_lu_3] ok
+2015-09-22 00:30:29 ERROR agent.node_watcher:442 delete node [game swall_lu_4] fail
+2015-09-22 00:30:35 ERROR agent.node_watcher:442 delete node [game swall_lu_4] fail
+2015-09-22 00:30:41 ERROR agent.node_watcher:442 delete node [game swall_lu_4] fail
+2015-09-22 00:30:47 ERROR agent.node_watcher:442 delete node [game swall_lu_4] fail
+2015-09-22 00:30:47 ERROR agent.node_watcher:442 delete node [game swall_lu_3] fail
+2015-09-22 00:30:53 ERROR agent.node_watcher:442 delete node [game swall_lu_4] fail
+2015-09-22 00:30:53 ERROR agent.node_watcher:442 delete node [game swall_lu_3] fail
+2015-09-22 00:30:59 ERROR agent.node_watcher:442 delete node [game swall_lu_4] fail
+2015-09-22 00:30:59 ERROR agent.node_watcher:442 delete node [game swall_lu_3] fail
+2015-09-22 00:31:05 ERROR agent.node_watcher:442 delete node [game swall_lu_4] fail
+2015-09-22 00:31:05 ERROR agent.node_watcher:442 delete node [game swall_lu_3] fail
+2015-09-22 00:31:11 ERROR agent.node_watcher:442 delete node [game swall_lu_4] fail
+2015-09-22 00:31:11 ERROR agent.node_watcher:442 delete node [game swall_lu_3] fail
+2015-09-22 00:31:17 ERROR agent.node_watcher:442 delete node [game swall_lu_4] fail
+2015-09-22 00:31:17 ERROR agent.node_watcher:442 delete node [game swall_lu_3] fail
+2015-09-22 00:31:23 ERROR agent.node_watcher:442 delete node [game swall_lu_4] fail
+2015-09-22 00:31:23 ERROR agent.node_watcher:442 delete node [game swall_lu_3] fail
+2015-09-22 00:31:29 ERROR agent.node_watcher:442 delete node [game swall_lu_4] fail
+2015-09-22 00:31:29 ERROR agent.node_watcher:442 delete node [game swall_lu_3] fail
+2015-09-22 00:31:35 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:31:35 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_1
+2015-09-22 00:31:35 INFO agent.node_watcher:432 register node [game swall_lu_1] ok
+2015-09-22 00:31:35 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_2
+2015-09-22 00:31:35 INFO agent.node_watcher:432 register node [game swall_lu_2] ok
+2015-09-22 00:31:47 INFO agent.node_watcher:438 delete node [game swall_lu_1] ok
+2015-09-22 00:31:59 INFO agent.node_watcher:438 delete node [game swall_lu_2] ok
+2015-09-22 00:32:11 INFO agent.add_node:337 new register accepted from 127.0.0.1 for swall_lu_4 success
+2015-09-22 00:32:11 INFO agent.node_watcher:432 register node [game swall_lu_4] ok
+2015-09-22 00:32:11 INFO agent.add_node:337 new register accepted from 127.0.0.1 for swall_lu_5 success
+2015-09-22 00:32:11 INFO agent.node_watcher:432 register node [game swall_lu_5] ok
+2015-09-22 00:32:11 INFO agent.add_node:337 new register accepted from 127.0.0.1 for swall_lu_1 success
+2015-09-22 00:32:11 INFO agent.node_watcher:432 register node [game swall_lu_1] ok
+2015-09-22 00:32:11 INFO agent.add_node:337 new register accepted from 127.0.0.1 for swall_lu_2 success
+2015-09-22 00:32:11 INFO agent.node_watcher:432 register node [game swall_lu_2] ok
+2015-09-22 00:32:11 INFO agent.add_node:337 new register accepted from 127.0.0.1 for swall_lu_3 success
+2015-09-22 00:32:11 INFO agent.node_watcher:432 register node [game swall_lu_3] ok
+2015-09-22 00:34:34 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:34:34 WARNING agent.node_watcher:418 node_watcher stopping
+2015-09-22 00:34:35 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:34:35 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:34:35 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:34:35 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:34:35 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:34:35 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:34:35 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:34:35 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:34:35 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:34:35 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:34:35 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:34:35 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:34:35 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:34:35 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:34:35 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:34:35 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:34:35 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:34:35 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:34:35 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:34:35 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:34:35 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:34:35 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:34:35 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:34:35 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:34:35 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:34:35 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:34:35 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:34:35 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:34:35 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:34:35 WARNING agent.single_run_job:498 single_run_job stopping
+2015-09-22 00:34:35 WARNING agent.loop_tos:379 loop_tos stopping
+2015-09-22 00:34:36 WARNING agent.auto_auth:360 auto_auth stopping
+2015-09-22 00:34:36 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:34:37 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_4
+2015-09-22 00:34:37 INFO agent.node_watcher:432 register node [game swall_lu_4] ok
+2015-09-22 00:34:37 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_5
+2015-09-22 00:34:37 INFO agent.node_watcher:432 register node [game swall_lu_5] ok
+2015-09-22 00:34:37 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_1
+2015-09-22 00:34:37 INFO agent.node_watcher:432 register node [game swall_lu_1] ok
+2015-09-22 00:34:37 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_2
+2015-09-22 00:34:37 INFO agent.node_watcher:432 register node [game swall_lu_2] ok
+2015-09-22 00:34:37 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_3
+2015-09-22 00:34:37 INFO agent.node_watcher:432 register node [game swall_lu_3] ok
+2015-09-22 00:35:17 WARNING agent.node_watcher:418 node_watcher stopping
+2015-09-22 00:35:17 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:35:17 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:35:17 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:35:17 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:35:17 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:35:17 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:35:17 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:35:17 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:35:17 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:35:17 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:35:17 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:35:17 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:35:17 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:35:17 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:35:17 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:35:17 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:35:17 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:35:17 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:35:17 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:35:17 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:35:17 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:35:17 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:35:17 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:35:17 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:35:17 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:35:17 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:35:17 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:35:17 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:35:17 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:35:17 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:35:18 WARNING agent.single_run_job:498 single_run_job stopping
+2015-09-22 00:35:19 WARNING agent.auto_auth:360 auto_auth stopping
+2015-09-22 00:35:22 WARNING agent.loop_tos:379 loop_tos stopping
+2015-09-22 00:35:23 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:35:23 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_4
+2015-09-22 00:35:23 INFO agent.node_watcher:432 register node [game swall_lu_4] ok
+2015-09-22 00:35:23 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_5
+2015-09-22 00:35:23 INFO agent.node_watcher:432 register node [game swall_lu_5] ok
+2015-09-22 00:35:23 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_1
+2015-09-22 00:35:23 INFO agent.node_watcher:432 register node [game swall_lu_1] ok
+2015-09-22 00:35:23 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_2
+2015-09-22 00:35:23 INFO agent.node_watcher:432 register node [game swall_lu_2] ok
+2015-09-22 00:35:23 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_3
+2015-09-22 00:35:23 INFO agent.node_watcher:432 register node [game swall_lu_3] ok
+2015-09-22 00:38:46 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:38:46 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:38:46 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:38:46 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:38:46 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:38:46 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:38:46 WARNING agent.node_watcher:418 node_watcher stopping
+2015-09-22 00:38:46 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:38:46 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:38:46 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:38:46 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:38:46 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:38:46 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:38:46 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:38:46 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:38:46 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:38:46 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:38:46 WARNING agent.single_run_job:498 single_run_job stopping
+2015-09-22 00:38:46 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:38:46 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:38:46 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:38:46 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:38:46 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:38:46 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:38:46 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:38:47 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:38:47 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:38:47 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:38:47 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:38:47 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:38:47 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:38:47 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:38:47 WARNING agent.auto_auth:360 auto_auth stopping
+2015-09-22 00:38:48 WARNING agent.loop_tos:379 loop_tos stopping
+2015-09-22 00:38:48 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:38:48 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_4
+2015-09-22 00:38:48 INFO agent.node_watcher:432 register node [game swall_lu_4] ok
+2015-09-22 00:38:48 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_5
+2015-09-22 00:38:48 INFO agent.node_watcher:432 register node [game swall_lu_5] ok
+2015-09-22 00:38:48 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_1
+2015-09-22 00:38:48 INFO agent.node_watcher:432 register node [game swall_lu_1] ok
+2015-09-22 00:38:48 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_2
+2015-09-22 00:38:48 INFO agent.node_watcher:432 register node [game swall_lu_2] ok
+2015-09-22 00:38:48 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_3
+2015-09-22 00:38:48 INFO agent.node_watcher:432 register node [game swall_lu_3] ok
+2015-09-22 00:41:54 WARNING agent.node_watcher:418 node_watcher stopping
+2015-09-22 00:41:54 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:41:54 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:41:54 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:41:54 WARNING agent.auto_auth:360 auto_auth stopping
+2015-09-22 00:41:54 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:41:54 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:41:54 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:41:54 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:41:54 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:41:54 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:41:54 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:41:54 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:41:54 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:41:54 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:41:54 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:41:54 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:41:54 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:41:54 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:41:54 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:41:54 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:41:54 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:41:54 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:41:54 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:41:54 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:41:54 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:41:54 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:41:54 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:41:54 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:41:54 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:41:54 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:41:54 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:41:55 WARNING agent.single_run_job:498 single_run_job stopping
+2015-09-22 00:41:58 WARNING agent.loop_tos:379 loop_tos stopping
+2015-09-22 00:42:00 ERROR mq._conn:44 'MQ' object has no attribute '_redis'
+2015-09-22 00:42:00 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_4
+2015-09-22 00:42:00 INFO agent.node_watcher:433 register node [game swall_lu_4] ok
+2015-09-22 00:42:00 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_5
+2015-09-22 00:42:00 INFO agent.node_watcher:433 register node [game swall_lu_5] ok
+2015-09-22 00:42:00 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_1
+2015-09-22 00:42:00 INFO agent.node_watcher:433 register node [game swall_lu_1] ok
+2015-09-22 00:42:00 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_2
+2015-09-22 00:42:00 INFO agent.node_watcher:433 register node [game swall_lu_2] ok
+2015-09-22 00:42:00 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_3
+2015-09-22 00:42:00 INFO agent.node_watcher:433 register node [game swall_lu_3] ok
+2015-09-22 00:49:09 WARNING agent.node_watcher:419 node_watcher stopping
+2015-09-22 00:49:09 WARNING agent.send_ret:647 send_ret stopping
+2015-09-22 00:49:09 WARNING agent.run_job:576 run_job stopping
+2015-09-22 00:49:09 WARNING agent.send_ret:647 send_ret stopping
+2015-09-22 00:49:09 WARNING agent.get_job:453 get_job stopping
+2015-09-22 00:49:09 WARNING agent.get_job:453 get_job stopping
+2015-09-22 00:49:09 WARNING agent.get_job:453 get_job stopping
+2015-09-22 00:49:09 WARNING agent.send_ret:647 send_ret stopping
+2015-09-22 00:49:09 WARNING agent.run_job:576 run_job stopping
+2015-09-22 00:49:09 WARNING agent.run_job:576 run_job stopping
+2015-09-22 00:49:09 WARNING agent.run_job:576 run_job stopping
+2015-09-22 00:49:09 WARNING agent.send_ret:647 send_ret stopping
+2015-09-22 00:49:09 WARNING agent.send_ret:647 send_ret stopping
+2015-09-22 00:49:09 WARNING agent.send_ret:647 send_ret stopping
+2015-09-22 00:49:09 WARNING agent.run_job:576 run_job stopping
+2015-09-22 00:49:09 WARNING agent.run_job:576 run_job stopping
+2015-09-22 00:49:09 WARNING agent.send_ret:647 send_ret stopping
+2015-09-22 00:49:09 WARNING agent.send_ret:647 send_ret stopping
+2015-09-22 00:49:09 WARNING agent.run_job:576 run_job stopping
+2015-09-22 00:49:09 WARNING agent.run_job:576 run_job stopping
+2015-09-22 00:49:09 WARNING agent.get_job:453 get_job stopping
+2015-09-22 00:49:09 WARNING agent.run_job:576 run_job stopping
+2015-09-22 00:49:09 WARNING agent.get_job:453 get_job stopping
+2015-09-22 00:49:09 WARNING agent.run_job:576 run_job stopping
+2015-09-22 00:49:09 WARNING agent.send_ret:647 send_ret stopping
+2015-09-22 00:49:09 WARNING agent.send_ret:647 send_ret stopping
+2015-09-22 00:49:09 WARNING agent.get_job:453 get_job stopping
+2015-09-22 00:49:09 WARNING agent.get_job:453 get_job stopping
+2015-09-22 00:49:09 WARNING agent.get_job:453 get_job stopping
+2015-09-22 00:49:09 WARNING agent.get_job:453 get_job stopping
+2015-09-22 00:49:09 WARNING agent.get_job:453 get_job stopping
+2015-09-22 00:49:09 WARNING agent.single_run_job:499 single_run_job stopping
+2015-09-22 00:49:10 WARNING agent.auto_auth:360 auto_auth stopping
+2015-09-22 00:49:11 WARNING agent.loop_tos:379 loop_tos stopping
+2015-09-22 00:49:11 ERROR mq._conn:45 'MQ' object has no attribute '_redis'
+2015-09-22 00:49:11 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_4
+2015-09-22 00:49:11 INFO agent.node_watcher:432 register node [game swall_lu_4] ok
+2015-09-22 00:49:11 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_5
+2015-09-22 00:49:11 INFO agent.node_watcher:432 register node [game swall_lu_5] ok
+2015-09-22 00:49:11 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_1
+2015-09-22 00:49:11 INFO agent.node_watcher:432 register node [game swall_lu_1] ok
+2015-09-22 00:49:11 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_2
+2015-09-22 00:49:11 INFO agent.node_watcher:432 register node [game swall_lu_2] ok
+2015-09-22 00:49:11 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_3
+2015-09-22 00:49:11 INFO agent.node_watcher:432 register node [game swall_lu_3] ok
+2015-09-22 00:52:43 WARNING agent.node_watcher:418 node_watcher stopping
+2015-09-22 00:52:43 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:52:43 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:52:43 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:52:43 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:52:43 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:52:43 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:52:43 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:52:43 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:52:43 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:52:43 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:52:43 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:52:43 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:52:43 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:52:43 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:52:43 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:52:43 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:52:43 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:52:43 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:52:43 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:52:43 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:52:43 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:52:43 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:52:43 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:52:43 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:52:43 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:52:43 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:52:43 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:52:43 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:52:43 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:52:43 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:52:43 WARNING agent.single_run_job:498 single_run_job stopping
+2015-09-22 00:52:44 WARNING agent.auto_auth:360 auto_auth stopping
+2015-09-22 00:52:46 WARNING agent.loop_tos:379 loop_tos stopping
+2015-09-22 00:52:47 ERROR mq._conn:45 'MQ' object has no attribute '_redis'
+2015-09-22 00:52:47 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_4
+2015-09-22 00:52:47 INFO agent.node_watcher:432 register node [game swall_lu_4] ok
+2015-09-22 00:52:47 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_5
+2015-09-22 00:52:47 INFO agent.node_watcher:432 register node [game swall_lu_5] ok
+2015-09-22 00:52:47 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_1
+2015-09-22 00:52:47 INFO agent.node_watcher:432 register node [game swall_lu_1] ok
+2015-09-22 00:52:47 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_2
+2015-09-22 00:52:47 INFO agent.node_watcher:432 register node [game swall_lu_2] ok
+2015-09-22 00:52:47 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_3
+2015-09-22 00:52:47 INFO agent.node_watcher:432 register node [game swall_lu_3] ok
+2015-09-22 00:54:10 WARNING agent.node_watcher:418 node_watcher stopping
+2015-09-22 00:54:11 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:54:11 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:54:11 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:54:11 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:54:11 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:54:11 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:54:11 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:54:11 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:54:11 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:54:11 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:54:11 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:54:11 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:54:11 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:54:11 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:54:11 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:54:11 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:54:11 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:54:11 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:54:11 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:54:11 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:54:11 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:54:11 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:54:11 WARNING agent.auto_auth:360 auto_auth stopping
+2015-09-22 00:54:11 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:54:11 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:54:11 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:54:11 WARNING agent.run_job:575 run_job stopping
+2015-09-22 00:54:11 WARNING agent.send_ret:646 send_ret stopping
+2015-09-22 00:54:11 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:54:11 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:54:11 WARNING agent.get_job:452 get_job stopping
+2015-09-22 00:54:11 WARNING agent.single_run_job:498 single_run_job stopping
+2015-09-22 00:54:12 WARNING agent.loop_tos:379 loop_tos stopping
+2015-09-22 00:54:12 ERROR mq._conn:45 'MQ' object has no attribute '_redis'
+2015-09-22 00:54:12 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_4
+2015-09-22 00:54:12 INFO agent.node_watcher:430 register node [game swall_lu_4] ok
+2015-09-22 00:54:12 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_5
+2015-09-22 00:54:12 INFO agent.node_watcher:430 register node [game swall_lu_5] ok
+2015-09-22 00:54:12 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_1
+2015-09-22 00:54:12 INFO agent.node_watcher:430 register node [game swall_lu_1] ok
+2015-09-22 00:54:12 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_2
+2015-09-22 00:54:12 INFO agent.node_watcher:430 register node [game swall_lu_2] ok
+2015-09-22 00:54:12 INFO agent.add_node:334 register already accepted from 127.0.0.1 for swall_lu_3
+2015-09-22 00:54:12 INFO agent.node_watcher:430 register node [game swall_lu_3] ok
+2015-09-22 00:54:39 INFO agent.node_watcher:436 delete node [game swall_lu_1] ok

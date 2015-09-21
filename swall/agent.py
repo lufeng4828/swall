@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 __author__ = 'lufeng4828@163.com'
 
 import os
@@ -8,13 +8,11 @@ import signal
 import Queue
 import logging
 import msgpack
-import zookeeper
 import traceback
-from swall.zkcon import ZKDb
-from threading import Lock,\
+from threading import Lock, \
     Thread
 from swall.crypt import Crypt
-
+from swall.mq import MQ
 from swall.utils import cp, \
     thread, \
     prog_dir, \
@@ -27,7 +25,6 @@ from swall.utils import cp, \
     app_abs_path, \
     load_module
 
-from swall.zkclient import watchmethod
 from swall.excpt import SwallCommandExecutionError
 
 log = logging.getLogger()
@@ -36,7 +33,7 @@ QUEUE_SIZE = 20000
 THREAD_NUM = 10
 
 
-class Agent(ZKDb):
+class Agent(object):
     """
     节点处理
     """
@@ -46,9 +43,7 @@ class Agent(ZKDb):
         super(Agent, self).__init__()
 
         self.main_conf = Conf(config["swall"])
-        self.zookeeper_conf = Conf(config["zk"])
-        self.fs_conf = Conf(config["fs"])
-        self.zkepoch = 0
+        self.mq = MQ(config)
         self.queues = {
             "reg_node": Queue.Queue(maxsize=QUEUE_SIZE),
             "get_job": Queue.Queue(maxsize=QUEUE_SIZE),
@@ -70,6 +65,7 @@ class Agent(ZKDb):
         self.nodes = {}
         self.sys_envs = {}
         self._stop = 0
+        self.running_jobs = set([])
 
     def load_node(self, *args, **kwargs):
         """
@@ -90,11 +86,10 @@ class Agent(ZKDb):
                 else:
                     func_name = func_str[0]
                     func_args = []
-                func = self.node_funcs[role].get(func_name)
+                func = self.node_funcs.get(func_name)
                 inodes = func(*func_args) if func else {}
                 for k in inodes.iterkeys():
                     inodes[k].update({
-                        "role": role,
                         "node_name": k,
                         "node_ip": self.main_conf.node_ip
                     })
@@ -104,7 +99,6 @@ class Agent(ZKDb):
                     nodes[n] = {
                         "project": role_conf.project,
                         "agent": role_conf.agent,
-                        "role": role,
                         "node_name": n,
                         "node_ip": self.main_conf.node_ip
                     }
@@ -139,35 +133,26 @@ class Agent(ZKDb):
         """
         return 1
 
-    def load_module(self, role=None, *args, **kwargs):
+    def load_module(self, *args, **kwargs):
         """
         加载模块
         """
-        node_funcs = {}
-        if role is None:
-            loop_roles = self.main_conf.node_role.split(',')
-        else:
-            loop_roles = [role]
-
-        for role in loop_roles:
-            node_funcs.update({
-                role: load_module("%s,%s" % (app_abs_path("module/common"), app_abs_path("module/%s" % role)))
-            })
-            node_funcs[role].update({
-                "sys.reload_module": self._reload_module,
-                "sys.reload_env": self._reload_env,
-                "sys.get_env": self._get_env,
-                "sys.copy": self._copy,
-                "sys.get": self._get,
-                "sys.job_info": self._job_info,
-                "sys.exprs": self.exprs,
-                "sys.rsync_module": self._rsync_module,
-                "sys.reload_node": self._reload_node,
-                "sys.ping": self.ping,
-                "sys.roles": self._get_roles,
-                "sys.funcs": self._get_func,
-                "sys.version": self._version,
-            })
+        node_funcs = load_module(app_abs_path("module/"))
+        node_funcs.update({
+            "sys.reload_module": self._reload_module,
+            "sys.reload_env": self._reload_env,
+            "sys.get_env": self._get_env,
+            "sys.copy": self._copy,
+            "sys.get": self._get,
+            "sys.job_info": self._job_info,
+            "sys.exprs": self.exprs,
+            "sys.rsync_module": self._rsync_module,
+            "sys.reload_node": self._reload_node,
+            "sys.ping": self.ping,
+            "sys.roles": self._get_roles,
+            "sys.funcs": self._get_func,
+            "sys.version": self._version,
+        })
         return node_funcs
 
     def _job_info(self, jid, *args, **kwargs):
@@ -255,8 +240,7 @@ class Agent(ZKDb):
         def _get_env(self, *args, **kwargs) ->获取系统变量
         @return tuple:
         """
-        role = kwargs["role"]
-        return [i for i in self.sys_envs[role]]
+        return [i for i in self.sys_envs]
 
     def exprs(self, str1, *args, **kwargs):
         """
@@ -266,21 +250,11 @@ class Agent(ZKDb):
         """
         return str1
 
-    def load_env(self, role=None, *args, **kwargs):
+    def load_env(self, *args, **kwargs):
         """
         加载模块
         """
-        node_envs = {}
-        roles = self._get_roles()
-        if not role:
-            for r in roles:
-                node_envs.update({
-                    r: load_env("%s,%s" % (app_abs_path("module/common"), app_abs_path("module/%s" % r)))
-                })
-        else:
-            node_envs.update({
-                role: load_env("%s,%s" % (app_abs_path("module/common"), app_abs_path("module/%s" % role)))
-            })
+        node_envs = load_env(app_abs_path("module/"))
         return node_envs
 
     def _copy(self, *args, **kwargs):
@@ -339,50 +313,40 @@ class Agent(ZKDb):
         fscli = FsClient(self.fs_conf)
         return fscli.upload(remote_path)
 
-    def add_node(self, role, role_name, role_ip):
+    def add_node(self, role_name, role_ip):
         """
         add_node
-        @param role:string 节点所属类型
         @param role_name:string 节点名称
         @parm role_ip:string 角色所在的服务器ip
         @return:bool True or False if add_node fail
         """
-        node_path = os.path.join(self.zookeeper_conf.nodes, role, role_name)
-        zkcli = self.zkconn
-        if zkcli.exists(node_path):
-            old_ip = zkcli.get(os.path.join(node_path, "ip"))[0]
-            if old_ip != role_ip:
-                log.error(
-                    "register attempt from %s for %s(%s) failed, the ip in pending is different"
-                    % (role_ip, role_name, role)
-                )
-                return False
-            else:
-                zkcli.create(os.path.join(node_path, "tos"), flags=zookeeper.EPHEMERAL, force=True)
-                log.info("register already accepted from %s for %s(%s)" % (old_ip, role_name, role))
-                return True
-
-        ret1 = zkcli.create(os.path.join(node_path, "ip"), role_ip, makepath=True)
-        ret2 = zkcli.create(os.path.join(node_path, "jobs"), makepath=True)
-        ret3 = zkcli.create(os.path.join(node_path, "result"), makepath=True)
-        ret4 = zkcli.create(os.path.join(node_path, "tos"), flags=zookeeper.EPHEMERAL, force=True)
-        if all([ret1, ret2, ret3, ret4]):
-            log.info("new register accepted from %s for %s(%s) success" % (role_ip, role_name, role))
+        if self.mq.exists(role_name):
+            ret = self.mq.get_tos(role_name)
+            if ret:
+                old_ip, _ = ret
+                if old_ip != role_ip:
+                    log.error(
+                        "register attempt from %s for %s failed, the ip in pending is different"
+                        % (role_ip, role_name)
+                    )
+                    return False
+                else:
+                    log.info("register already accepted from %s for %s" % (old_ip, role_name))
+                    return True
+        if self.mq.tos(role_name):
+            log.info("new register accepted from %s for %s success" % (role_ip, role_name))
             return True
         else:
-            log.error("new register accepted from %s for %s(%s) fail" % (role_ip, role_name, role))
+            log.error("new register accepted from %s for %s fail" % (role_ip, role_name))
             return False
 
-    def del_node(self, role, role_name):
+    def del_node(self, role_name):
         """
         删除节点
-        @param role string:角色名
         @param role_name:角色名称
         @return bool:True or False
         """
-        zkcli = self.zkconn
-        node_path = os.path.join(self.zookeeper_conf.nodes, role, role_name)
-        return zkcli.delete(node_path, recursive=True)
+        return self.mq.unregister(role_name)
 
     @thread(pnum=1)
     def auto_auth(self):
@@ -402,46 +366,8 @@ class Agent(ZKDb):
                 q.put(("add", node_name, curr_nodes[node_name]), timeout=5)
             for node_name in del_nodes:
                 q.put(("del", node_name, self.nodes[node_name]), timeout=5)
-            time.sleep(6)
+            time.sleep(3)
 
-    @thread(pnum=1)
-    def crond_clear_job(self):
-        """
-        定时清理已经完成的job
-        """
-        while 1:
-            if self._stop:
-                log.warn("crond_clear_job stopping")
-                return
-            try:
-                for node_name in self.nodes.keys():
-                    job_path = os.path.join(self.zookeeper_conf.nodes, self.nodes[node_name]["role"], node_name, "jobs")
-                    jids = self.zkconn.get_children(job_path)
-                    for jid in jids:
-                        jid_path = os.path.join(job_path, jid)
-                        znode = self.zkconn.get(jid_path)
-                        job = znode[0]
-                        mtime = znode[1]["mtime"] / 1000
-                        data = msgpack.loads(job)
-                        if data["env"] == "aes":
-                            key_str = self.main_conf.token
-                            crypt = Crypt(key_str)
-                            data["payload"] = crypt.loads(data.get("payload"))
-                        cur_t = int(time.strftime('%s', time.localtime()))
-                        delay_sec = cur_t - mtime
-                        keep_job_time = getattr(self.main_conf, "keep_job_time", 604800)
-
-                        if delay_sec >= keep_job_time:
-                            zkcli = self.zkconn
-                            if zkcli.delete(jid_path):
-                                log.info("delete the timeout %s %s job [%s] ok" % (keep_job_time,
-                                                                                   data["payload"]["status"], jid))
-                            else:
-                                log.error("delete the timeout %s %s job [%s] fail" % (keep_job_time,
-                                                                                      data["payload"]["status"], jid))
-            except:
-                log.error(traceback.format_exc())
-            time.sleep(5)
 
     @thread(pnum=1)
     def loop_tos(self):
@@ -450,63 +376,54 @@ class Agent(ZKDb):
         """
         while 1:
             if self._stop:
-                log.warn("loop_tos stopping,delete tos")
-                for node_name in self.nodes:
-                    node_path = os.path.join(self.zookeeper_conf.nodes, self.nodes[node_name]["role"], node_name)
-                    if zkcli.exists(os.path.join(node_path, "tos")):
-                        zkcli.delete(os.path.join(node_path, "tos"))
+                log.warn("loop_tos stopping")
                 return
             try:
-                zkcli = self.zkconn
                 for node_name in self.nodes:
-                    node_path = os.path.join(self.zookeeper_conf.nodes, self.nodes[node_name]["role"], node_name)
-                    if not zkcli.exists(os.path.join(node_path, "tos")):
-                        zkcli.create(os.path.join(node_path, "tos"), flags=zookeeper.EPHEMERAL)
+                    self.mq.tos(node_name)
             except:
                 log.error(traceback.format_exc())
             time.sleep(5)
 
+    @thread(pnum=5)
+    def loop_job_rev(self):
+        """
+        实时检查job
+        :return:
+        """
+        while 1:
+            for message in self.mq.pubsub.listen():
+                if message["type"] == "pmessage":
+                    channel = message["channel"]
+                    data = channel.replace("__keyspace@0__:__SWALL__:__JOB__:").split(':')
+                    if len(data) != 2:
+                        continue
+                    dist_node, jid = tuple(data)
+                    if jid in self.running_jobs:
+                        continue
+                    self.queues["get_job"].put((dist_node, jid), timeout=5)
+            time.sleep(0.001)
+
+
     @thread(pnum=1)
     def node_watcher(self):
-
-        @watchmethod
-        def recv_job(event):
-            children = self.zkconn.get_children(event.path, watcher=recv_job)
-            if event and event.type_name == "child":
-                add_jobs = set(children) - self.node_jobs.get(event.path, set([]))
-                if add_jobs:
-                    self.node_jobs[event.path] = set(children)
-                    dist_role = event.path.split('/')[-3]
-                    dist_node = event.path.split('/')[-2]
-                    log.info("[%s %s] receive job [%s]" % (dist_role, dist_node, ','.join(add_jobs)))
-                    for jid in add_jobs:
-                        self.queues["get_job"].put((dist_role, dist_node, jid), timeout=5)
-
-        def rewatch():
-            for i in self.nodes.keys():
-                path = os.path.join(self.zookeeper_conf.nodes, self.nodes[i]["role"], i, "jobs")
-                self.zkconn.get_children(path, watcher=recv_job)
+        #监听事件
+        for node in self.nodes.keys():
+            self.mq.psub("__keyspace@0__:__SWALL__:__JOB__:" % node)
 
         while 1:
             if self._stop:
                 log.warn("node_watcher stopping")
                 return
             try:
-                q = self.queues["reg_node"]
-                zkconn = self.zkconn
-                if self.zkepoch and zkconn.epoch != self.zkepoch:
-                    log.warn("start rewatch")
-                    rewatch()
-                    self.zkepoch = zkconn.epoch
-                if q.empty():
-                    time.sleep(0.5)
+
+                if self.queues["reg_node"].empty():
+                    time.sleep(0.05)
                     continue
+                q = self.queues["reg_node"]
                 action, node_name, node_info = q.get(timeout=5)
-                job_path = os.path.join(self.zookeeper_conf.nodes, node_info["role"], node_name, "jobs")
                 if action == "add":
-                    if self.add_node(node_info["role"], node_name, node_info["node_ip"]):
-                        children = zkconn.get_children(job_path, watcher=recv_job)
-                        self.node_jobs[job_path] = set(children)
+                    if self.add_node(node_name, node_info["node_ip"]):
                         #加载系统变量
                         if node_info["role"] not in self.sys_envs:
                             self.sys_envs.update(self.load_env(node_info["role"]))
@@ -515,9 +432,8 @@ class Agent(ZKDb):
                     else:
                         log.error("register node [%s %s] fail" % (node_info["role"], node_name))
                 else:
-                    if self.del_node(node_info["role"], node_name):
+                    if self.del_node(node_name):
                         log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
-                        self.node_jobs.pop(job_path)
                         self.nodes.pop(node_name)
                     else:
                         log.error("delete node [%s %s] fail" % (node_info["role"], node_name))
@@ -538,13 +454,11 @@ class Agent(ZKDb):
                     self.locks["get_job"].release()
                     time.sleep(0.5)
                     continue
-                dist_role, dist_node, jid = self.queues["get_job"].get(timeout=5)
+                dist_node, jid = self.queues["get_job"].get(timeout=5)
                 self.queues["get_job"].task_done()
                 self.locks["get_job"].release()
-                node_base_dir = self.zookeeper_conf.nodes
-                jid_path = os.path.join(node_base_dir, dist_role, dist_node, "jobs", jid)
                 try:
-                    job = self.zkconn.get(jid_path)[0]
+                    job = self.mq.get_job(dist_node, jid)
                     data = msgpack.loads(job)
                     if data["env"] == "aes":
                         key_str = self.main_conf.token
@@ -552,7 +466,7 @@ class Agent(ZKDb):
                         data["payload"] = crypt.loads(data.get("payload"))
                     if data["payload"]["status"] != "READY":
                         continue
-                    data["payload"]["role"] = dist_role
+                    self.running_jobs.add(dist_node)
                     data["payload"]["node_name"] = dist_node
                     #发送到执行队列中
                     if data["payload"].get("nthread"):
@@ -566,10 +480,10 @@ class Agent(ZKDb):
                         crypt = Crypt(key_str)
                         data["payload"] = crypt.dumps(data.get("payload"))
                         #修改任务状态为RUNNING
-                    self.zkconn.set(jid_path, msgpack.dumps(data))
+                    self.mq.set_job(dist_node, jid, msgpack.dumps(data))
                 except:
                     log.error(traceback.format_exc())
-                    self.queues["get_job"].put((dist_role, dist_node, jid))
+                    self.queues["get_job"].put((dist_node, jid))
 
     @thread(pnum=1)
     def single_run_job(self):
@@ -587,8 +501,7 @@ class Agent(ZKDb):
                     continue
                 log.info("single_run_job start")
                 data = msgpack.loads(self.queues["sigle_run"].get(timeout=5))
-                role, cmd, node_name = data["payload"]["role"], data["payload"]["cmd"], data["payload"][
-                    "node_name"]
+                cmd, node_name = data["payload"]["cmd"], data["payload"]["node_name"]
                 #做一些变量替换，把变量中如{ip}、{node}替换为具体的值
                 i = 0
                 args = list(data["payload"]["args"])
@@ -598,8 +511,8 @@ class Agent(ZKDb):
                         continue
                     matchs = env_regx.findall(args[i])
                     for match in matchs:
-                        if match in self.sys_envs[role]:
-                            val = self.sys_envs[role][match](**data["payload"]["kwargs"])
+                        if match in self.sys_envs:
+                            val = self.sys_envs[match](**data["payload"]["kwargs"])
                             args[i] = env_regx.sub(val, args[i], count=1)
                     i += 1
                 kwargs = data["payload"]["kwargs"]
@@ -608,8 +521,8 @@ class Agent(ZKDb):
                         continue
                     matchs = env_regx.findall(kwargs[key])
                     for match in matchs:
-                        if match in self.sys_envs[role]:
-                            val = self.sys_envs[role][match](**data["payload"]["kwargs"])
+                        if match in self.sys_envs:
+                            val = self.sys_envs[match](**data["payload"]["kwargs"])
                             kwargs[key] = env_regx.sub(val, kwargs[key], count=1)
 
                 def do(data):
@@ -617,9 +530,9 @@ class Agent(ZKDb):
                     os.chdir(prog_dir())
                     try:
                         if len(data["payload"]["args"]) == 1 and data["payload"]["args"][0] == "help":
-                            ret = self.node_funcs[role][cmd].__doc__
+                            ret = self.node_funcs[cmd].__doc__
                         else:
-                            ret = self.node_funcs[role][cmd](
+                            ret = self.node_funcs[cmd](
                                 *data["payload"]["args"],
                                 **data["payload"]["kwargs"]
                             )
@@ -636,7 +549,7 @@ class Agent(ZKDb):
                         os.chdir(prog_dir())
                     data["payload"]["return"] = ret
                     data["payload"]["status"] = "FINISH"
-                    self.queues["ret_job"].put(msgpack.dumps(data), timeout=5)
+                    self.queues["ret_job"].put((node_name, msgpack.dumps(data)), timeout=5)
 
                 works = []
                 log.info("nthread [%s]" % data["payload"]["nthread"])
@@ -669,9 +582,8 @@ class Agent(ZKDb):
                 self.locks["mult_run"].release()
                 os.chdir(prog_dir())
                 ret = ''
+                cmd, node_name = data["payload"]["cmd"], data["payload"]["node_name"]
                 try:
-                    role, cmd, node_name = data["payload"]["role"], data["payload"]["cmd"], data["payload"][
-                        "node_name"]
                     #做一些变量替换，把变量中如{ip}、{node}替换为具体的值
                     i = 0
                     args = list(data["payload"]["args"])
@@ -681,8 +593,8 @@ class Agent(ZKDb):
                             continue
                         matchs = env_regx.findall(args[i])
                         for match in matchs:
-                            if match in self.sys_envs[role]:
-                                val = self.sys_envs[role][match](**data["payload"]["kwargs"])
+                            if match in self.sys_envs:
+                                val = self.sys_envs[match](**data["payload"]["kwargs"])
                                 args[i] = env_regx.sub(val, args[i], count=1)
                         data["payload"]["args"] = args
                         i += 1
@@ -692,18 +604,18 @@ class Agent(ZKDb):
                             continue
                         matchs = env_regx.findall(kwargs[key])
                         for match in matchs:
-                            if match in self.sys_envs[role]:
-                                val = self.sys_envs[role][match](**data["payload"]["kwargs"])
+                            if match in self.sys_envs:
+                                val = self.sys_envs[match](**data["payload"]["kwargs"])
                                 kwargs[key] = env_regx.sub(val, kwargs[key], count=1)
 
-                    log.info("[%s %s] start run job [%s]" % (
-                        data["payload"]["role"], data["payload"]["node_name"], data["payload"]["jid"])
+                    log.info("[%s] start run job [%s]" % (
+                        data["payload"]["node_name"], data["payload"]["jid"])
                     )
                     #判断是否需要返回函数help信息
                     if len(data["payload"]["args"]) == 1 and data["payload"]["args"][0] == "help":
-                        ret = self.node_funcs[role][cmd].__doc__
+                        ret = self.node_funcs[cmd].__doc__
                     else:
-                        ret = self.node_funcs[role][cmd](
+                        ret = self.node_funcs[cmd](
                             *data["payload"]["args"],
                             **data["payload"]["kwargs"]
                         )
@@ -720,7 +632,7 @@ class Agent(ZKDb):
                     os.chdir(prog_dir())
                 data["payload"]["return"] = ret
                 data["payload"]["status"] = "FINISH"
-                self.queues["ret_job"].put(msgpack.dumps(data), timeout=5)
+                self.queues["ret_job"].put((node_name, msgpack.dumps(data)), timeout=5)
 
     @thread(pnum=THREAD_NUM)
     def send_ret(self):
@@ -736,17 +648,10 @@ class Agent(ZKDb):
                     self.locks["ret_job"].release()
                     time.sleep(0.5)
                     continue
-                data = msgpack.loads(self.queues["ret_job"].get(timeout=5))
+                node_name, data = msgpack.loads(self.queues["ret_job"].get(timeout=5))
                 self.queues["ret_job"].task_done()
                 self.locks["ret_job"].release()
-                node_base_dir = self.zookeeper_conf.nodes
-                jid_path = os.path.join(
-                    node_base_dir,
-                    data["payload"]["role"],
-                    data["payload"]["node_name"],
-                    "jobs",
-                    data["payload"]["jid"]
-                )
+                jid = data["payload"]["jid"]
                 log.info("[%s %s] send the result of job [%s]" % (
                     data["payload"]["role"], data["payload"]["node_name"], data["payload"]["jid"]))
                 try:
@@ -756,12 +661,9 @@ class Agent(ZKDb):
                         data["payload"] = crypt.dumps(data.get("payload"))
 
                     #遇到过set返回成功但是却没有更新的情况，这里尝试set两次看看
-                    self.zkconn.set(jid_path, msgpack.dumps(data))
+                    self.mq.set_job(node_name, jid, msgpack.dumps(data))
+                    self.running_jobs.remove(jid)
                     time.sleep(0.0001)
-                    set_ret = self.zkconn.set(jid_path, msgpack.dumps(data))
-
-                    if set_ret != 0:
-                        log.error("send result error,retcode is [%s]" % set_ret)
                 except:
                     log.error(traceback.format_exc())
 
@@ -779,9 +681,9 @@ class Agent(ZKDb):
         self.loop_tos()
         self.get_job()
         self.run_job()
+        self.loop_job_rev()
         self.single_run_job()
         self.send_ret()
-        self.crond_clear_job()
         while 1:
             if self._stop:
                 break

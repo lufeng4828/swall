@@ -810,7 +810,14 @@ def agent_config(path):
                 "fs_user": "swall",
                 "fs_pass": "vGjeVUxxxrrrx8CcZ",
                 "fs_tmp_dir": "/data/swall_fs"
-            }
+            },
+        'redis': {
+            "host": "0.0.0.0",
+            "port": 6379,
+            "db": 0,
+            "password": "foo",
+            "expire": 600
+        }
     }
 
     opt = load_config(path)

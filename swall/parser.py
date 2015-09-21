@@ -86,7 +86,7 @@ class BaseOptionParser(optparse.OptionParser, object):
 class ConfParser(BaseOptionParser):
     def setup_config(self):
         opts = {}
-        for f in ('swall', 'zk', 'fs'):
+        for f in ('swall', 'zk', 'fs', 'redis'):
             opts[f] = agent_config(self.get_config_file_path("%s.conf" % f))
         return opts
 

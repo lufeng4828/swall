@@ -4,14 +4,12 @@ __author__ = 'lufeng4828@163.com'
 import os
 import re
 import logging
-from swall.zkcon import ZKDb
 from swall.utils import Conf
-from swall.zkclient import ZKClientError
 
 log = logging.getLogger()
 
 
-class Keeper(ZKDb):
+class Keeper(object):
     """
     实现zookeeper一些基础功能
     """
