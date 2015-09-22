@@ -17,17 +17,15 @@ from swall.utils import cp, \
     Timeout
 
 from copy import deepcopy
-from swall.zkcon import ZKDb
 from swall.crypt import Crypt
 from swall.keeper import Keeper
-from swall.zkclient import ZKClientError
 from swall.utils import timeout as iTimeout
 from swall.excpt import SwallAgentError
 
 log = logging.getLogger()
 
 
-class Job(ZKDb):
+class Job(object):
     """
     任务管理相关
     """
