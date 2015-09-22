@@ -15,10 +15,12 @@ from swall.excpt import SwallAgentError
 
 log = logging.getLogger()
 
+DEFAULT_CONF_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "conf")
+
 
 class Client(object):
     def __init__(self, globs=None, exclude_globs=None, role=None, wait_all=False, timeout=30, nthread=None,
-                 conf_dir="/data/swall/conf"):
+                 conf_dir=DEFAULT_CONF_DIR):
         self.config = {}
         for f in ('swall', 'zk', 'fs', 'redis'):
             abs_path = app_abs_path(os.path.join(conf_dir, "%s.conf" % f))
