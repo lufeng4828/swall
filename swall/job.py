@@ -35,7 +35,6 @@ class Job(object):
 
         self.fs_conf = Conf(config["fs"])
         self.main_conf = Conf(config["swall"])
-        self.zookeeper_conf = Conf(config["zk"])
         self.keeper = Keeper(config)
         self.jid = jid
         self.env = env
@@ -57,33 +56,30 @@ class Job(object):
         self._gen_jid()
         return self.jid
 
-    def _send_job(self, data, role, node_name):
+    def _send_job(self, data, node_name):
         """
         发送job到对应的zk目录
         @param data dict:
-        @param role string:
         @param node_name string:
         @return int:1 for success else 0
         """
         ret = 0
         try:
-            job_path = os.path.join(self.zookeeper_conf.nodes, role, node_name, "jobs", data["payload"]["jid"])
             if data.get("env") == "aes":
                 key_str = self.main_conf.token
                 crypt = Crypt(key_str)
                 data["payload"] = crypt.dumps(data.get("payload"))
             data = msgpack.dumps(data)
-            self.zkconn.create(job_path, data)
+            self.keeper.mq.set_job(node_name, data["payload"]["jid"], data)
             ret = 1
-        except ZKClientError, e:
+        except Exception, e:
             log.error("send_job error:%s" % e.message)
         return ret
 
-    def submit_job(self, cmd, roles, nregex, nexclude=None, args=[], kwargs={}, wait_timeout=0, nthread=-1):
+    def submit_job(self, cmd, nregex, nexclude=None, args=[], kwargs={}, wait_timeout=0, nthread=-1):
         """
         提交任务
         @param cmd string:需要执行的命令
-        @param roles string:需要执行的节点类型，如game、admin、server等，多个用|分隔
         @param nregex string:节点匹配正则表达式
         @param nexclude string:排除节点正则，会从nregex结果排除掉
         @param args list:传给cmd命令的位置参数
@@ -97,11 +93,10 @@ class Job(object):
             }
         """
         self._gen_jid()
-        match_nodes = {}
-        for role in re.split(r"[|,]", roles):
-            match = self.keeper.get_nodes_by_regex(role, nregex, nexclude)
-            if match:
-                match_nodes[role] = match
+        match_nodes = []
+        match = self.keeper.get_nodes_by_regex(nregex, nexclude)
+        if match:
+            match_nodes = match
         if not match_nodes:
             log.warn("0 node match for %s [%s]" % (self.jid, cmd))
             return {
@@ -135,15 +130,10 @@ class Job(object):
                 modules = {}
                 if "mods" in kwargs or args:
                     for role in match_nodes:
-                        t_path = [
+                        modules = [
                             os.path.join(role, mod) for mod in mods
-                            if os.path.exists(os.path.join(app_abs_path(self.main_conf.module), role, mod))
+                            if os.path.exists(os.path.join(app_abs_path(self.main_conf.module), mod))
                         ]
-                        t_path.extend([
-                            os.path.join("common", mod) for mod in mods
-                            if os.path.exists(os.path.join(app_abs_path(self.main_conf.module), "common", mod))
-                        ])
-                        modules[role] = t_path
                 else:
                     for role in match_nodes:
                         role_mod_path = os.path.join(app_abs_path(self.main_conf.module), role)
