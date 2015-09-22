@@ -5,11 +5,13 @@ import time
 import msgpack
 import logging
 import traceback
+from datetime import datetime
 from swall.utils import Conf
 from redis import ConnectionPool, Redis, ConnectionError
 
 
 log = logging.getLogger()
+
 
 class MQ(object):
     """
@@ -28,7 +30,6 @@ class MQ(object):
         :return:
         """
         return self._conn()
-
 
     def _conn(self):
         """
@@ -69,15 +70,15 @@ class MQ(object):
         :return:
         """
         if self.tos(node_name):
-            self.psub("__keyspace@0__:__SWALL__:__JOB__:" % node_name)
+            self.psub("__keyspace@0__:_swall:_job:" % node_name)
             return True
         else:
             return False
 
     def unregister(self, node_name):
-        ping = '__SWALL__:__PING__:%s' % node_name
+        ping = '_swall:_ping:%s' % node_name
         self.redis.delete(ping)
-        self.unpsub("__keyspace@0__:__SWALL__:__JOB__:%s" % node_name)
+        self.unpsub("__keyspace@0__:_swall:_job:%s" % node_name)
         return True
 
     def tos(self, node_name):
@@ -88,7 +89,7 @@ class MQ(object):
         try:
             tval = "%s@%s" % (self.main_conf.node_ip, time.strftime('%y-%m-%d %H:%M:%S', time.localtime()))
             for node in nodes:
-                ping = '__SWALL__:__PING__:%s' % node
+                ping = '_swall:_ping:%s' % node
                 self.redis.set(ping, tval)
                 self.redis.expire(ping, int(self.redis_conf.expire))
                 return True
@@ -97,7 +98,7 @@ class MQ(object):
         return False
 
     def get_tos(self, node_name):
-        ping = '__SWALL__:__PING__:%s' % node_name
+        ping = '_swall:_ping:%s' % node_name
         tos = self.redis.get(ping)
         if tos:
             return tos.split('@')
@@ -108,7 +109,7 @@ class MQ(object):
         :param node_name:
         :return:
         """
-        ping = '__SWALL__:__PING__:%s' % node_name
+        ping = '_swall:_ping:%s' % node_name
         return self.redis.exists(ping)
 
     def get_job(self, node_name, jid):
@@ -118,7 +119,7 @@ class MQ(object):
         :param jid:
         :return:
         """
-        job_key = "__SWALL__:__JOB__:%s:%s" % (node_name, jid)
+        job_key = "_swall:_job:%s:%s" % (node_name, jid)
         job = self.redis.get(job_key)
         if job:
             return msgpack.loads(job)
@@ -133,17 +134,42 @@ class MQ(object):
         :param data:
         :return:
         """
-        job_key = "__SWALL__:__JOB__:%s:%s" % (node_name, jid)
+        job_key = "_swall:_job:%s:%s" % (node_name, jid)
         self.redis.set(job_key, data)
         return True
 
-
-    def loop_recv(self, node_name, job_queue):
+    def get_nodes(self, type_="online"):
         """
-        self.queues["get_job"].put((dist_role, dist_node, jid), timeout=5)
-        :param job_q:
-        :return:
+        获取节点，默认获取可用节点，type_=online|offline|all
         """
-        pattern = "__keyspace@0__:__SWALL__:__JOB__:%s" % node_name
+        keys = self.redis.keys("_swall:_ping:*")
+        final_nodes = {}
+        nodes = {}
+        for key in keys:
+            data = self.get_tos(key)
+            if data:
+                timedelta = datetime.now() - datetime.strptime(data[1], '%Y-%m-%d %H:%M:%S')
+                nodes.update({key: {"ip": data[0], "update_time": data[1], "delta_min": timedelta.min}})
+        if type_ == "online":
+            for key in nodes:
+                if nodes[key]["delta_min"] <= 1:
+                    final_nodes[key] = nodes[key]
+        elif type_ == "offline":
+            for key in nodes:
+                if nodes[key]["delta_min"] > 1:
+                    final_nodes[key] = nodes[key]
+        else:
+            final_nodes = nodes
 
+        return final_nodes
 
+    def is_valid(self, node_name):
+        """
+        检查节点是否可用
+        """
+        data = self.get_tos(node_name)
+        if data:
+            timedelta = datetime.now() - datetime.strptime(data[1], '%Y-%m-%d %H:%M:%S')
+            if timedelta.min <= 1:
+                return True
+        return False
