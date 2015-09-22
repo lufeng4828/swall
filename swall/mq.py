@@ -20,7 +20,7 @@ class MQ(object):
     def __init__(self, config):
         self.redis_conf = Conf(config["redis"])
         self.main_conf = Conf(config["swall"])
-        self._redis = self._conn()
+        self._redis = None
         self.pubsub = self.redis.pubsub()
 
     @property
@@ -29,25 +29,10 @@ class MQ(object):
         返回redis链接对象
         :return:
         """
-        return self._conn()
-
-    def _conn(self):
-        """
-        返回redis链接对象,为了保证链接先暂时在获取redis时候先检查链接
-        :return:
-        """
-        status = False
-        try:
-            if self._redis:
-                status = self._redis.ping()
-        except ConnectionError, error:
-            log.error("redis connect error:%s, try...." % error)
-        except Exception, error:
-            log.error(error)
-        if not status:
-            pool = ConnectionPool(host=self.redis_conf.host, port=int(self.redis_conf.port), db=int(self.redis_conf.db), password=self.redis_conf.password)
-            return Redis(connection_pool=pool)
+        if self._redis and self._redis.ping():
+            return self._redis
         else:
+            self._redis = Redis(host=self.redis_conf.host, port=int(self.redis_conf.port), db=int(self.redis_conf.db), password=self.redis_conf.password)
             return self._redis
 
     def psub(self, pattern):
@@ -70,7 +55,7 @@ class MQ(object):
         :return:
         """
         if self.tos(node_name):
-            self.psub("__keyspace@0__:_swall:_job:" % node_name)
+            self.psub("__keyspace@0__:_swall:_job:%s:*" % node_name)
             return True
         else:
             return False
@@ -92,7 +77,7 @@ class MQ(object):
                 ping = '_swall:_ping:%s' % node
                 self.redis.set(ping, tval)
                 self.redis.expire(ping, int(self.redis_conf.expire))
-                return True
+            return True
         except Exception:
             log.error(traceback.format_exc())
         return False
@@ -112,6 +97,16 @@ class MQ(object):
         ping = '_swall:_ping:%s' % node_name
         return self.redis.exists(ping)
 
+    def is_job_exists(self, node_name, jid):
+        """
+        检查是否存在job
+        :param node_name:
+        :param jid:
+        :return:
+        """
+        job_key = "_swall:_job:%s:%s" % (node_name, jid)
+        return self.redis.exists(job_key)
+
     def get_job(self, node_name, jid):
         """
         获取job数据
@@ -125,6 +120,45 @@ class MQ(object):
             return msgpack.loads(job)
         else:
             return {}
+
+    def get_node_job(self, node_name):
+        """
+        获取job数据
+        :param node_name:
+        :return:
+        """
+        job_key = "_swall:_job:%s:*" % node_name
+        keys = self.redis.keys(job_key)
+        jobs = []
+        for key in keys:
+            job = self.redis.get(key)
+            if job:
+                jobs.append(msgpack.loads(job))
+        return jobs
+
+
+    def del_job(self, node_name, jid):
+        """
+        删除job
+        :param node_name:
+        :param jid:
+        :return:
+        """
+        job_key = "_swall:_job:%s:%s" % (node_name, jid)
+        self.redis.delete(job_key)
+        return True
+
+    def del_node_jobs(self, node_name):
+        """
+        删除节点对应的job
+        :param node_name:
+        :return:
+        """
+        keys = self.redis.keys("_swall:_job:%s:*" % node_name)
+        for key in keys:
+            self.redis.delete(key)
+        return True
+
 
     def set_job(self, node_name, jid, data):
         """
@@ -146,17 +180,18 @@ class MQ(object):
         final_nodes = {}
         nodes = {}
         for key in keys:
-            data = self.get_tos(key)
+            node = key.split(':')[-1]
+            data = self.get_tos(node)
             if data:
-                timedelta = datetime.now() - datetime.strptime(data[1], '%Y-%m-%d %H:%M:%S')
-                nodes.update({key: {"ip": data[0], "update_time": data[1], "delta_min": timedelta.min}})
+                timedelta = datetime.now() - datetime.strptime(data[1], '%y-%m-%d %H:%M:%S')
+                nodes.update({node: {"ip": data[0], "update_time": data[1], "delta_seconds": timedelta.seconds}})
         if type_ == "online":
             for key in nodes:
-                if nodes[key]["delta_min"] <= 1:
+                if nodes[key]["delta_seconds"] <= 60:
                     final_nodes[key] = nodes[key]
         elif type_ == "offline":
             for key in nodes:
-                if nodes[key]["delta_min"] > 1:
+                if nodes[key]["delta_seconds"] > 60:
                     final_nodes[key] = nodes[key]
         else:
             final_nodes = nodes

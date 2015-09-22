@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 __author__ = 'lufeng4828@163.com'
 
 import re
@@ -743,17 +743,15 @@ def sort_ret(rets):
     """
     t = []
     list_result = []
-    for role in rets:
-        id1 = role
-        for node in rets[role]:
-            try:
-                id2 = '_'.join(node.split('_')[:-1])
-                id3 = int(node.split('_')[-1])
-            except:
-                id2 = '_'.join(node.split('_')[:-1])
-                id3 = node.split('_')[-1]
-            t.append({"id1": id1, "id2": id2, "id3": id3, "info": (role, node, rets[role][node])})
-    t.sort(key=operator.itemgetter("id1", "id2", "id3"))
+    for node in rets:
+        try:
+            id2 = '_'.join(node.split('_')[:-1])
+            id3 = int(node.split('_')[-1])
+        except:
+            id2 = '_'.join(node.split('_')[:-1])
+            id3 = node.split('_')[-1]
+        t.append({"id2": id2, "id3": id3, "info": (node, rets[node])})
+    t.sort(key=operator.itemgetter("id2", "id3"))
     for i in t:
         list_result.append(i["info"])
     return list_result

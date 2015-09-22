@@ -2,33 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0e79f8e-da32-452d-97e2-12349172c27a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/swall/mq.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conf/redis.conf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/swall.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/conf/zk.conf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/swall/zkclient.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/swall/zkcon.py" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/module/common/_sys_common.py" afterPath="$PROJECT_DIR$/module/_sys_common.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/module/common/cmd.py" afterPath="$PROJECT_DIR$/module/cmd.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/module/common/gen.py" afterPath="$PROJECT_DIR$/module/gen.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/module/common/network.py" afterPath="$PROJECT_DIR$/module/network.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/module/common/ps.py" afterPath="$PROJECT_DIR$/module/ps.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/module/server/server_tools.py" afterPath="$PROJECT_DIR$/module/server_tools.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/swall/agent.py" afterPath="$PROJECT_DIR$/swall/agent.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/swall/client.py" afterPath="$PROJECT_DIR$/swall/client.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/swall/job.py" afterPath="$PROJECT_DIR$/swall/job.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/swall/keeper.py" afterPath="$PROJECT_DIR$/swall/keeper.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/swall/mq.py" afterPath="$PROJECT_DIR$/swall/mq.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/swall/parser.py" afterPath="$PROJECT_DIR$/swall/parser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirememts.txt" afterPath="$PROJECT_DIR$/requirememts.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/conf/roles.d/server.conf" afterPath="$PROJECT_DIR$/conf/roles.d/server.conf" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/conf/swall.conf" afterPath="$PROJECT_DIR$/conf/swall.conf" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logs/swall.log" afterPath="$PROJECT_DIR$/logs/swall.log" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/swall/utils.py" afterPath="$PROJECT_DIR$/swall/utils.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="swall.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -51,21 +33,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="fs.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/conf/fs.conf">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="286">
-              <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="agent.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/swall/agent.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2951807" vertical-offset="13693" max-vertical-offset="15334">
-              <caret line="638" column="11" selection-start-line="638" selection-start-column="11" selection-end-line="638" selection-end-column="11" />
+            <state vertical-scroll-proportion="0.36965632" vertical-offset="7655" max-vertical-offset="15356">
+              <caret line="368" column="0" selection-start-line="368" selection-start-column="0" selection-end-line="368" selection-end-column="0" />
               <folding>
                 <element signature="e#50#59#0" expanded="true" />
               </folding>
@@ -76,8 +48,8 @@
       <file leaf-file-name="client.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/swall/client.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="352" max-vertical-offset="2772">
-              <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+            <state vertical-scroll-proportion="-22.192308" vertical-offset="1337" max-vertical-offset="2530">
+              <caret line="87" column="0" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
               <folding>
                 <element signature="e#49#58#0" expanded="true" />
               </folding>
@@ -85,32 +57,44 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="swall.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/conf/swall.conf">
+      <file leaf-file-name="utils.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/swall/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="836">
-              <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="15412" max-vertical-offset="17820">
+              <caret line="749" column="15" selection-start-line="749" selection-start-column="15" selection-end-line="749" selection-end-column="15" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/conf/roles.d/server.conf">
+      <file leaf-file-name="keeper.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/swall/keeper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="198">
-              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+            <state vertical-scroll-proportion="-15.269231" vertical-offset="395" max-vertical-offset="1628">
+              <caret line="40" column="10" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="10" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server_tools.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/server_tools.py">
+      <file leaf-file-name="excpt.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/swall/excpt.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="352">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="814">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="job.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/swall/job.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="5.0384617" vertical-offset="4487" max-vertical-offset="6996">
+              <caret line="198" column="8" selection-start-line="198" selection-start-column="8" selection-end-line="198" selection-end-column="8" />
+              <folding>
+                <element signature="e#49#58#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -125,21 +109,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="redis.conf" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/conf/redis.conf">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="264">
-              <caret line="5" column="10" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="mq.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/swall/mq.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1518" max-vertical-offset="3410">
-              <caret line="82" column="8" selection-start-line="82" selection-start-column="8" selection-end-line="82" selection-end-column="8" />
+            <state vertical-scroll-proportion="-8.5" vertical-offset="285" max-vertical-offset="4752">
+              <caret line="23" column="36" selection-start-line="23" selection-start-column="36" selection-end-line="23" selection-end-column="36" />
               <folding>
                 <element signature="e#49#60#0" expanded="true" />
               </folding>
@@ -147,11 +121,21 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="parser.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/swall/parser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="6873" max-vertical-offset="10890">
+              <caret line="342" column="24" selection-start-line="342" selection-start-column="24" selection-end-line="342" selection-end-column="24" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="client.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-181.57692" vertical-offset="4563" max-vertical-offset="57970">
-              <caret line="444" column="23" selection-start-line="444" selection-start-column="8" selection-end-line="444" selection-end-column="23" />
+            <state vertical-scroll-proportion="-15.269231" vertical-offset="47937" max-vertical-offset="57992">
+              <caret line="2219" column="8" selection-start-line="2219" selection-start-column="8" selection-end-line="2219" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -170,26 +154,26 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/swall/job.py" />
         <option value="$PROJECT_DIR$/swall/crypt.py" />
-        <option value="$PROJECT_DIR$/swall/keeper.py" />
-        <option value="$PROJECT_DIR$/swall/client.py" />
-        <option value="$PROJECT_DIR$/swall/parser.py" />
-        <option value="$PROJECT_DIR$/swall/utils.py" />
         <option value="$PROJECT_DIR$/conf/redis.conf" />
         <option value="$PROJECT_DIR$/conf/swall.conf" />
         <option value="$PROJECT_DIR$/conf/roles.d/server.conf" />
-        <option value="$USER_HOME$/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py" />
+        <option value="$PROJECT_DIR$/swall/keeper.py" />
         <option value="$PROJECT_DIR$/swall/mq.py" />
+        <option value="$PROJECT_DIR$/swall/client.py" />
+        <option value="$PROJECT_DIR$/swall/parser.py" />
+        <option value="$PROJECT_DIR$/swall/utils.py" />
+        <option value="$USER_HOME$/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py" />
+        <option value="$PROJECT_DIR$/swall/job.py" />
         <option value="$PROJECT_DIR$/swall/agent.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1457" />
-    <option name="y" value="23" />
-    <option name="width" value="2134" />
-    <option name="height" value="1334" />
+    <option name="x" value="2117" />
+    <option name="y" value="48" />
+    <option name="width" value="2501" />
+    <option name="height" value="1365" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -502,8 +486,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1457" y="23" width="2134" height="1334" extended-state="0" />
-    <editor active="false" />
+    <frame x="2117" y="48" width="2501" height="1365" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -511,7 +495,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.115200765" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.09800732" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
@@ -557,44 +541,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/swall/job.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1" max-vertical-offset="8668">
-          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/swall/crypt.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2486">
           <caret line="8" column="11" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/swall/keeper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2904">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding>
-            <element signature="e#49#58#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/swall/parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-22.5" vertical-offset="977" max-vertical-offset="10956">
-          <caret line="89" column="27" selection-start-line="89" selection-start-column="27" selection-end-line="89" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/swall/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="16478" max-vertical-offset="17864">
-          <caret line="801" column="33" selection-start-line="801" selection-start-column="33" selection-end-line="801" selection-end-column="33" />
           <folding />
         </state>
       </provider>
@@ -639,6 +589,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/swall/keeper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.269231" vertical-offset="395" max-vertical-offset="1628">
+          <caret line="40" column="10" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swall/mq.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.5" vertical-offset="285" max-vertical-offset="4752">
+          <caret line="23" column="36" selection-start-line="23" selection-start-column="36" selection-end-line="23" selection-end-column="36" />
+          <folding>
+            <element signature="e#49#60#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swall/parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="6873" max-vertical-offset="10890">
+          <caret line="342" column="24" selection-start-line="342" selection-start-column="24" selection-end-line="342" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.269231" vertical-offset="47937" max-vertical-offset="57992">
+          <caret line="2219" column="8" selection-start-line="2219" selection-start-column="8" selection-end-line="2219" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swall/job.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="5.0384617" vertical-offset="4487" max-vertical-offset="6996">
+          <caret line="198" column="8" selection-start-line="198" selection-start-column="8" selection-end-line="198" selection-end-column="8" />
+          <folding>
+            <element signature="e#49#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/module/gen.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="858">
@@ -647,38 +641,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.pyenv/versions/swall/lib/python2.7/site-packages/redis/client.py">
+    <entry file="file://$PROJECT_DIR$/swall/excpt.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-181.57692" vertical-offset="4563" max-vertical-offset="57970">
-          <caret line="444" column="23" selection-start-line="444" selection-start-column="8" selection-end-line="444" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1219">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/swall/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="15412" max-vertical-offset="17820">
+          <caret line="749" column="15" selection-start-line="749" selection-start-column="15" selection-end-line="749" selection-end-column="15" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/swall/client.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2" max-vertical-offset="2772">
-          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+        <state vertical-scroll-proportion="-22.192308" vertical-offset="1337" max-vertical-offset="2530">
+          <caret line="87" column="0" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
           <folding>
             <element signature="e#49#58#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/swall/mq.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1518" max-vertical-offset="3410">
-          <caret line="82" column="8" selection-start-line="82" selection-start-column="8" selection-end-line="82" selection-end-column="8" />
-          <folding>
-            <element signature="e#49#60#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/swall/agent.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2951807" vertical-offset="13693" max-vertical-offset="15334">
-          <caret line="638" column="11" selection-start-line="638" selection-start-column="11" selection-end-line="638" selection-end-column="11" />
+        <state vertical-scroll-proportion="0.36965632" vertical-offset="7655" max-vertical-offset="15356">
+          <caret line="368" column="0" selection-start-line="368" selection-start-column="0" selection-end-line="368" selection-end-column="0" />
           <folding>
             <element signature="e#50#59#0" expanded="true" />
           </folding>
