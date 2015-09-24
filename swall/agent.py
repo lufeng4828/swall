@@ -300,33 +300,33 @@ class Agent(object):
         fscli = FsClient(self.fs_conf)
         return fscli.upload(remote_path)
 
-    def add_node(self, role_name, role_ip):
+    def add_node(self, node_data):
         """
         add_node
-        @param role_name:string 节点名称
-        @parm role_ip:string 角色所在的服务器ip
+        @parm node_data:dict
         @return:bool True or False if add_node fail
         """
-        if self.mq.exists(role_name):
-            ret = self.mq.get_tos(role_name)
-            if ret:
-                old_ip, _ = ret
-                if old_ip != role_ip:
-                    log.error(
-                        "register attempt from %s for %s failed, the ip in pending is different"
-                        % (role_ip, role_name)
-                    )
-                    return False
-                else:
-                    self.mq.register(role_name)
-                    log.info("register already accepted from %s for %s" % (old_ip, role_name))
-                    return True
-        if self.mq.register(role_name):
-            log.info("new register accepted from %s for %s success" % (role_ip, role_name))
-            return True
+        exist_info = self.mq.exists(node_data.keys())
+        if exist_info:
+            exist_nodes = [i for i in exist_info if exist_info[i] is not None]
         else:
-            log.error("new register accepted from %s for %s fail" % (role_ip, role_name))
-            return False
+            exist_nodes = []
+        data = self.mq.get_tos(exist_nodes)
+        add_nodes = set(node_data.keys()) - set(exist_nodes)
+        for node in data:
+            name, old_ip, _, = node
+            if old_ip != node_data[name]:
+                log.error(
+                    "register attempt from %s for %s failed, the ip in pending is different"
+                        % (node_data[name], name)
+                )
+            else:
+                add_nodes.add(name)
+        if add_nodes:
+            if self.mq.register(list(add_nodes)):
+                log.info("[%s] new register accepted" % len(add_nodes))
+                return True
+        return False
 
     def del_node(self, role_name):
         """
@@ -350,13 +350,15 @@ class Agent(object):
             curr_nodes = self.load_node()
             add_nodes = set(curr_nodes.keys()) - set(self.nodes.keys())
             del_nodes = set(self.nodes.keys()) - set(curr_nodes.keys())
+            node_data = {}
             for node_name in add_nodes:
                 node_info = curr_nodes.get(node_name, {})
                 node_ip = node_info.get("node_ip")
                 if node_info and node_ip:
-                    if self.add_node(node_name, node_ip):
-                        log.info("register node [%s] ok" % node_name)
-                        self.nodes[node_name] = node_info
+                    node_data[node_name] = node_ip
+            if self.add_node(node_data):
+                for node_name in node_data:
+                    self.nodes[node_name] = curr_nodes.get(node_name, {})
 
             for node_name in del_nodes:
                 if node_name in self.nodes.keys():
@@ -396,8 +398,7 @@ class Agent(object):
                 try:
                     message = self.mq.pubsub.get_message()
                 except:
-                    log.error(traceback.format_exc())
-                    time.sleep(0.001)
+                    time.sleep(0.0001)
                 self.locks["recv_job"].release()
                 if message and message["type"] == "pmessage":
                     channel = message["channel"]
@@ -452,7 +453,7 @@ class Agent(object):
                         crypt = Crypt(key_str)
                         data["payload"] = crypt.dumps(data.get("payload"))
                         #修改任务状态为RUNNING
-                    self.mq.set_job(dist_node, jid, msgpack.dumps(data))
+                    self.mq.set_job([dist_node, jid, msgpack.dumps(data)])
                 except:
                     log.error(traceback.format_exc())
                     self.queues["get_job"].put((dist_node, jid))
@@ -608,6 +609,8 @@ class Agent(object):
         """
         发送结果
         """
+        key_str = self.main_conf.token
+        crypt = Crypt(key_str)
         while 1:
             if self._stop:
                 log.warn("send_ret stopping")
@@ -615,26 +618,37 @@ class Agent(object):
             if self.locks["ret_job"].acquire():
                 if self.queues["ret_job"].empty():
                     self.locks["ret_job"].release()
-                    time.sleep(0.5)
+                    time.sleep(0.005)
                     continue
-                node_name, data = self.queues["ret_job"].get(timeout=5)
-                data = msgpack.loads(data)
+                result = []
+                for _ in xrange(100):
+                    try:
+                        node_name, data = self.queues["ret_job"].get(block=False)
+                        result.append((node_name, data))
+                    except Queue.Empty:
+                        continue
                 self.queues["ret_job"].task_done()
                 self.locks["ret_job"].release()
-                jid = data["payload"]["jid"]
-                log.info("[%s] send the result of job [%s]" % (data["payload"]["node_name"], data["payload"]["jid"]))
-                try:
-                    if data["env"] == "aes":
-                        key_str = self.main_conf.token
-                        crypt = Crypt(key_str)
-                        data["payload"] = crypt.dumps(data.get("payload"))
-
-                    #遇到过set返回成功但是却没有更新的情况，这里尝试set两次看看
-                    self.mq.set_job(node_name, jid, msgpack.dumps(data))
-                    self.running_jobs.remove('%s@%s' % (jid, node_name))
-                    time.sleep(0.0001)
-                except:
-                    log.error(traceback.format_exc())
+                log.info("send [%s] result" % len(result))
+                rets = []
+                del_jobs = []
+                for res in result:
+                    data = res[1]
+                    node_name = res[0]
+                    data = msgpack.loads(data)
+                    jid = data["payload"]["jid"]
+                    del_jobs.append('%s@%s' % (jid, node_name))
+                    try:
+                        if data["env"] == "aes":
+                            data["payload"] = crypt.dumps(data.get("payload"))
+                        rets.append((node_name, jid, msgpack.dumps(data)))
+                    except:
+                        log.error(traceback.format_exc())
+                if rets:
+                    if self.mq.set_job(rets):
+                        for i in del_jobs:
+                            if i in self.running_jobs:
+                                self.running_jobs.remove(i)
 
     def loop(self):
         """

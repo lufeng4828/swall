@@ -68,7 +68,7 @@ class Client(object):
         match_nodes = self.job.keeper.get_nodes_by_regex(self.globs, self.exclude_globs)
         return match_nodes
 
-    def get_return(self, timeout=30):
+    def get_return(self, timeout=60):
         """
         获取结果数据
         @param _timeout int:获取数据的超时
@@ -79,12 +79,16 @@ class Client(object):
         def _return(nodes, job_rets):
             while 1:
                 try:
+                    job_data = []
                     for n in nodes:
-                        job_ret = self.job.get_job(n, self.job.jid)
-                        i_ret = job_ret.get("payload", {}).get("return")
+                        job_data.append((n, self.job.jid))
+                    rets = self.job.get_job(job_data)
+                    for node, ret in rets.items():
+                        i_ret = ret.get("payload", {}).get("return")
                         if i_ret is None:
                             raise SwallAgentError("wait")
-                        job_rets.update({n: i_ret})
+                        else:
+                            job_rets.update({node: i_ret})
                 except SwallAgentError:
                     time.sleep(0.1)
                 else:

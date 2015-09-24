@@ -59,22 +59,28 @@ class Job(object):
         self._gen_jid()
         return self.jid
 
-    def _send_job(self, data, node_name):
+    def _send_job(self, node_data):
         """
-        发送job到对应的zk目录
+        发送job
         @param data dict:
         @param node_name string:
         @return int:1 for success else 0
         """
         ret = 0
         try:
-            jid = data["payload"]["jid"]
-            if data.get("env") == "aes":
-                key_str = self.main_conf.token
-                crypt = Crypt(key_str)
-                data["payload"] = crypt.dumps(data.get("payload"))
-            data = msgpack.dumps(data)
-            self.keeper.mq.set_job(node_name, jid, data)
+            key_str = self.main_conf.token
+            crypt = Crypt(key_str)
+            jobs = []
+            for node in node_data:
+                data = node[0]
+                node_name = node[1]
+                jid = data["payload"]["jid"]
+                if data.get("env") == "aes":
+                    data["payload"] = crypt.dumps(data.get("payload"))
+                data = msgpack.dumps(data)
+                jobs.append((node_name, jid, data))
+            if jobs:
+                self.keeper.mq.set_job(jobs)
             ret = 1
         except Exception, e:
             log.error("send_job error:%s" % traceback.format_exc())
@@ -147,11 +153,12 @@ class Job(object):
         }
         if nthread != -1:
             data["payload"]["nthread"] = nthread
-        send_ret = {}
+        node_data = []
         for node_name in match_nodes:
             job_data = deepcopy(data)
-            send_ret.update({node_name: self._send_job(job_data, node_name)})
-
+            node_data.append((job_data, node_name))
+        ret = self._send_job(node_data)
+        send_ret = {n: ret for n in match_nodes}
         if wait_timeout:
             rets = {}
 
@@ -196,7 +203,7 @@ class Job(object):
                     "msg": "send_job complete,fail",
                 }
 
-    def get_job(self, node_name, jid):
+    def get_job(self, job_data):
         """
         获取任务
         @param node_name string:节点名称
@@ -204,45 +211,47 @@ class Job(object):
         @return dict:a job info
         """
         ret = {}
+        key_str = self.main_conf.token
+        crypt = Crypt(key_str)
         try:
-            data = self.mq.get_job(node_name, jid)
-            env = data.get("env")
-            if env == "aes":
-                key_str = self.main_conf.token
-                crypt = Crypt(key_str)
-                data["payload"] = crypt.loads(data.get("payload"))
-            payload = data["payload"]
-            if payload["cmd"] == "sys.get" and payload["status"] == "FINISH" and payload["return"] != "":
-                if payload["args"][0] != "help":
-                    fid = payload["return"]
-                    if "local_path" in payload["kwargs"] and "remote_path" in payload["kwargs"]:
-                        local_path = payload["kwargs"]["local_path"]
-                        remote_path = payload["kwargs"]["remote_path"]
-                    else:
-                        local_path = payload["args"][1]
-                        remote_path = payload["args"][0]
-                    stat = payload["kwargs"].get("stat")
-                    if local_path.endswith('/') or os.path.isdir(local_path):
-                        local_path = os.path.join(local_path, os.path.basename(remote_path))
-                    if checksum(local_path) != fid:
-                        if not check_cache(app_abs_path(self.main_conf.cache), fid):
-                            FsClient = load_fclient(app_abs_path(self.main_conf.fs_plugin), ftype=self.fs_conf.fs_type)
-                            fscli = FsClient(self.fs_conf)
-                            fscli.download(fid, os.path.join(app_abs_path(self.main_conf.cache), fid))
+            rets = self.mq.mget_job(job_data)
+            for node, data in rets.items():
+                data = msgpack.loads(data)
+                env = data.get("env")
+                if env == "aes":
+                    data["payload"] = crypt.loads(data.get("payload"))
+                payload = data["payload"]
+                if payload["cmd"] == "sys.get" and payload["status"] == "FINISH" and payload["return"] != "":
+                    if payload["args"][0] != "help":
+                        fid = payload["return"]
+                        if "local_path" in payload["kwargs"] and "remote_path" in payload["kwargs"]:
+                            local_path = payload["kwargs"]["local_path"]
+                            remote_path = payload["kwargs"]["remote_path"]
+                        else:
+                            local_path = payload["args"][1]
+                            remote_path = payload["args"][0]
+                        stat = payload["kwargs"].get("stat")
+                        if local_path.endswith('/') or os.path.isdir(local_path):
+                            local_path = os.path.join(local_path, os.path.basename(remote_path))
+                        if checksum(local_path) != fid:
+                            if not check_cache(app_abs_path(self.main_conf.cache), fid):
+                                FsClient = load_fclient(app_abs_path(self.main_conf.fs_plugin), ftype=self.fs_conf.fs_type)
+                                fscli = FsClient(self.fs_conf)
+                                fscli.download(fid, os.path.join(app_abs_path(self.main_conf.cache), fid))
 
-                        if check_cache(app_abs_path(self.main_conf.cache), fid):
-                            if not make_dirs(os.path.dirname(local_path)):
-                                log.error("创建目标目录:%s失败" % local_path)
-                            if cp(os.path.join(app_abs_path(self.main_conf.cache), fid), local_path, stat):
-                                payload["return"] = local_path
-                            else:
-                                payload["return"] = ""
-                    else:
-                        payload["return"] = local_path
-            ret = data
+                            if check_cache(app_abs_path(self.main_conf.cache), fid):
+                                if not make_dirs(os.path.dirname(local_path)):
+                                    log.error("创建目标目录:%s失败" % local_path)
+                                if cp(os.path.join(app_abs_path(self.main_conf.cache), fid), local_path, stat):
+                                    payload["return"] = local_path
+                                else:
+                                    payload["return"] = ""
+                        else:
+                            payload["return"] = local_path
+                ret[node] = data
 
         except Exception, e:
-            log.error(e.message)
+            log.error(traceback.format_exc())
         return ret
 
     def get_job_info(self, node_name, jid):

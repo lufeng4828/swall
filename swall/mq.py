@@ -55,7 +55,10 @@ class MQ(object):
         :return:
         """
         if self.tos(node_name):
-            self.psub("__keyspace@0__:_swall:_job:%s:*" % node_name)
+            if not isinstance(node_name, list):
+                node_name = [node_name]
+            for node in node_name:
+                self.psub("__keyspace@0__:_swall:_job:%s:*" % node)
             return True
         else:
             return False
@@ -72,21 +75,35 @@ class MQ(object):
         else:
             nodes = [node_name]
         try:
-            tval = "%s@%s" % (self.main_conf.node_ip, time.strftime('%y-%m-%d %H:%M:%S', time.localtime()))
+            str_time = time.strftime('%y-%m-%d %H:%M:%S', time.localtime())
+            tos_maps = {}
             for node in nodes:
+                tval = "%s@%s@%s" % (node, self.main_conf.node_ip, str_time)
                 ping = '_swall:_ping:%s' % node
-                self.redis.set(ping, tval)
-                self.redis.expire(ping, int(self.redis_conf.expire))
+                tos_maps[ping] = tval
+            if not tos_maps:
+                return None
+            self.redis.mset(tos_maps)
             return True
         except Exception:
             log.error(traceback.format_exc())
         return False
 
     def get_tos(self, node_name):
-        ping = '_swall:_ping:%s' % node_name
-        tos = self.redis.get(ping)
+        is_list = isinstance(node_name, list)
+        if not node_name:
+            return []
+        if is_list:
+            pings = ['_swall:_ping:%s' % node for node in node_name]
+        else:
+            pings = ['_swall:_ping:%s' % node_name]
+        tos = self.redis.mget(pings)
         if tos:
-            return tos.split('@')
+            result = [t.split('@') for t in tos if t]
+            if is_list:
+                return result
+            else:
+                return result[0]
 
     def exists(self, node_name):
         """
@@ -94,8 +111,22 @@ class MQ(object):
         :param node_name:
         :return:
         """
-        ping = '_swall:_ping:%s' % node_name
-        return self.redis.exists(ping)
+        pings = []
+        is_list = isinstance(node_name, list)
+        if not is_list:
+            node_name = [node_name]
+        for node in node_name:
+            pings.append('_swall:_ping:%s' % node)
+        if pings:
+            result = self.redis.mget(pings)
+            pairs = zip(node_name, result)
+            rets = {}
+            for pair in pairs:
+                rets[pair[0]] = pair[1]
+            if not list:
+                return result is not None
+            else:
+                return rets
 
     def is_job_exists(self, node_name, jid):
         """
@@ -120,6 +151,22 @@ class MQ(object):
             return msgpack.loads(job)
         else:
             return {}
+
+    def mget_job(self, job_info):
+        """
+        获取job数据
+        :param job_info:
+        :param jid:
+        :return:
+        """
+        data = []
+        for job in job_info:
+            data.append("_swall:_job:%s:%s" % (job[0], job[1]))
+        jobs = self.redis.mget(data)
+        result = {}
+        for k, v in zip(job_info, jobs):
+            result[k[0]] = v
+        return result
 
     def get_node_job(self, node_name):
         """
@@ -160,16 +207,17 @@ class MQ(object):
         return True
 
 
-    def set_job(self, node_name, jid, data):
+    def set_job(self, job_data):
         """
 
-        :param node_name:
-        :param jid:
-        :param data:
+        :param job_data=[(node_name, jid, data)]
         :return:
         """
-        job_key = "_swall:_job:%s:%s" % (node_name, jid)
-        self.redis.set(job_key, data)
+        send_data = {}
+        for job in job_data:
+            job_key = "_swall:_job:%s:%s" % (job[0], job[1])
+            send_data[job_key] = job[2]
+        self.redis.mset(send_data)
         return True
 
     def get_nodes(self, type_="online"):
@@ -179,12 +227,10 @@ class MQ(object):
         keys = self.redis.keys("_swall:_ping:*")
         final_nodes = {}
         nodes = {}
-        for key in keys:
-            node = key.split(':')[-1]
-            data = self.get_tos(node)
-            if data:
-                timedelta = datetime.now() - datetime.strptime(data[1], '%y-%m-%d %H:%M:%S')
-                nodes.update({node: {"ip": data[0], "update_time": data[1], "delta_seconds": timedelta.seconds}})
+        toses = self.get_tos([key.split(':')[-1] for key in keys])
+        for node in toses:
+            timedelta = datetime.now() - datetime.strptime(node[2], '%y-%m-%d %H:%M:%S')
+            nodes.update({node[0]: {"ip": node[0], "update_time": node[2], "delta_seconds": timedelta.seconds}})
         if type_ == "online":
             for key in nodes:
                 if nodes[key]["delta_seconds"] <= 60:
@@ -195,7 +241,6 @@ class MQ(object):
                     final_nodes[key] = nodes[key]
         else:
             final_nodes = nodes
-
         return final_nodes
 
     def is_valid(self, node_name):
