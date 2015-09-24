@@ -150,7 +150,6 @@ class Agent(object):
             "sys.rsync_module": self._rsync_module,
             "sys.reload_node": self._reload_node,
             "sys.ping": self.ping,
-            "sys.roles": self._get_roles,
             "sys.funcs": self._get_func,
             "sys.version": self._version,
         })
@@ -164,16 +163,6 @@ class Agent(object):
         """
         #为了加快速度，这部分在client.py实现了，不会调用到这里
         pass
-
-    def _get_roles(self, *args, **kwargs):
-        """
-        def roles( *args, **kwargs) -> get all roles of this agent
-        @return list:
-        """
-        iroles = set([])
-        for v in self.nodes.itervalues():
-            iroles.add(v)
-        return list(iroles)
 
     def _rsync_module(self, *args, **kwargs):
         """
@@ -353,19 +342,31 @@ class Agent(object):
         循环检查是否需要注册节点
         @return int:1 for success,else 0
         """
-        q = self.queues["reg_node"]
+        self.sys_envs.update(self.load_env())
         while 1:
             if self._stop:
                 log.warn("auto_auth stopping")
                 return
             curr_nodes = self.load_node()
-            add_nodes = set([v for v in curr_nodes.keys()]) - set([v for v in self.nodes.keys()])
-            del_nodes = set([v for v in self.nodes.keys()]) - set([v for v in curr_nodes.keys()])
+            add_nodes = set(curr_nodes.keys()) - set(self.nodes.keys())
+            del_nodes = set(self.nodes.keys()) - set(curr_nodes.keys())
             for node_name in add_nodes:
-                q.put(("add", node_name, curr_nodes[node_name]), timeout=5)
+                node_info = curr_nodes.get(node_name, {})
+                node_ip = node_info.get("node_ip")
+                if node_info and node_ip:
+                    if self.add_node(node_name, node_ip):
+                        log.info("register node [%s] ok" % node_name)
+                        self.nodes[node_name] = node_info
+
             for node_name in del_nodes:
-                q.put(("del", node_name, self.nodes[node_name]), timeout=5)
-            time.sleep(3)
+                if node_name in self.nodes.keys():
+                    del self.nodes[node_name]
+            for node_name in del_nodes:
+                if self.del_node(node_name):
+                    log.info("delete node [%s] ok" % node_name)
+                else:
+                    log.error("delete node [%s] fail" % node_name)
+            time.sleep(7)
 
 
     @thread(pnum=1)
@@ -378,8 +379,7 @@ class Agent(object):
                 log.warn("loop_tos stopping")
                 return
             try:
-                for node_name in self.nodes.keys():
-                    self.mq.tos(node_name)
+                self.mq.tos(self.nodes.keys())
             except:
                 log.error(traceback.format_exc())
             time.sleep(5)
@@ -412,38 +412,6 @@ class Agent(object):
                     time.sleep(0.001)
             else:
                 time.sleep(0.001)
-
-    @thread(pnum=1)
-    def node_watcher(self):
-        #监听事件
-        while 1:
-            if self._stop:
-                log.warn("node_watcher stopping")
-                return
-            try:
-
-                if self.queues["reg_node"].empty():
-                    time.sleep(0.05)
-                    continue
-                q = self.queues["reg_node"]
-                action, node_name, node_info = q.get(timeout=5)
-                if action == "add":
-                    if self.add_node(node_name, node_info["node_ip"]):
-                        #加载系统变量
-                        if not self.sys_envs:
-                            self.sys_envs.update(self.load_env())
-                        log.info("register node [%s] ok" % node_name)
-                        self.nodes[node_name] = node_info
-                    else:
-                        log.error("register node [%s] fail" % node_name)
-                else:
-                    if self.del_node(node_name):
-                        log.info("delete node [%s] ok" % node_name)
-                        self.nodes.pop(node_name)
-                    else:
-                        log.error("delete node [%s] fail" % node_name)
-            except:
-                log.error(traceback.format_exc())
 
     @thread(pnum=THREAD_NUM)
     def get_job(self):
@@ -678,7 +646,6 @@ class Agent(object):
 
         signal.signal(signal.SIGUSR1, sigterm_stop)
         self.auto_auth()
-        self.node_watcher()
         self.loop_tos()
         self.get_job()
         self.run_job()
