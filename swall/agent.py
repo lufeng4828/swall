@@ -53,6 +53,7 @@ class Agent(object):
         }
 
         self.locks = {
+            "recv_job": Lock(),
             "get_job": Lock(),
             "mult_run": Lock(),
             "ret_job": Lock()
@@ -120,7 +121,7 @@ class Agent(object):
         @param module string:模块名称
         @return list:
         """
-        role_funcs = self.node_funcs[kwargs["role"]]
+        role_funcs = self.node_funcs
         if module:
             return [k for k in role_funcs if "%s." % module in k]
         else:
@@ -149,7 +150,6 @@ class Agent(object):
             "sys.rsync_module": self._rsync_module,
             "sys.reload_node": self._reload_node,
             "sys.ping": self.ping,
-            "sys.roles": self._get_roles,
             "sys.funcs": self._get_func,
             "sys.version": self._version,
         })
@@ -164,16 +164,6 @@ class Agent(object):
         #为了加快速度，这部分在client.py实现了，不会调用到这里
         pass
 
-    def _get_roles(self, *args, **kwargs):
-        """
-        def roles( *args, **kwargs) -> get all roles of this agent
-        @return list:
-        """
-        iroles = set([])
-        for v in self.nodes.itervalues():
-            iroles.add(v["role"])
-        return list(iroles)
-
     def _rsync_module(self, *args, **kwargs):
         """
         def rsync_module(*args, **kwargs) -> 同步模块
@@ -184,10 +174,8 @@ class Agent(object):
         copy_pair = kwargs.get("copy_pair", [])
         copy_ret = []
         copy_mods = []
-        for role, ifile, dfile in copy_pair:
+        for ifile, dfile in copy_pair:
             dfile = os.path.join(app_abs_path(self.main_conf.module), dfile)
-            if role != kwargs["role"]:
-                continue
             copy_mods.append(dfile)
             if not ifile:
                 log.error("rsync_module [%s] error" % dfile)
@@ -197,8 +185,8 @@ class Agent(object):
                            ret_type="full") == dfile)
         if all(copy_ret) and copy_ret:
             log.info(
-                "rsync_module [%s %s] ok" % (kwargs["role"], ','.join([os.path.basename(mod) for mod in copy_mods])))
-            self.node_funcs.update(self.load_module(kwargs["role"]))
+                "rsync_module [%s] ok" % (','.join([os.path.basename(mod) for mod in copy_mods])))
+            self.node_funcs.update(self.load_module())
             return 1
         else:
             return 0
@@ -223,8 +211,7 @@ class Agent(object):
         def reload_module(*args, **kwargs) -> 重新加载模块
         @return int:1 if sucess
         """
-        role = kwargs["role"]
-        self.node_funcs.update(self.load_module(role))
+        self.node_funcs.update(self.load_module())
         return 1
 
     def _reload_env(self, *args, **kwargs):
@@ -313,32 +300,33 @@ class Agent(object):
         fscli = FsClient(self.fs_conf)
         return fscli.upload(remote_path)
 
-    def add_node(self, role_name, role_ip):
+    def add_node(self, node_data):
         """
         add_node
-        @param role_name:string 节点名称
-        @parm role_ip:string 角色所在的服务器ip
+        @parm node_data:dict
         @return:bool True or False if add_node fail
         """
-        if self.mq.exists(role_name):
-            ret = self.mq.get_tos(role_name)
-            if ret:
-                old_ip, _ = ret
-                if old_ip != role_ip:
-                    log.error(
-                        "register attempt from %s for %s failed, the ip in pending is different"
-                        % (role_ip, role_name)
-                    )
-                    return False
-                else:
-                    log.info("register already accepted from %s for %s" % (old_ip, role_name))
-                    return True
-        if self.mq.tos(role_name):
-            log.info("new register accepted from %s for %s success" % (role_ip, role_name))
-            return True
+        exist_info = self.mq.exists(node_data.keys())
+        if exist_info:
+            exist_nodes = [i for i in exist_info if exist_info[i] is not None]
         else:
-            log.error("new register accepted from %s for %s fail" % (role_ip, role_name))
-            return False
+            exist_nodes = []
+        data = self.mq.get_tos(exist_nodes)
+        add_nodes = set(node_data.keys()) - set(exist_nodes)
+        for node in data:
+            name, old_ip, _, = node
+            if old_ip != node_data[name]:
+                log.error(
+                    "register attempt from %s for %s failed, the ip in pending is different"
+                        % (node_data[name], name)
+                )
+            else:
+                add_nodes.add(name)
+        if add_nodes:
+            if self.mq.register(list(add_nodes)):
+                log.info("[%s] new register accepted" % len(add_nodes))
+                return True
+        return False
 
     def del_node(self, role_name):
         """
@@ -354,20 +342,33 @@ class Agent(object):
         循环检查是否需要注册节点
         @return int:1 for success,else 0
         """
-        q = self.queues["reg_node"]
+        self.sys_envs.update(self.load_env())
         while 1:
             if self._stop:
                 log.warn("auto_auth stopping")
                 return
             curr_nodes = self.load_node()
-            add_nodes = set([v for v in curr_nodes]) - set([v for v in self.nodes])
-            del_nodes = set([v for v in self.nodes]) - set([v for v in curr_nodes])
+            add_nodes = set(curr_nodes.keys()) - set(self.nodes.keys())
+            del_nodes = set(self.nodes.keys()) - set(curr_nodes.keys())
+            node_data = {}
             for node_name in add_nodes:
-                q.put(("add", node_name, curr_nodes[node_name]), timeout=5)
-            for node_name in del_nodes:
-                q.put(("del", node_name, self.nodes[node_name]), timeout=5)
-            time.sleep(3)
+                node_info = curr_nodes.get(node_name, {})
+                node_ip = node_info.get("node_ip")
+                if node_info and node_ip:
+                    node_data[node_name] = node_ip
+            if self.add_node(node_data):
+                for node_name in node_data:
+                    self.nodes[node_name] = curr_nodes.get(node_name, {})
 
+            for node_name in del_nodes:
+                if node_name in self.nodes.keys():
+                    del self.nodes[node_name]
+            for node_name in del_nodes:
+                if self.del_node(node_name):
+                    log.info("delete node [%s] ok" % node_name)
+                else:
+                    log.error("delete node [%s] fail" % node_name)
+            time.sleep(7)
 
     @thread(pnum=1)
     def loop_tos(self):
@@ -379,8 +380,7 @@ class Agent(object):
                 log.warn("loop_tos stopping")
                 return
             try:
-                for node_name in self.nodes:
-                    self.mq.tos(node_name)
+                self.mq.tos(self.nodes.keys())
             except:
                 log.error(traceback.format_exc())
             time.sleep(5)
@@ -392,53 +392,26 @@ class Agent(object):
         :return:
         """
         while 1:
-            for message in self.mq.pubsub.listen():
-                if message["type"] == "pmessage":
+            message = None
+            if self.locks["recv_job"].acquire():
+                try:
+                    message = self.mq.pubsub.get_message()
+                except:
+                    time.sleep(0.0001)
+                self.locks["recv_job"].release()
+                if message and message["type"] == "pmessage":
                     channel = message["channel"]
-                    data = channel.replace("__keyspace@0__:__SWALL__:__JOB__:").split(':')
+                    data = channel.replace("__keyspace@0__:_swall:_job:", '').split(':')
                     if len(data) != 2:
                         continue
                     dist_node, jid = tuple(data)
-                    if jid in self.running_jobs:
+                    if '%s@%s' % (jid, dist_node) in self.running_jobs:
                         continue
                     self.queues["get_job"].put((dist_node, jid), timeout=5)
-            time.sleep(0.001)
-
-
-    @thread(pnum=1)
-    def node_watcher(self):
-        #监听事件
-        for node in self.nodes.keys():
-            self.mq.psub("__keyspace@0__:__SWALL__:__JOB__:" % node)
-
-        while 1:
-            if self._stop:
-                log.warn("node_watcher stopping")
-                return
-            try:
-
-                if self.queues["reg_node"].empty():
-                    time.sleep(0.05)
-                    continue
-                q = self.queues["reg_node"]
-                action, node_name, node_info = q.get(timeout=5)
-                if action == "add":
-                    if self.add_node(node_name, node_info["node_ip"]):
-                        #加载系统变量
-                        if node_info["role"] not in self.sys_envs:
-                            self.sys_envs.update(self.load_env(node_info["role"]))
-                        log.info("register node [%s %s] ok" % (node_info["role"], node_name))
-                        self.nodes[node_name] = node_info
-                    else:
-                        log.error("register node [%s %s] fail" % (node_info["role"], node_name))
                 else:
-                    if self.del_node(node_name):
-                        log.info("delete node [%s %s] ok" % (node_info["role"], node_name))
-                        self.nodes.pop(node_name)
-                    else:
-                        log.error("delete node [%s %s] fail" % (node_info["role"], node_name))
-            except:
-                log.error(traceback.format_exc())
+                    time.sleep(0.001)
+            else:
+                time.sleep(0.001)
 
     @thread(pnum=THREAD_NUM)
     def get_job(self):
@@ -458,15 +431,14 @@ class Agent(object):
                 self.queues["get_job"].task_done()
                 self.locks["get_job"].release()
                 try:
-                    job = self.mq.get_job(dist_node, jid)
-                    data = msgpack.loads(job)
+                    data = self.mq.get_job(dist_node, jid)
                     if data["env"] == "aes":
                         key_str = self.main_conf.token
                         crypt = Crypt(key_str)
                         data["payload"] = crypt.loads(data.get("payload"))
                     if data["payload"]["status"] != "READY":
                         continue
-                    self.running_jobs.add(dist_node)
+                    self.running_jobs.add('%s@%s' % (jid, dist_node))
                     data["payload"]["node_name"] = dist_node
                     #发送到执行队列中
                     if data["payload"].get("nthread"):
@@ -480,7 +452,7 @@ class Agent(object):
                         crypt = Crypt(key_str)
                         data["payload"] = crypt.dumps(data.get("payload"))
                         #修改任务状态为RUNNING
-                    self.mq.set_job(dist_node, jid, msgpack.dumps(data))
+                    self.mq.set_job([dist_node, jid, msgpack.dumps(data)])
                 except:
                     log.error(traceback.format_exc())
                     self.queues["get_job"].put((dist_node, jid))
@@ -608,9 +580,6 @@ class Agent(object):
                                 val = self.sys_envs[match](**data["payload"]["kwargs"])
                                 kwargs[key] = env_regx.sub(val, kwargs[key], count=1)
 
-                    log.info("[%s] start run job [%s]" % (
-                        data["payload"]["node_name"], data["payload"]["jid"])
-                    )
                     #判断是否需要返回函数help信息
                     if len(data["payload"]["args"]) == 1 and data["payload"]["args"][0] == "help":
                         ret = self.node_funcs[cmd].__doc__
@@ -639,6 +608,8 @@ class Agent(object):
         """
         发送结果
         """
+        key_str = self.main_conf.token
+        crypt = Crypt(key_str)
         while 1:
             if self._stop:
                 log.warn("send_ret stopping")
@@ -646,26 +617,37 @@ class Agent(object):
             if self.locks["ret_job"].acquire():
                 if self.queues["ret_job"].empty():
                     self.locks["ret_job"].release()
-                    time.sleep(0.5)
+                    time.sleep(0.005)
                     continue
-                node_name, data = msgpack.loads(self.queues["ret_job"].get(timeout=5))
+                result = []
+                for _ in xrange(100):
+                    try:
+                        node_name, data = self.queues["ret_job"].get(block=False)
+                        result.append((node_name, data))
+                    except Queue.Empty:
+                        continue
                 self.queues["ret_job"].task_done()
                 self.locks["ret_job"].release()
-                jid = data["payload"]["jid"]
-                log.info("[%s %s] send the result of job [%s]" % (
-                    data["payload"]["role"], data["payload"]["node_name"], data["payload"]["jid"]))
-                try:
-                    if data["env"] == "aes":
-                        key_str = self.main_conf.token
-                        crypt = Crypt(key_str)
-                        data["payload"] = crypt.dumps(data.get("payload"))
-
-                    #遇到过set返回成功但是却没有更新的情况，这里尝试set两次看看
-                    self.mq.set_job(node_name, jid, msgpack.dumps(data))
-                    self.running_jobs.remove(jid)
-                    time.sleep(0.0001)
-                except:
-                    log.error(traceback.format_exc())
+                log.info("send [%s] result" % len(result))
+                rets = []
+                del_jobs = []
+                for res in result:
+                    data = res[1]
+                    node_name = res[0]
+                    data = msgpack.loads(data)
+                    jid = data["payload"]["jid"]
+                    del_jobs.append('%s@%s' % (jid, node_name))
+                    try:
+                        if data["env"] == "aes":
+                            data["payload"] = crypt.dumps(data.get("payload"))
+                        rets.append((node_name, jid, msgpack.dumps(data)))
+                    except:
+                        log.error(traceback.format_exc())
+                if rets:
+                    if self.mq.set_job(rets):
+                        for i in del_jobs:
+                            if i in self.running_jobs:
+                                self.running_jobs.remove(i)
 
     def loop(self):
         """
@@ -677,7 +659,6 @@ class Agent(object):
 
         signal.signal(signal.SIGUSR1, sigterm_stop)
         self.auto_auth()
-        self.node_watcher()
         self.loop_tos()
         self.get_job()
         self.run_job()

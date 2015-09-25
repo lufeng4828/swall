@@ -19,7 +19,7 @@ DEFAULT_CONF_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 
 
 class Client(object):
-    def __init__(self, globs=None, exclude_globs=None, role=None, wait_all=False, timeout=30, nthread=None,
+    def __init__(self, globs=None, exclude_globs=None, wait_all=False, timeout=30, nthread=None,
                  conf_dir=DEFAULT_CONF_DIR):
         self.config = {}
         for f in ('swall', 'zk', 'fs', 'redis'):
@@ -29,7 +29,6 @@ class Client(object):
         self.job = Job(self.config, env="aes")
         self.globs = globs if globs else ""
         self.exclude_globs = exclude_globs if exclude_globs else ""
-        self.role = role
         self.wait_all = wait_all
         self.timeout = timeout
         self.nthread = nthread
@@ -38,7 +37,6 @@ class Client(object):
         wait_timeout = self.timeout if self.wait_all else 0
         rets = self.job.submit_job(
             func,
-            self.role,
             self.globs,
             self.exclude_globs,
             args=list(args),
@@ -50,17 +48,14 @@ class Client(object):
 
     def job_info(self, jid, *args, **kwargs):
         """
-        直接通过zookeeper查看任务状态
+        直接通过redis查看任务状态
         """
         job_rets = {}
         match_nodes = self.get_host()
-        for role in match_nodes:
-            for node in match_nodes[role]:
-                job_ret = self.job.get_job_info(role, node, jid)
-                if job_rets.get(role):
-                    job_rets[role].update({node: job_ret})
-                else:
-                    job_rets[role] = {node: job_ret}
+        for node in match_nodes:
+            job_ret = self.job.get_job_info(node, jid)
+            if job_rets:
+                job_rets.update({node: job_ret})
 
         log.info("end to get job_info for job [%s]" % self.job.get_jid())
         return job_rets
@@ -70,14 +65,10 @@ class Client(object):
         获取节点列表
         @return dict:
         """
-        match_nodes = {}
-        for r in re.split(r"[|,]", self.role):
-            match = self.job.keeper.get_nodes_by_regex(r, self.globs, self.exclude_globs)
-            if match:
-                match_nodes[r] = match
+        match_nodes = self.job.keeper.get_nodes_by_regex(self.globs, self.exclude_globs)
         return match_nodes
 
-    def get_return(self, timeout=30):
+    def get_return(self, timeout=60):
         """
         获取结果数据
         @param _timeout int:获取数据的超时
@@ -86,18 +77,18 @@ class Client(object):
 
         @iTimeout(timeout)
         def _return(nodes, job_rets):
+            job_data = []
+            for n in nodes:
+                job_data.append((n, self.job.jid))
             while 1:
                 try:
-                    for r in nodes:
-                        for n in nodes[r]:
-                            job_ret = self.job.get_job(r, n, self.job.jid)
-                            i_ret = job_ret.get("payload", {}).get("return", "")
-                            if not i_ret:
-                                raise SwallAgentError("wait")
-                            if job_rets.get(r):
-                                job_rets[r].update({n: i_ret})
-                            else:
-                                job_rets[r] = {n: i_ret}
+                    rets = self.job.get_job(job_data)
+                    for node, ret in rets.items():
+                        i_ret = ret.get("payload", {}).get("return")
+                        if i_ret is None:
+                            raise SwallAgentError("wait")
+                        else:
+                            job_rets.update({node: i_ret})
                 except SwallAgentError:
                     time.sleep(0.1)
                 else:
@@ -105,6 +96,8 @@ class Client(object):
         job_rets = {}
         try:
             match_nodes = self.get_host()
+            if not match_nodes:
+                return job_rets
             _return(match_nodes, job_rets)
         except Timeout, e:
             log.error(e)

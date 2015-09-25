@@ -323,21 +323,20 @@ class Ctl(CtlParser):
             #解析参数，获取位置参数和关键字参数
 
         cli = Client(
-            globs=args[1],
+            globs=args[0],
             exclude_globs=self.options.exclude,
-            role=args[0],
             nthread=int(self.options.nthread),
             conf_dir=self.options.config_dir
         )
         rets = {}
-        if args[2] == "sys.job_info":
-            if len(args[3:]) == 0 and len(kwargs) == 0:
+        if args[0] == "sys.job_info":
+            if len(args[1:]) == 0 and len(kwargs) == 0:
                 sys.stderr.write(c("jid needed for sys.job_info\n", 'r'))
                 sys.stderr.flush()
             else:
-                rets = cli.job_info(*args[3:], **kwargs)
+                rets = cli.job_info(*args[2:], **kwargs)
         else:
-            cli.submit_job(args[2], *args[3:], **kwargs)
+            cli.submit_job(args[1], *args[2:], **kwargs)
             rets = cli.get_return(self.options.timeout)
 
         if rets:
@@ -350,15 +349,13 @@ class Ctl(CtlParser):
 
         nfail = 0
         for ret in rets:
-            if not ret[2]:
+            if not ret[1]:
                 nfail += 1
 
         if not self.options.is_raw:
-            format_ret = enumerate(
-                [u"%s %s : %s" % (u"[%s]" % c(ret[0], 'y'), c(ret[1], 'b'), color(format_obj(ret[2]))) for ret in rets])
+            format_ret = enumerate([u"%s : %s" % (c(ret[0], 'b'), color(format_obj(ret[1]))) for ret in rets])
         else:
-            format_ret = enumerate(
-                [u"%s %s : %s" % (u"[%s]" % ret[0], ret[1], ret[2]) for ret in rets])
+            format_ret = enumerate([u"%s : %s" % (ret[0], ret[1]) for ret in rets])
         print c('#' * 50, 'y')
 
         for index, item in format_ret:
