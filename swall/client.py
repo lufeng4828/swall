@@ -81,16 +81,18 @@ class Client(object):
             for n in nodes:
                 job_data.append((n, self.job.jid))
             while 1:
-                try:
-                    rets = self.job.get_job(job_data)
-                    for node, ret in rets.items():
-                        i_ret = ret.get("payload", {}).get("return")
-                        if i_ret is None:
-                            raise SwallAgentError("wait")
-                        else:
-                            job_rets.update({node: i_ret})
-                except SwallAgentError:
-                    time.sleep(0.1)
+                is_wait = False
+                rets = self.job.get_job(job_data)
+                for node, ret in rets.items():
+                    i_ret = ret.get("payload", {}).get("return")
+                    if i_ret is None:
+                        is_wait = True
+                for node, ret in rets.items():
+                    i_ret = ret.get("payload", {}).get("return")
+                    if i_ret:
+                        job_rets.update({node: i_ret})
+                if is_wait:
+                    continue
                 else:
                     break
         job_rets = {}

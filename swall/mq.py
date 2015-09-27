@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 __author__ = 'lufeng4828@163.com'
 
 import time
@@ -17,42 +17,27 @@ class MQ(object):
     """
     消息传输
     """
+
     def __init__(self, config):
         self.redis_conf = Conf(config["redis"])
         self.main_conf = Conf(config["swall"])
-        self._redis = None
+        self.redis = self.redis()
+        self.is_repubsub = False
         self.pubsub_keys = set([])
         self.pubsub = self.redis.pubsub()
 
-    def _ping(self):
-        try:
-            return self._redis.ping()
-        except Exception:
-            return False
-
-    @property
     def redis(self):
         """
         返回redis链接对象
         :return:
         """
-        if self._redis and self._redis.ping():
-            return self._redis
-        else:
-            while (not self._redis) or (self._redis and not self._ping()):
-                try:
-                    self._redis = Redis(
-                        host=self.redis_conf.host,
-                        port=int(self.redis_conf.port),
-                        db=int(self.redis_conf.db),
-                        password=self.redis_conf.password,
-                        socket_connect_timeout=5
-                    )
-                    for key in self.pubsub_keys:
-                        self.pubsub(key)
-                except Exception, error:
-                    log.error(error.message)
-            return self._redis
+        return Redis(
+            host=self.redis_conf.host,
+            port=int(self.redis_conf.port),
+            db=int(self.redis_conf.db),
+            password=self.redis_conf.password,
+            socket_connect_timeout=5
+        )
 
     def psub(self, pattern):
         """
@@ -93,6 +78,13 @@ class MQ(object):
         self.unpsub(key)
         return True
 
+    def ping(self):
+        try:
+            return self.redis.ping()
+        except Exception, error:
+            log.error(error.message)
+        return False
+
     def tos(self, node_name):
         if isinstance(node_name, list):
             nodes = node_name
@@ -108,6 +100,12 @@ class MQ(object):
             if not tos_maps:
                 return None
             self.redis.mset(tos_maps)
+            if self.is_repubsub:
+                log.info("repubsub....")
+                for node in nodes:
+                    key = '_swall:_job:%s' % node
+                    self.psub(key)
+                self.is_repubsub = False
             return True
         except Exception:
             log.error(traceback.format_exc())

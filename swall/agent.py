@@ -30,7 +30,7 @@ from swall.excpt import SwallCommandExecutionError
 log = logging.getLogger()
 
 QUEUE_SIZE = 20000
-THREAD_NUM = 10
+THREAD_NUM = 30
 
 
 class Agent(object):
@@ -418,6 +418,8 @@ class Agent(object):
         """
         获取job内容，发送到执行队列，并修改任务状态
         """
+        key_str = self.main_conf.token
+        crypt = Crypt(key_str)
         while 1:
             if self._stop:
                 log.warn("get_job stopping")
@@ -433,8 +435,6 @@ class Agent(object):
                 try:
                     data = self.mq.get_job(dist_node, jid)
                     if data["env"] == "aes":
-                        key_str = self.main_conf.token
-                        crypt = Crypt(key_str)
                         data["payload"] = crypt.loads(data.get("payload"))
                     if data["payload"]["status"] != "READY":
                         continue
@@ -448,8 +448,6 @@ class Agent(object):
 
                     data["payload"]["status"] = "RUNNING"
                     if data["env"] == "aes":
-                        key_str = self.main_conf.token
-                        crypt = Crypt(key_str)
                         data["payload"] = crypt.dumps(data.get("payload"))
                         #修改任务状态为RUNNING
                     self.mq.set_job([dist_node, jid, msgpack.dumps(data)])
@@ -649,6 +647,14 @@ class Agent(object):
                             if i in self.running_jobs:
                                 self.running_jobs.remove(i)
 
+    @thread(pnum=1)
+    def check_redis(self):
+        while 1:
+            if not self.mq.ping():
+                log.info("redis ping false")
+                self.mq.is_repubsub = True
+            time.sleep(0.001)
+
     def loop(self):
         """
         主体循环
@@ -662,6 +668,7 @@ class Agent(object):
         self.loop_tos()
         self.get_job()
         self.run_job()
+        self.check_redis()
         self.loop_job_rev()
         self.single_run_job()
         self.send_ret()
