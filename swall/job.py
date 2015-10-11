@@ -161,7 +161,7 @@ class Job(object):
                                     job_rets = {node: i_ret}
                     is_wait = False
                     for ret_ in job_ret.itervalues():
-                        if ret_:
+                        if not ret_:
                             is_wait = True
                         else:
                             i_ret = ret_["payload"].get("return")

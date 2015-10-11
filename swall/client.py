@@ -1,5 +1,5 @@
-#coding:utf-8
-#--code
+# coding:utf-8
+# --code
 
 __author__ = 'lufeng4828@163.com'
 
@@ -76,20 +76,25 @@ class Client(object):
 
         @iTimeout(timeout)
         def _return(nodes, job_rets):
-            job_data = []
-            for n in nodes:
-                job_data.append((n, self.job.jid))
             while 1:
+                job_ret = self.job.get_job([(n, self.job.jid) for n in nodes])
+
+                for node, ret_ in job_ret.iteritems():
+                    if ret_:
+                        i_ret = ret_["payload"].get("return")
+                        if i_ret is not None:
+                            if job_rets:
+                                job_rets.update({node: i_ret})
+                            else:
+                                job_rets[node] = i_ret
                 is_wait = False
-                rets = self.job.get_job(job_data)
-                for node, ret in rets.items():
-                    i_ret = ret.get("payload", {}).get("return")
-                    if i_ret is None:
+                for ret_ in job_ret.itervalues():
+                    if not ret_:
                         is_wait = True
-                for node, ret in rets.items():
-                    i_ret = ret.get("payload", {}).get("return")
-                    if i_ret:
-                        job_rets.update({node: i_ret})
+                    else:
+                        i_ret = ret_["payload"].get("return")
+                        if i_ret is None:
+                            is_wait = True
                 if is_wait:
                     continue
                 else:
@@ -113,4 +118,3 @@ class Client(object):
 
     def __getattr__(self, name):
         return Automagic(self, [name])
-

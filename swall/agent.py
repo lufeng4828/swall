@@ -7,6 +7,7 @@ import time
 import signal
 import logging
 import traceback
+from copy import deepcopy
 from swall.mq import MQ
 from swall.crypt import Crypt
 from swall.utils import cp, thread, prog_dir, check_cache, make_dirs, Conf, load_env, load_fclient, app_abs_path, load_module
@@ -272,20 +273,23 @@ class Agent(object):
             time.sleep(0.001)
 
     def update(self, data):
-        cmd = data["payload"]["cmd"]
-        args = list(data["payload"]["args"])
-        kwargs = data["payload"]["kwargs"]
-        jid = data["payload"]["jid"]
-
+        """
+        执行任务
+        """
         try:
+
             if data["env"] == "aes":
                 data["payload"] = self.crypt.loads(data.get("payload"))
-
-            data["payload"]["status"] = "RUNNING"
-            if data["env"] == "aes":
-                data["payload"] = self.crypt.dumps(data.get("payload"))
+            cmd = data["payload"]["cmd"]
+            args = list(data["payload"]["args"])
+            kwargs = data["payload"]["kwargs"]
+            jid = data["payload"]["jid"]
             #修改任务状态为RUNNING
-            self.mq.set_res(self.node, jid, data)
+            data_t = deepcopy(data)
+            data_t["payload"]["status"] = "RUNNING"
+            if data_t["env"] == "aes":
+                data_t["payload"] = self.crypt.dumps(data_t.get("payload"))
+            self.mq.set_res(self.node, jid, data_t)
 
             os.chdir(prog_dir())
             ret = ''
@@ -331,6 +335,8 @@ class Agent(object):
             os.chdir(prog_dir())
         data["payload"]["return"] = ret
         data["payload"]["status"] = "FINISH"
+        if data["env"] == "aes":
+                data["payload"] = self.crypt.dumps(data.get("payload"))
         self.mq.set_res(self.node, jid, data)
         return True
 
