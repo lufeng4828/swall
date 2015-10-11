@@ -1,9 +1,9 @@
 #coding:utf-8
+#--code
+
 __author__ = 'lufeng4828@163.com'
 
-import re
 import os
-import time
 import logging
 from swall.job import Job
 from swall.utils import timeout as iTimeout
@@ -11,7 +11,6 @@ from swall.utils import app_abs_path,\
     Automagic, \
     Timeout, \
     agent_config
-from swall.excpt import SwallAgentError
 
 log = logging.getLogger()
 

@@ -16,7 +16,6 @@ class Keeper(object):
     """
 
     def __init__(self, config):
-        super(Keeper, self).__init__()
         self.main_conf = Conf(config["swall"])
         self.mq = MQ(config)
 

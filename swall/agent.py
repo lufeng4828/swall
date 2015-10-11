@@ -5,26 +5,10 @@ import os
 import re
 import time
 import signal
-import Queue
 import logging
-import msgpack
 import traceback
-from threading import Lock, \
-    Thread
 from swall.crypt import Crypt
-from swall.mq import MQ
-from swall.utils import cp, \
-    thread, \
-    prog_dir, \
-    check_cache, \
-    make_dirs, \
-    Conf, \
-    load_env, \
-    load_config, \
-    load_fclient, \
-    app_abs_path, \
-    load_module
-
+from swall.utils import cp, thread, prog_dir, check_cache, make_dirs, Conf, load_env, load_fclient, app_abs_path, load_module
 from swall.excpt import SwallCommandExecutionError
 
 log = logging.getLogger()
@@ -33,87 +17,45 @@ QUEUE_SIZE = 20000
 THREAD_NUM = 30
 
 
+class JobSubject(object):
+    def __init__(self):
+        self.observers = []
+        self.job = None
+
+    def register(self, observer):
+        if observer not in self.observers:
+            self.observers.append(observer)
+
+    def unregister(self, observer):
+        if observer in self.observers:
+            self.observers.remove(observer)
+
+    @thread()
+    def notify_observers(self):
+        for o in self.observers:
+            o.update(self.job)
+
+    def data_changed(self):
+        self.notify_observers()
+
+    def set_data(self, job):
+        self.job = job
+        self.data_changed()
+
+
 class Agent(object):
     """
     节点处理
     """
 
     def __init__(self, config):
-        #初始化下ZKDb的init方法
-        super(Agent, self).__init__()
-
         self.main_conf = Conf(config["swall"])
-        self.mq = MQ(config)
-        self.queues = {
-            "reg_node": Queue.Queue(maxsize=QUEUE_SIZE),
-            "get_job": Queue.Queue(maxsize=QUEUE_SIZE),
-            "mult_run": Queue.Queue(maxsize=QUEUE_SIZE),
-            "sigle_run": Queue.Queue(maxsize=QUEUE_SIZE),
-            "ret_job": Queue.Queue(maxsize=QUEUE_SIZE)
-        }
-
-        self.locks = {
-            "recv_job": Lock(),
-            "get_job": Lock(),
-            "mult_run": Lock(),
-            "ret_job": Lock()
-        }
-        self.node_jobs = {}
-        self.watch_procs = {}
-        self.reg_nodes = {}
-        self.node_types = {}
+        self.node = self.main_conf.node_role
         self.node_funcs = self.load_module()
-        self.nodes = {}
-        self.sys_envs = {}
-        self._stop = 0
-        self.running_jobs = set([])
-
-    def load_node(self, *args, **kwargs):
-        """
-        加载节点
-        return dict:
-        """
-        nodes = {}
-        node_roles = self.main_conf.node_role.split(',')
-        for role in node_roles:
-            conf = load_config(os.path.join(self.main_conf.config_dir, "roles.d", "%s.conf" % role))
-            role_conf = Conf(conf)
-            node_name = role_conf.node_name
-            if node_name.startswith("@@"):
-                func_str = node_name.lstrip("@@").split()
-                if len(func_str) > 1:
-                    func_name = func_str[0]
-                    func_args = func_str[1:]
-                else:
-                    func_name = func_str[0]
-                    func_args = []
-                func = self.node_funcs.get(func_name)
-                inodes = func(*func_args) if func else {}
-                for k in inodes.iterkeys():
-                    inodes[k].update({
-                        "node_name": k,
-                        "node_ip": self.main_conf.node_ip
-                    })
-                nodes.update(inodes)
-            else:
-                for n in node_name.split(','):
-                    nodes[n] = {
-                        "project": role_conf.project,
-                        "agent": role_conf.agent,
-                        "node_name": n,
-                        "node_ip": self.main_conf.node_ip
-                    }
-        return nodes
-
-    def _reload_node(self, *args, **kwargs):
-        """
-        def reload_node(*args, **kwargs) -> 重新加载节点
-        @param args list:
-        @param kwargs dict:
-        @return int:1 if success
-        """
-        self.nodes = self.load_node()
-        return 1
+        self.sys_envs = self.load_env()
+        self.job_sub = JobSubject()
+        self.job_sub.register(self)
+        self.crypt = Crypt(self.main_conf.token)
 
     def _get_func(self, module=None, *args, **kwargs):
         """
@@ -148,7 +90,6 @@ class Agent(object):
             "sys.job_info": self._job_info,
             "sys.exprs": self.exprs,
             "sys.rsync_module": self._rsync_module,
-            "sys.reload_node": self._reload_node,
             "sys.ping": self.ping,
             "sys.funcs": self._get_func,
             "sys.version": self._version,
@@ -300,77 +241,7 @@ class Agent(object):
         fscli = FsClient(self.fs_conf)
         return fscli.upload(remote_path)
 
-    def add_node(self, node_data):
-        """
-        add_node
-        @parm node_data:dict
-        @return:bool True or False if add_node fail
-        """
-        exist_info = self.mq.exists(node_data.keys())
-        if exist_info:
-            exist_nodes = [i for i in exist_info if exist_info[i] is not None]
-        else:
-            exist_nodes = []
-        data = self.mq.get_tos(exist_nodes)
-        add_nodes = set(node_data.keys()) - set(exist_nodes)
-        for node in data:
-            name, old_ip, _, = node
-            if old_ip != node_data[name]:
-                log.error(
-                    "register attempt from %s for %s failed, the ip in pending is different"
-                        % (node_data[name], name)
-                )
-            else:
-                add_nodes.add(name)
-        if add_nodes:
-            if self.mq.register(list(add_nodes)):
-                log.info("[%s] new register accepted" % len(add_nodes))
-                return True
-        return False
-
-    def del_node(self, role_name):
-        """
-        删除节点
-        @param role_name:角色名称
-        @return bool:True or False
-        """
-        return self.mq.unregister(role_name)
-
-    @thread(pnum=1)
-    def auto_auth(self):
-        """
-        循环检查是否需要注册节点
-        @return int:1 for success,else 0
-        """
-        self.sys_envs.update(self.load_env())
-        while 1:
-            if self._stop:
-                log.warn("auto_auth stopping")
-                return
-            curr_nodes = self.load_node()
-            add_nodes = set(curr_nodes.keys()) - set(self.nodes.keys())
-            del_nodes = set(self.nodes.keys()) - set(curr_nodes.keys())
-            node_data = {}
-            for node_name in add_nodes:
-                node_info = curr_nodes.get(node_name, {})
-                node_ip = node_info.get("node_ip")
-                if node_info and node_ip:
-                    node_data[node_name] = node_ip
-            if self.add_node(node_data):
-                for node_name in node_data:
-                    self.nodes[node_name] = curr_nodes.get(node_name, {})
-
-            for node_name in del_nodes:
-                if node_name in self.nodes.keys():
-                    del self.nodes[node_name]
-            for node_name in del_nodes:
-                if self.del_node(node_name):
-                    log.info("delete node [%s] ok" % node_name)
-                else:
-                    log.error("delete node [%s] fail" % node_name)
-            time.sleep(7)
-
-    @thread(pnum=1)
+    @thread()
     def loop_tos(self):
         """
         定时检查tos
@@ -380,280 +251,85 @@ class Agent(object):
                 log.warn("loop_tos stopping")
                 return
             try:
-                self.mq.tos(self.nodes.keys())
+                self.mq.tos(self.node)
             except:
                 log.error(traceback.format_exc())
             time.sleep(5)
 
-    @thread(pnum=5)
+    @thread()
     def loop_job_rev(self):
         """
         实时检查job
         :return:
         """
         while 1:
-            message = None
-            if self.locks["recv_job"].acquire():
-                try:
-                    message = self.mq.pubsub.get_message()
-                except:
-                    time.sleep(0.0001)
-                self.locks["recv_job"].release()
-                if message and message["type"] == "pmessage":
-                    channel = message["channel"]
-                    data = channel.replace("__keyspace@0__:_swall:_job:", '').split(':')
-                    if len(data) != 2:
-                        continue
-                    dist_node, jid = tuple(data)
-                    if '%s@%s' % (jid, dist_node) in self.running_jobs:
-                        continue
-                    self.queues["get_job"].put((dist_node, jid), timeout=5)
-                else:
-                    time.sleep(0.001)
-            else:
-                time.sleep(0.001)
-
-    @thread(pnum=THREAD_NUM)
-    def get_job(self):
-        """
-        获取job内容，发送到执行队列，并修改任务状态
-        """
-        key_str = self.main_conf.token
-        crypt = Crypt(key_str)
-        while 1:
-            if self._stop:
-                log.warn("get_job stopping")
-                return
-            if self.locks["get_job"].acquire():
-                if self.queues["get_job"].empty():
-                    self.locks["get_job"].release()
-                    time.sleep(0.5)
-                    continue
-                dist_node, jid = self.queues["get_job"].get(timeout=5)
-                self.queues["get_job"].task_done()
-                self.locks["get_job"].release()
-                try:
-                    data = self.mq.get_job(dist_node, jid)
-                    if data["env"] == "aes":
-                        data["payload"] = crypt.loads(data.get("payload"))
-                    if data["payload"]["status"] != "READY":
-                        continue
-                    self.running_jobs.add('%s@%s' % (jid, dist_node))
-                    data["payload"]["node_name"] = dist_node
-                    #发送到执行队列中
-                    if data["payload"].get("nthread"):
-                        self.queues["sigle_run"].put(msgpack.dumps(data), timeout=5)
-                    else:
-                        self.queues["mult_run"].put(msgpack.dumps(data), timeout=5)
-
-                    data["payload"]["status"] = "RUNNING"
-                    if data["env"] == "aes":
-                        data["payload"] = crypt.dumps(data.get("payload"))
-                        #修改任务状态为RUNNING
-                    self.mq.set_job([dist_node, jid, msgpack.dumps(data)])
-                except:
-                    log.error(traceback.format_exc())
-                    self.queues["get_job"].put((dist_node, jid))
-
-    @thread(pnum=1)
-    def single_run_job(self):
-        """
-        执行一定数量的任务
-        """
-        env_regx = re.compile(r'{([a-zA-Z0-9]+)}')
-        while 1:
-            if self._stop:
-                log.warn("single_run_job stopping")
-                return
-            try:
-                if self.queues["sigle_run"].empty():
-                    time.sleep(1)
-                    continue
-                log.info("single_run_job start")
-                data = msgpack.loads(self.queues["sigle_run"].get(timeout=5))
-                cmd, node_name = data["payload"]["cmd"], data["payload"]["node_name"]
-                #做一些变量替换，把变量中如{ip}、{node}替换为具体的值
-                i = 0
-                args = list(data["payload"]["args"])
-                data["payload"]["kwargs"].update(self.nodes.get(node_name, {}))
-                while i < len(args):
-                    if not isinstance(args[i], str):
-                        continue
-                    matchs = env_regx.findall(args[i])
-                    for match in matchs:
-                        if match in self.sys_envs:
-                            val = self.sys_envs[match](**data["payload"]["kwargs"])
-                            args[i] = env_regx.sub(val, args[i], count=1)
-                    i += 1
-                kwargs = data["payload"]["kwargs"]
-                for key in kwargs.iterkeys():
-                    if not isinstance(kwargs[key], str):
-                        continue
-                    matchs = env_regx.findall(kwargs[key])
-                    for match in matchs:
-                        if match in self.sys_envs:
-                            val = self.sys_envs[match](**data["payload"]["kwargs"])
-                            kwargs[key] = env_regx.sub(val, kwargs[key], count=1)
-
-                def do(data):
-                    #判断是否需要返回函数help信息
-                    os.chdir(prog_dir())
-                    try:
-                        if len(data["payload"]["args"]) == 1 and data["payload"]["args"][0] == "help":
-                            ret = self.node_funcs[cmd].__doc__
-                        else:
-                            ret = self.node_funcs[cmd](
-                                *data["payload"]["args"],
-                                **data["payload"]["kwargs"]
-                            )
-                    except KeyError as exc:
-                        ret = "cmd %s not found: %s" % (cmd, str(exc))
-                    except SwallCommandExecutionError as exc:
-                        ret = "cmd %s running error: %s" % (cmd, str(exc))
-                    except TypeError as exc:
-                        ret = "cmd %s argument error: %s" % (cmd, str(exc))
-                    except:
-                        ret = traceback.format_exc()
-                        log.error(ret)
-                    finally:
-                        os.chdir(prog_dir())
-                    data["payload"]["return"] = ret
-                    data["payload"]["status"] = "FINISH"
-                    self.queues["ret_job"].put((node_name, msgpack.dumps(data)), timeout=5)
-
-                works = []
-                log.info("nthread [%s]" % data["payload"]["nthread"])
-                for i in xrange(data["payload"]["nthread"]):
-                    t = Thread(target=lambda: do(data))
-                    works.append(t)
-                    t.start()
-                for proc in works:
-                    proc.join()
-            except:
-                log.error(traceback.format_exc())
-
-    @thread(pnum=THREAD_NUM)
-    def run_job(self):
-        """
-        执行任务
-        """
-        env_regx = re.compile(r'{([a-zA-Z0-9]+)}')
-        while 1:
-            if self._stop:
-                log.warn("run_job stopping")
-                return
-            if self.locks["mult_run"].acquire():
-                if self.queues["mult_run"].empty():
-                    self.locks["mult_run"].release()
-                    time.sleep(0.5)
-                    continue
-                data = msgpack.loads(self.queues["mult_run"].get(timeout=5))
-                self.queues["mult_run"].task_done()
-                self.locks["mult_run"].release()
-                os.chdir(prog_dir())
-                ret = ''
-                cmd, node_name = data["payload"]["cmd"], data["payload"]["node_name"]
-                try:
-                    #做一些变量替换，把变量中如{ip}、{node}替换为具体的值
-                    i = 0
-                    args = list(data["payload"]["args"])
-                    data["payload"]["kwargs"].update(self.nodes.get(node_name, {}))
-                    while i < len(args):
-                        if not isinstance(args[i], str):
-                            continue
-                        matchs = env_regx.findall(args[i])
-                        for match in matchs:
-                            if match in self.sys_envs:
-                                val = self.sys_envs[match](**data["payload"]["kwargs"])
-                                args[i] = env_regx.sub(val, args[i], count=1)
-                        data["payload"]["args"] = args
-                        i += 1
-                    kwargs = data["payload"]["kwargs"]
-                    for key in kwargs.iterkeys():
-                        if not isinstance(kwargs[key], str):
-                            continue
-                        matchs = env_regx.findall(kwargs[key])
-                        for match in matchs:
-                            if match in self.sys_envs:
-                                val = self.sys_envs[match](**data["payload"]["kwargs"])
-                                kwargs[key] = env_regx.sub(val, kwargs[key], count=1)
-
-                    #判断是否需要返回函数help信息
-                    if len(data["payload"]["args"]) == 1 and data["payload"]["args"][0] == "help":
-                        ret = self.node_funcs[cmd].__doc__
-                    else:
-                        ret = self.node_funcs[cmd](
-                            *data["payload"]["args"],
-                            **data["payload"]["kwargs"]
-                        )
-                except KeyError as exc:
-                    ret = "cmd %s not found: %s" % (cmd, str(exc))
-                except SwallCommandExecutionError as exc:
-                    ret = "cmd %s running error: %s" % (cmd, str(exc))
-                except TypeError as exc:
-                    ret = "cmd %s argument error: %s" % (cmd, str(exc))
-                except:
-                    ret = traceback.format_exc()
-                    log.error(ret)
-                finally:
-                    os.chdir(prog_dir())
-                data["payload"]["return"] = ret
-                data["payload"]["status"] = "FINISH"
-                self.queues["ret_job"].put((node_name, msgpack.dumps(data)), timeout=5)
-
-    @thread(pnum=THREAD_NUM)
-    def send_ret(self):
-        """
-        发送结果
-        """
-        key_str = self.main_conf.token
-        crypt = Crypt(key_str)
-        while 1:
-            if self._stop:
-                log.warn("send_ret stopping")
-                return
-            if self.locks["ret_job"].acquire():
-                if self.queues["ret_job"].empty():
-                    self.locks["ret_job"].release()
-                    time.sleep(0.005)
-                    continue
-                result = []
-                for _ in xrange(100):
-                    try:
-                        node_name, data = self.queues["ret_job"].get(block=False)
-                        result.append((node_name, data))
-                    except Queue.Empty:
-                        continue
-                self.queues["ret_job"].task_done()
-                self.locks["ret_job"].release()
-                log.info("send [%s] result" % len(result))
-                rets = []
-                del_jobs = []
-                for res in result:
-                    data = res[1]
-                    node_name = res[0]
-                    data = msgpack.loads(data)
-                    jid = data["payload"]["jid"]
-                    del_jobs.append('%s@%s' % (jid, node_name))
-                    try:
-                        if data["env"] == "aes":
-                            data["payload"] = crypt.dumps(data.get("payload"))
-                        rets.append((node_name, jid, msgpack.dumps(data)))
-                    except:
-                        log.error(traceback.format_exc())
-                if rets:
-                    if self.mq.set_job(rets):
-                        for i in del_jobs:
-                            if i in self.running_jobs:
-                                self.running_jobs.remove(i)
-
-    @thread(pnum=1)
-    def check_redis(self):
-        while 1:
-            if not self.mq.ping():
-                log.info("redis ping false")
-                self.mq.is_repubsub = True
+            job = self.mq.get_job(self.node)
+            if job:
+                self.job_sub.set_data(job)
             time.sleep(0.001)
+
+    def update(self, data):
+        cmd = data["payload"]["cmd"]
+        args = list(data["payload"]["args"])
+        kwargs = data["payload"]["kwargs"]
+        jid = data["payload"]["jid"]
+
+        try:
+            if data["env"] == "aes":
+                data["payload"] = self.crypt.loads(data.get("payload"))
+
+            data["payload"]["status"] = "RUNNING"
+            if data["env"] == "aes":
+                data["payload"] = self.crypt.dumps(data.get("payload"))
+            #修改任务状态为RUNNING
+            self.mq.set_res(self.node, jid, data)
+
+            os.chdir(prog_dir())
+            ret = ''
+            #做一些变量替换，把变量中如{ip}、{node}替换为具体的值
+            i = 0
+            env_regx = re.compile(r'{([a-zA-Z0-9]+)}')
+            while i < len(args):
+                if not isinstance(args[i], str):
+                    continue
+                matchs = env_regx.findall(args[i])
+                for match in matchs:
+                    if match in self.sys_envs:
+                        val = self.sys_envs[match](**kwargs)
+                        args[i] = env_regx.sub(val, args[i], count=1)
+                i += 1
+            for key in kwargs.iterkeys():
+                if not isinstance(kwargs[key], str):
+                    continue
+                matchs = env_regx.findall(kwargs[key])
+                for match in matchs:
+                    if match in self.sys_envs:
+                        val = self.sys_envs[match](**kwargs)
+                        kwargs[key] = env_regx.sub(val, kwargs[key], count=1)
+
+            #判断是否需要返回函数help信息
+            if len(args) == 1 and args[0] == "help":
+                ret = self.node_funcs[cmd].__doc__
+            else:
+                ret = self.node_funcs[cmd](
+                    *args,
+                    **kwargs
+                )
+        except KeyError as exc:
+            ret = "cmd %s not found: %s" % (cmd, str(exc))
+        except SwallCommandExecutionError as exc:
+            ret = "cmd %s running error: %s" % (cmd, str(exc))
+        except TypeError as exc:
+            ret = "cmd %s argument error: %s" % (cmd, str(exc))
+        except:
+            ret = traceback.format_exc()
+            log.error(ret)
+        finally:
+            os.chdir(prog_dir())
+        data["payload"]["return"] = ret
+        data["payload"]["status"] = "FINISH"
+        self.mq.set_res(self.node, jid, data)
+        return True
 
     def loop(self):
         """
@@ -664,14 +340,8 @@ class Agent(object):
             self._stop = 1
 
         signal.signal(signal.SIGUSR1, sigterm_stop)
-        self.auto_auth()
         self.loop_tos()
-        self.get_job()
-        self.run_job()
-        self.check_redis()
         self.loop_job_rev()
-        self.single_run_job()
-        self.send_ret()
         while 1:
             if self._stop:
                 break

@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 __author__ = 'lufeng4828@163.com'
 
 import os
@@ -31,10 +31,8 @@ class Job(object):
     """
     任务管理相关
     """
-    def __init__(self, config, jid="", env="clear", timeout=60, retry_times=3):
-        #初始化下ZKDb的init方法
-        super(Job, self).__init__()
 
+    def __init__(self, config, jid="", env="clear", timeout=60, retry_times=3):
         self.fs_conf = Conf(config["fs"])
         self.main_conf = Conf(config["swall"])
         self.keeper = Keeper(config)
@@ -78,9 +76,9 @@ class Job(object):
                 if data.get("env") == "aes":
                     data["payload"] = crypt.dumps(data.get("payload"))
                 data = msgpack.dumps(data)
-                jobs.append((node_name, jid, data))
+                jobs.append((node_name, data))
             if jobs:
-                self.keeper.mq.set_job(jobs)
+                self.keeper.mq.mset_job(jobs)
             ret = 1
         except Exception, e:
             log.error("send_job error:%s" % traceback.format_exc())
@@ -141,15 +139,15 @@ class Job(object):
         data = {
             "env": self.env,
             "payload":
-            {
-                "jid": self.jid,
-                "cmd": cmd,
-                "args": args,
-                "kwargs": kwargs,
-                "status": "READY",
-                "timeout": self.timeout,
-                "retry_times": self.retry_times
-            }
+                {
+                    "jid": self.jid,
+                    "cmd": cmd,
+                    "args": args,
+                    "kwargs": kwargs,
+                    "status": "READY",
+                    "timeout": self.timeout,
+                    "retry_times": self.retry_times
+                }
         }
         if nthread != -1:
             data["payload"]["nthread"] = nthread
@@ -165,18 +163,21 @@ class Job(object):
             @iTimeout(wait_timeout)
             def _return(nodes, job_rets):
                 while 1:
-                    try:
-                        for n in nodes:
-                            job_ret = self.get_job(n, self.jid)
-                            i_ret = job_ret["payload"].get("return", "")
-                            if not i_ret:
-                                raise SwallAgentError("wait")
+                    job_ret = self.get_job([(n, self.jid) for n in nodes])
+                    for node, ret_ in job_ret.iteritems():
+                        i_ret = ret_["payload"].get("return")
+                        if i_ret is not None:
                             if job_rets:
-                                job_rets.update({n: i_ret})
+                                job_rets.update({node: i_ret})
                             else:
-                                job_rets = {n: i_ret}
-                    except SwallAgentError:
-                        time.sleep(0.1)
+                                job_rets = {node: i_ret}
+                    is_wait = False
+                    for ret_ in job_ret.itervalues():
+                        i_ret = ret_["payload"].get("return")
+                        if i_ret is None:
+                            is_wait = True
+                    if is_wait:
+                        continue
                     else:
                         break
             try:
@@ -235,7 +236,8 @@ class Job(object):
                             local_path = os.path.join(local_path, os.path.basename(remote_path))
                         if checksum(local_path) != fid:
                             if not check_cache(app_abs_path(self.main_conf.cache), fid):
-                                FsClient = load_fclient(app_abs_path(self.main_conf.fs_plugin), ftype=self.fs_conf.fs_type)
+                                FsClient = load_fclient(app_abs_path(self.main_conf.fs_plugin),
+                                                        ftype=self.fs_conf.fs_type)
                                 fscli = FsClient(self.fs_conf)
                                 fscli.download(fid, os.path.join(app_abs_path(self.main_conf.cache), fid))
 
@@ -261,10 +263,9 @@ class Job(object):
         @param jid string:任务id
         @return dict:
         """
-        self.mq.exists(node_name)
         payload = {}
-        if self.mq.is_job_exists(node_name, jid):
-            data = self.mq.get_job(node_name, jid)
+        data = self.mq.get_res(node_name, jid)
+        if data:
             if data["env"] == "aes":
                 key_str = self.main_conf.token
                 crypt = Crypt(key_str)
@@ -280,42 +281,7 @@ class Job(object):
         """
         ret = 0
         try:
-            return self.mq.del_job(node_name, jid)
+            return self.mq.del_res(node_name, jid)
         except Exception, e:
             log.error(e.message)
         return ret
-
-    def clear_all_jobs(self):
-        """
-        清空所有的任务
-        @return int:1 for success else 0
-        """
-        nodes = self.keeper.get_valid_nodes()
-        for node in nodes:
-            self.mq.del_node_jobs(node)
-        return True
-
-    def jobs_list(self):
-        """
-        获取一个角色下面的所有任务
-        @return dict:{"ljxz_tx_5001":[job1,job2,job3,jobN]}
-        """
-        ret = {}
-        try:
-
-            nodes = self.keeper.get_valid_nodes()
-            for node in nodes:
-                for job in self.mq.get_node_job(node):
-                    ret[node] = job
-        except Exception, e:
-            log.error(e.message)
-        return ret
-
-
-
-
-
-
-
-
-
