@@ -7,14 +7,12 @@ import time
 import signal
 import logging
 import traceback
+from swall.mq import MQ
 from swall.crypt import Crypt
 from swall.utils import cp, thread, prog_dir, check_cache, make_dirs, Conf, load_env, load_fclient, app_abs_path, load_module
 from swall.excpt import SwallCommandExecutionError
 
 log = logging.getLogger()
-
-QUEUE_SIZE = 20000
-THREAD_NUM = 30
 
 
 class JobSubject(object):
@@ -52,6 +50,8 @@ class Agent(object):
         self.main_conf = Conf(config["swall"])
         self.node = self.main_conf.node_role
         self.node_funcs = self.load_module()
+        self.mq = MQ(config)
+        self._stop = 0
         self.sys_envs = self.load_env()
         self.job_sub = JobSubject()
         self.job_sub.register(self)
@@ -263,6 +263,9 @@ class Agent(object):
         :return:
         """
         while 1:
+            if self._stop:
+                log.warn("loop_job_rev stopping")
+                return
             job = self.mq.get_job(self.node)
             if job:
                 self.job_sub.set_data(job)
@@ -335,7 +338,6 @@ class Agent(object):
         """
         主体循环
         """
-
         def sigterm_stop(signum, frame):
             self._stop = 1
 

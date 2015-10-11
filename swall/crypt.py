@@ -2,9 +2,9 @@
 __author__ = 'lufeng4828@163.com'
 
 import os
+import json
 import hmac
 import logging
-import msgpack
 import hashlib
 from Crypto.Cipher import AES
 from swall.excpt import SwallAuthenticationError
@@ -26,7 +26,7 @@ class Crypt(object):
     def __init__(self, key_string, key_size=192):
         self.keys = self.extract_keys(key_string, key_size)
         self.key_size = key_size
-        self.serial = msgpack
+        self.serial = json
 
     @classmethod
     def gen_key(cls, key_size=192):

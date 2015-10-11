@@ -2,27 +2,15 @@
 __author__ = 'lufeng4828@163.com'
 
 import os
-import re
-import time
 import traceback
-import msgpack
 import datetime
 import logging
-from swall.utils import cp, \
-    check_cache, \
-    make_dirs, \
-    Conf, \
-    load_fclient, \
-    app_abs_path, \
-    checksum, \
-    Timeout
-
 from copy import deepcopy
 from swall.mq import MQ
 from swall.crypt import Crypt
 from swall.keeper import Keeper
 from swall.utils import timeout as iTimeout
-from swall.excpt import SwallAgentError
+from swall.utils import cp, check_cache, make_dirs, Conf, load_fclient, app_abs_path, checksum, Timeout
 
 log = logging.getLogger()
 
@@ -72,10 +60,8 @@ class Job(object):
             for node in node_data:
                 data = node[0]
                 node_name = node[1]
-                jid = data["payload"]["jid"]
                 if data.get("env") == "aes":
                     data["payload"] = crypt.dumps(data.get("payload"))
-                data = msgpack.dumps(data)
                 jobs.append((node_name, data))
             if jobs:
                 self.keeper.mq.mset_job(jobs)
@@ -217,7 +203,6 @@ class Job(object):
         try:
             rets = self.mq.mget_job(job_data)
             for node, data in rets.items():
-                data = msgpack.loads(data)
                 env = data.get("env")
                 if env == "aes":
                     data["payload"] = crypt.loads(data.get("payload"))
