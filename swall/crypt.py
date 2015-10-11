@@ -2,7 +2,7 @@
 __author__ = 'lufeng4828@163.com'
 
 import os
-import json
+import msgpack
 import hmac
 import logging
 import hashlib
@@ -26,7 +26,7 @@ class Crypt(object):
     def __init__(self, key_string, key_size=192):
         self.keys = self.extract_keys(key_string, key_size)
         self.key_size = key_size
-        self.serial = json
+        self.serial = msgpack
 
     @classmethod
     def gen_key(cls, key_size=192):

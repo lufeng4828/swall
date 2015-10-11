@@ -5,7 +5,7 @@ import re
 import sys
 import imp
 import time
-import json
+import msgpack
 import traceback
 import hashlib
 import functools
@@ -765,7 +765,7 @@ def format_obj(obj):
     """
     is_true = map(lambda x: isinstance(obj, x), [list, tuple, set])
     if any(is_true) and len(obj) >= 5 or isinstance(obj, dict):
-        outs = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+        outs = msgpack.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
         outs = "\n%s\n" % outs
     else:
         outs = obj

@@ -150,18 +150,23 @@ class Job(object):
             def _return(nodes, job_rets):
                 while 1:
                     job_ret = self.get_job([(n, self.jid) for n in nodes])
+
                     for node, ret_ in job_ret.iteritems():
-                        i_ret = ret_["payload"].get("return")
-                        if i_ret is not None:
-                            if job_rets:
-                                job_rets.update({node: i_ret})
-                            else:
-                                job_rets = {node: i_ret}
+                        if ret_:
+                            i_ret = ret_["payload"].get("return")
+                            if i_ret is not None:
+                                if job_rets:
+                                    job_rets.update({node: i_ret})
+                                else:
+                                    job_rets = {node: i_ret}
                     is_wait = False
                     for ret_ in job_ret.itervalues():
-                        i_ret = ret_["payload"].get("return")
-                        if i_ret is None:
+                        if ret_:
                             is_wait = True
+                        else:
+                            i_ret = ret_["payload"].get("return")
+                            if i_ret is None:
+                                is_wait = True
                     if is_wait:
                         continue
                     else:
@@ -203,38 +208,39 @@ class Job(object):
         try:
             rets = self.mq.mget_job(job_data)
             for node, data in rets.items():
-                env = data.get("env")
-                if env == "aes":
-                    data["payload"] = crypt.loads(data.get("payload"))
-                payload = data["payload"]
-                if payload["cmd"] == "sys.get" and payload["status"] == "FINISH" and payload["return"] != "":
-                    if payload["args"][0] != "help":
-                        fid = payload["return"]
-                        if "local_path" in payload["kwargs"] and "remote_path" in payload["kwargs"]:
-                            local_path = payload["kwargs"]["local_path"]
-                            remote_path = payload["kwargs"]["remote_path"]
-                        else:
-                            local_path = payload["args"][1]
-                            remote_path = payload["args"][0]
-                        stat = payload["kwargs"].get("stat")
-                        if local_path.endswith('/') or os.path.isdir(local_path):
-                            local_path = os.path.join(local_path, os.path.basename(remote_path))
-                        if checksum(local_path) != fid:
-                            if not check_cache(app_abs_path(self.main_conf.cache), fid):
-                                FsClient = load_fclient(app_abs_path(self.main_conf.fs_plugin),
-                                                        ftype=self.fs_conf.fs_type)
-                                fscli = FsClient(self.fs_conf)
-                                fscli.download(fid, os.path.join(app_abs_path(self.main_conf.cache), fid))
+                if data:
+                    env = data.get("env")
+                    if env == "aes":
+                        data["payload"] = crypt.loads(data.get("payload"))
+                    payload = data["payload"]
+                    if payload["cmd"] == "sys.get" and payload["status"] == "FINISH" and payload["return"] != "":
+                        if payload["args"][0] != "help":
+                            fid = payload["return"]
+                            if "local_path" in payload["kwargs"] and "remote_path" in payload["kwargs"]:
+                                local_path = payload["kwargs"]["local_path"]
+                                remote_path = payload["kwargs"]["remote_path"]
+                            else:
+                                local_path = payload["args"][1]
+                                remote_path = payload["args"][0]
+                            stat = payload["kwargs"].get("stat")
+                            if local_path.endswith('/') or os.path.isdir(local_path):
+                                local_path = os.path.join(local_path, os.path.basename(remote_path))
+                            if checksum(local_path) != fid:
+                                if not check_cache(app_abs_path(self.main_conf.cache), fid):
+                                    FsClient = load_fclient(app_abs_path(self.main_conf.fs_plugin),
+                                                            ftype=self.fs_conf.fs_type)
+                                    fscli = FsClient(self.fs_conf)
+                                    fscli.download(fid, os.path.join(app_abs_path(self.main_conf.cache), fid))
 
-                            if check_cache(app_abs_path(self.main_conf.cache), fid):
-                                if not make_dirs(os.path.dirname(local_path)):
-                                    log.error("创建目标目录:%s失败" % local_path)
-                                if cp(os.path.join(app_abs_path(self.main_conf.cache), fid), local_path, stat):
-                                    payload["return"] = local_path
-                                else:
-                                    payload["return"] = ""
-                        else:
-                            payload["return"] = local_path
+                                if check_cache(app_abs_path(self.main_conf.cache), fid):
+                                    if not make_dirs(os.path.dirname(local_path)):
+                                        log.error("创建目标目录:%s失败" % local_path)
+                                    if cp(os.path.join(app_abs_path(self.main_conf.cache), fid), local_path, stat):
+                                        payload["return"] = local_path
+                                    else:
+                                        payload["return"] = ""
+                            else:
+                                payload["return"] = local_path
                 ret[node] = data
 
         except Exception, e:

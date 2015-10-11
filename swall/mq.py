@@ -2,7 +2,7 @@
 __author__ = 'lufeng4828@163.com'
 
 import time
-import json
+import msgpack
 import logging
 import traceback
 from datetime import datetime
@@ -61,14 +61,13 @@ class MQ(object):
         result = {}
         if jobs:
             for ret in zip([node for node, _ in job_info], jobs):
-                result[ret[0]] = json.loads(ret[1])
-        else:
-            return result
+                result[ret[0]] = msgpack.loads(ret[1]) if ret[1] else ret[1]
+        return result
 
     def get_job(self, node):
         item = self.redis.lpop("%s:%s" % (self.node_job_req, node))
         if item:
-            item = json.loads(item)
+            item = msgpack.loads(item)
         return item
 
     def set_res(self, node, jid, result):
@@ -80,7 +79,7 @@ class MQ(object):
         :return:
         """
         key = "%s:%s" % (node, jid)
-        self.redis.hset(self.node_job_res, key, json.dumps(result))
+        self.redis.hset(self.node_job_res, key, msgpack.dumps(result))
         return True
 
     def del_res(self, node, jid):
@@ -104,7 +103,7 @@ class MQ(object):
         key = "%s:%s" % (node, jid)
         item = self.redis.hget(self.node_job_res, key)
         if item:
-            item = json.loads(item)
+            item = msgpack.loads(item)
         return item
 
     def mset_job(self, job_data):
@@ -115,7 +114,7 @@ class MQ(object):
         """
         pl = self.redis.pipeline()
         for job in job_data:
-            pl.rpush('%s:%s' % (self.node_job_req, job[0]), json.dumps(job[1]))
+            pl.rpush('%s:%s' % (self.node_job_req, job[0]), msgpack.dumps(job[1]))
         pl.execute()
         return True
 
