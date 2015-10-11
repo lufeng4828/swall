@@ -49,6 +49,7 @@ class Agent(object):
 
     def __init__(self, config):
         self.main_conf = Conf(config["swall"])
+        self.fs_conf = Conf(config["fs"])
         self.node = self.main_conf.node_name
         self.node_ip = self.main_conf.node_ip
         self.node_funcs = self.load_module()
@@ -307,6 +308,7 @@ class Agent(object):
                         val = self.sys_envs[match](**kwargs)
                         args[i] = env_regx.sub(val, args[i], count=1)
                 i += 1
+            data["payload"]["args"] = args
             for key in kwargs.iterkeys():
                 if not isinstance(kwargs[key], str):
                     continue
@@ -315,7 +317,7 @@ class Agent(object):
                     if match in self.sys_envs:
                         val = self.sys_envs[match](**kwargs)
                         kwargs[key] = env_regx.sub(val, kwargs[key], count=1)
-
+            data["payload"]["kwargs"] = kwargs
             #判断是否需要返回函数help信息
             if len(args) == 1 and args[0] == "help":
                 ret = self.node_funcs[cmd].__doc__
