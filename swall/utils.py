@@ -5,7 +5,7 @@ import re
 import sys
 import imp
 import time
-import msgpack
+import json
 import traceback
 import hashlib
 import functools
@@ -83,12 +83,10 @@ def node(func):
     :param func: 修饰的函数
     """
     func.node = True
-
     @functools.wraps(func)
     def wrapped(*args, **kwargs):
         ret = func(*args, **kwargs)
         return ret
-
     return wrapped
 
 
@@ -229,7 +227,7 @@ def load_module(mod_dirs):
                 #将加载的模块存放到字典里面
             if callable(getattr(mod, attr)):
                 func = getattr(mod, attr)
-                if attr == "node":
+                if not getattr(func, "node", None):
                     continue
                 try:
                     funcs['{0}.{1}'.format(mod.__name__, attr)] = func
@@ -765,7 +763,7 @@ def format_obj(obj):
     """
     is_true = map(lambda x: isinstance(obj, x), [list, tuple, set])
     if any(is_true) and len(obj) >= 5 or isinstance(obj, dict):
-        outs = msgpack.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+        outs = json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
         outs = "\n%s\n" % outs
     else:
         outs = obj

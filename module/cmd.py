@@ -14,7 +14,7 @@ def call(cmd, ret_type="full", cwd=None, runas=None, shell="/bin/bash", env={}, 
     def call(cmd, ret_type="full", cwd=None, runas=None, shell="/bin/bash", env={}, *args, **kwarg) -> Execute the passed command and return the output as a string
     @param cmd string:执行的命令
     @param ret_type string:返回格式，默认全部返回
-    @param cmd string:工作目录，执行命令时候需要进入的目录
+    @param cwd string:工作目录，执行命令时候需要进入的目录
     @param runas string:以runas的身份执行命令
     @param shell string:解析脚本的shell，默认是/bin/bash
     @paran env dict:执行命令的环境
