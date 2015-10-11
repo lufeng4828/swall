@@ -27,7 +27,16 @@ swall升级以后用比较简单的redis替换zookeeper，swall是一个可以�
 
 （一）安装redis
 ----------------------
-    安装redis请自行google或者百度，这里我就不写了
+    安装redis请自行google或者百度，这里我就不写了，安装好redis以后配置/conf/redis.conf
+
+    [main]
+    #redis配置
+    host = 192.168.1.7
+    port = 6379
+    db = 0
+    password =
+    expire = 600
+
 
 
 （二）安装rsync服务
@@ -166,8 +175,8 @@ Swall这里安装到192.168.0.180服务器上
     ###swall.conf配置
     [main]
     user = swall
-    node_name = server
-    node_ip = swall01
+    node_name = swall01
+    node_ip = 192.168.0.180
     cache = var/cache
     module = module/
     backup = var/backup
@@ -177,14 +186,14 @@ Swall这里安装到192.168.0.180服务器上
     log_level = INFO
     token = yhIC7oenuJDpBxqyP3GSHn7mgQThRHtOnNNwqpJnyPVhR1n9Y9Q+/T3PJfjYCZdiGRrX03CM+VI=
 
-    ###fs.conf配置
-    fs_type = rsync
-    fs_host = 192.168.0.181
-    fs_port = 61768
-    fs_user = swall
-    fs_pass = vGjeVUncnbPV8CcZ
-    fs_tmp_dir = /data/swall_fs
-    fs_failtry = 3
+    ###redis.conf配置
+    [main]
+    #redis配置
+    host = 192.168.1.7
+    port = 6379
+    db = 0
+    password =
+    expire = 600
 
 
 5.新增PATH和PYTHONPATH路径（PYTHONPATH一定要设置，否则程序运行会提示swall模块找不到的）
