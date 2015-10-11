@@ -26,7 +26,7 @@ def call(cmd, ret_type="full", cwd=None, runas=None, shell="/bin/bash", env={}, 
         'retcode': 脚本返回状态
         }
     CLI Example::
-        swall ctl game '*' cmd.run "ls -l | awk '/foo/{print $2}'"
+        swall ctl '*' cmd.run "ls -l | awk '/foo/{print $2}'"
     """
 
     ret = run(cmd, runas=runas, shell=shell, cwd=cwd, env=env)

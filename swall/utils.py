@@ -271,7 +271,7 @@ def load_env(mod_dirs):
                 #将加载的模块存放到字典里面
             if callable(getattr(mod, attr)):
                 func = getattr(mod, attr)
-                if attr == "env":
+                if not getattr(func, "env", None):
                     continue
                 try:
                     funcs['{0}'.format(attr)] = func
@@ -779,7 +779,7 @@ def agent_config(path):
     opts = {
         "swall":
             {
-                "node_role": "server",
+                "node_name": "server",
                 "node_ip": "localhost",
                 "cache": "var/cache",
                 "backup": "var/backup",
@@ -787,16 +787,7 @@ def agent_config(path):
                 "pidfile": "/tmp/.swall.pid",
                 "log_file": "var/logs/swall.log",
                 "log_level": "INFO",
-                "token": "yhIC7oenuJDpBxqyP3GSHn7mgQThRHtOnNNwqpJnyPVhR1n9Y9Q+/T3PJfjYCZdiGRrX03CM+VI=",
-                "thread_num": 20
-            },
-        "zk":
-            {
-                "zk_servers": "localhost:2181",
-                "zk_scheme": "digest",
-                "zk_auth": "swall!@#",
-                "root": "/swall",
-                "nodes": "/swall/nodes"
+                "token": "yhIC7oenuJDpBxqyP3GSHn7mgQThRHtOnNNwqpJnyPVhR1n9Y9Q+/T3PJfjYCZdiGRrX03CM+VI="
             },
         "fs":
             {

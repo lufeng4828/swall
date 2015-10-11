@@ -12,37 +12,12 @@ def IP(*args, **kwargs):
     """
     return kwargs.get("node_ip")
 
-
-@env
-def ROLE(*args, **kwargs):
-    """
-    获取角色
-    """
-    return kwargs.get("role")
-
-
 @env
 def NODE(*args, **kwargs):
     """
     获取节点
     """
     return kwargs.get("node_name")
-
-
-@env
-def PROJECT(*args, **kwargs):
-    """
-    获取节点对应的项目名称
-    """
-    return kwargs.get("project")
-
-
-@env
-def AGENT(*args, **kwargs):
-    """
-    获取节点对应的代理名称
-    """
-    return kwargs.get("agent")
 
 
 @env

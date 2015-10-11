@@ -49,7 +49,8 @@ class Agent(object):
 
     def __init__(self, config):
         self.main_conf = Conf(config["swall"])
-        self.node = self.main_conf.node_role
+        self.node = self.main_conf.node_name
+        self.node_ip = self.main_conf.node_ip
         self.node_funcs = self.load_module()
         self.mq = MQ(config)
         self._stop = 0
@@ -295,6 +296,7 @@ class Agent(object):
             ret = ''
             #做一些变量替换，把变量中如{ip}、{node}替换为具体的值
             i = 0
+            kwargs.update({"node_name": self.node, "node_ip": self.node_ip})
             env_regx = re.compile(r'{([a-zA-Z0-9]+)}')
             while i < len(args):
                 if not isinstance(args[i], str):

@@ -86,7 +86,7 @@ class BaseOptionParser(optparse.OptionParser, object):
 class ConfParser(BaseOptionParser):
     def setup_config(self):
         opts = {}
-        for f in ('swall', 'zk', 'fs', 'redis'):
+        for f in ('swall', 'fs', 'redis'):
             opts[f] = agent_config(self.get_config_file_path("%s.conf" % f))
         return opts
 
@@ -381,10 +381,7 @@ class SwallManage(ManageParser):
         self._sub_commands(cmd)
 
     def _sub_commands(self, cmd):
-        if cmd == "init":
-            init = ZKInit()
-            init.main()
-        elif cmd == "info":
+        if cmd == "info":
             self._show_info()
         else:
             self.print_help()
@@ -462,22 +459,6 @@ class SwallAgent(ServerParser):
     def restart(self):
         self.stop()
         self.start()
-
-
-class ZKInit(InitParser, ConfMin):
-    __metaclass__ = OptionParserMeta
-
-    def main(self):
-        """
-        init zookeeper
-        """
-        self.parse_args()
-        keeper = Keeper(self.config)
-        if keeper.init_db(self.options.force):
-            sys.stdout.write(c("init zookeeper db ok\n", 'g'))
-        else:
-            sys.stdout.write(c("init zookeeper db fail\n", 'r'))
-        sys.stdout.flush()
 
 
 class Swall(MainParser):

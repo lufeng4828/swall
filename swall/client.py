@@ -21,7 +21,7 @@ class Client(object):
     def __init__(self, globs=None, exclude_globs=None, wait_all=False, timeout=30, nthread=None,
                  conf_dir=DEFAULT_CONF_DIR):
         self.config = {}
-        for f in ('swall', 'zk', 'fs', 'redis'):
+        for f in ('swall', 'fs', 'redis'):
             abs_path = app_abs_path(os.path.join(conf_dir, "%s.conf" % f))
             self.config[f] = agent_config(abs_path)
 
